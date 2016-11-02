@@ -9,20 +9,27 @@ var TMP_FOLDER = '.tmp_plato/';
 // Program options
 program
 .version('1.0.0')
-.option('-o --output', 'Directory of output will be stored')
-.option('-r --root','Root directory. Default current')
+.option('-o --output <output>', 'Directory of output will be stored')
+.option('-r --root <root>','Root directory. Default current')
 .arguments('<component>')
+.action(function(component){
+  program.component = component;
+})
 .parse(process.argv);
 
-// if (typeof  program.component === 'undefined' || typeof program.output === 'undefined'){
-//     program.help();
-// }
+program.root = program.root || './';
+console.log(program.component, program.output)
+if (typeof  program.component === 'undefined' || typeof program.output === 'undefined'){
+  program.help();
+}
 
 // Program
 function getCurrentDir(file){
   var split = file.split('/');
   split.length = split.length -1;
-  return split.join('/') + '/';
+  // remove reference to current folder
+  if (split[0] === '.') split.splice(0,1);
+  return program.root + split.join('/') + '/';
 }
 function removeDotDot(url){
   var realUrl = [];
@@ -36,6 +43,7 @@ function removeDotDot(url){
   }
   return realUrl.join('/');
 }
+// TODO fix: if there're multiple script this code doesnt work
 function getScripts(file, observed) {
   file = removeDotDot(file);
   var html = fs.readFileSync(file, "utf-8");
@@ -47,7 +55,7 @@ function getScripts(file, observed) {
         return;
       }
       var $ = jquery(window);
-      var $script = $('script').html();
+      var $scripts = $('script');
       var $imports = $('link[rel="import"]');
       var promises = [];
       if ($imports){
@@ -79,7 +87,6 @@ function getScripts(file, observed) {
     });
   });
 }
-program.component = program.component || './test_component/google-geocoding/google-geocoding.html';
 function removeRepeted(list) {
   var repeted = [];
   var i = 0;
@@ -115,6 +122,12 @@ function createTmp(){
 }
 function createFiles(files){
   var new_dir = [];
+  var errrFn = function(err, file){
+    if (err) {
+      console.log(err);
+      return;
+    }
+  }
   for (var i=0;i<files.length;i++){
     var file_name = files[i].file.replace('./','');
     file_name = file_name.replace(/\//g,'_');
@@ -123,15 +136,10 @@ function createFiles(files){
     new_dir.push(filepath);
     console.log('Created file: ', filepath);
     var fd = fs.openSync(filepath, 'w');
-    fs.write(fd, files[i].script, null, 'utf8', function(err, file){
-      if (err) {
-        console.log(err);
-        return;
-      }
-    });
+    fs.write(fd, files[i].script, null, 'utf8', errFn);
   }
   return new_dir;
-}
+};
 
 
 // MAIN
@@ -139,7 +147,7 @@ getScripts(program.component).then(function(results){
   removeRepeted(results);
   createTmp();
   var files_dir = createFiles(results);
-  plato.inspect(files_dir, program.output || 'results', {}, function(){
+  plato.inspect(files_dir, program.output, {}, function(){
     console.log('Generated results');
     deleteFolderRecursive(TMP_FOLDER);
   });
