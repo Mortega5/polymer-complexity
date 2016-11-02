@@ -1,3 +1,4 @@
-test_component
+test_component/*
 !test_component/google-geocoding
 node_modules
+results
