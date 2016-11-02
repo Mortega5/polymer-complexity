@@ -1,0 +1,5480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - test_component_polymer_polymer.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>test_component_polymer_polymer.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.94</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">5363</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">243.45</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">90.89</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">Polymer.nar = [];
+Polymer.Annotations = {
+parseAnnotations: function (template) {
+var list = [];
+var content = template._content || template.content;
+this._parseNodeAnnotations(content, list, template.hasAttribute(&#039;strip-whitespace&#039;));
+return list;
+},
+_parseNodeAnnotations: function (node, list, stripWhiteSpace) {
+return node.nodeType === Node.TEXT_NODE ? this._parseTextNodeAnnotation(node, list) : this._parseElementAnnotations(node, list, stripWhiteSpace);
+},
+_bindingRegex: function () {
+var IDENT = &#039;(?:&#039; + &#039;[a-zA-Z_$][\\w.:$\\-*]*&#039; + &#039;)&#039;;
+var NUMBER = &#039;(?:&#039; + &#039;[-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?&#039; + &#039;)&#039;;
+var SQUOTE_STRING = &#039;(?:&#039; + &#039;\&#039;(?:[^\&#039;\\\\]|\\\\.)*\&#039;&#039; + &#039;)&#039;;
+var DQUOTE_STRING = &#039;(?:&#039; + &#039;&quot;(?:[^&quot;\\\\]|\\\\.)*&quot;&#039; + &#039;)&#039;;
+var STRING = &#039;(?:&#039; + SQUOTE_STRING + &#039;|&#039; + DQUOTE_STRING + &#039;)&#039;;
+var ARGUMENT = &#039;(?:&#039; + IDENT + &#039;|&#039; + NUMBER + &#039;|&#039; + STRING + &#039;\\s*&#039; + &#039;)&#039;;
+var ARGUMENTS = &#039;(?:&#039; + ARGUMENT + &#039;(?:,\\s*&#039; + ARGUMENT + &#039;)*&#039; + &#039;)&#039;;
+var ARGUMENT_LIST = &#039;(?:&#039; + &#039;\\(\\s*&#039; + &#039;(?:&#039; + ARGUMENTS + &#039;?&#039; + &#039;)&#039; + &#039;\\)\\s*&#039; + &#039;)&#039;;
+var BINDING = &#039;(&#039; + IDENT + &#039;\\s*&#039; + ARGUMENT_LIST + &#039;?&#039; + &#039;)&#039;;
+var OPEN_BRACKET = &#039;(\\[\\[|{{)&#039; + &#039;\\s*&#039;;
+var CLOSE_BRACKET = &#039;(?:]]|}})&#039;;
+var NEGATE = &#039;(?:(!)\\s*)?&#039;;
+var EXPRESSION = OPEN_BRACKET + NEGATE + BINDING + CLOSE_BRACKET;
+return new RegExp(EXPRESSION, &#039;g&#039;);
+}(),
+_parseBindings: function (text) {
+var re = this._bindingRegex;
+var parts = [];
+var lastIndex = 0;
+var m;
+while ((m = re.exec(text)) !== null) {
+if (m.index &gt; lastIndex) {
+parts.push({ literal: text.slice(lastIndex, m.index) });
+}
+var mode = m[1][0];
+var negate = Boolean(m[2]);
+var value = m[3].trim();
+var customEvent, notifyEvent, colon;
+if (mode == &#039;{&#039; &amp;&amp; (colon = value.indexOf(&#039;::&#039;)) &gt; 0) {
+notifyEvent = value.substring(colon + 2);
+value = value.substring(0, colon);
+customEvent = true;
+}
+parts.push({
+compoundIndex: parts.length,
+value: value,
+mode: mode,
+negate: negate,
+event: notifyEvent,
+customEvent: customEvent
+});
+lastIndex = re.lastIndex;
+}
+if (lastIndex &amp;&amp; lastIndex &lt; text.length) {
+var literal = text.substring(lastIndex);
+if (literal) {
+parts.push({ literal: literal });
+}
+}
+if (parts.length) {
+return parts;
+}
+},
+_literalFromParts: function (parts) {
+var s = &#039;&#039;;
+for (var i = 0; i &lt; parts.length; i++) {
+var literal = parts[i].literal;
+s += literal || &#039;&#039;;
+}
+return s;
+},
+_parseTextNodeAnnotation: function (node, list) {
+var parts = this._parseBindings(node.textContent);
+if (parts) {
+node.textContent = this._literalFromParts(parts) || &#039; &#039;;
+var annote = {
+bindings: [{
+kind: &#039;text&#039;,
+name: &#039;textContent&#039;,
+parts: parts,
+isCompound: parts.length !== 1
+}]
+};
+list.push(annote);
+return annote;
+}
+},
+_parseElementAnnotations: function (element, list, stripWhiteSpace) {
+var annote = {
+bindings: [],
+events: []
+};
+if (element.localName === &#039;content&#039;) {
+list._hasContent = true;
+}
+this._parseChildNodesAnnotations(element, annote, list, stripWhiteSpace);
+if (element.attributes) {
+this._parseNodeAttributeAnnotations(element, annote, list);
+if (this.prepElement) {
+this.prepElement(element);
+}
+}
+if (annote.bindings.length || annote.events.length || annote.id) {
+list.push(annote);
+}
+return annote;
+},
+_parseChildNodesAnnotations: function (root, annote, list, stripWhiteSpace) {
+if (root.firstChild) {
+var node = root.firstChild;
+var i = 0;
+while (node) {
+var next = node.nextSibling;
+if (node.localName === &#039;template&#039; &amp;&amp; !node.hasAttribute(&#039;preserve-content&#039;)) {
+this._parseTemplate(node, i, list, annote);
+}
+if (node.localName == &#039;slot&#039;) {
+node = this._replaceSlotWithContent(node);
+}
+if (node.nodeType === Node.TEXT_NODE) {
+var n = next;
+while (n &amp;&amp; n.nodeType === Node.TEXT_NODE) {
+node.textContent += n.textContent;
+next = n.nextSibling;
+root.removeChild(n);
+n = next;
+}
+if (stripWhiteSpace &amp;&amp; !node.textContent.trim()) {
+root.removeChild(node);
+i--;
+}
+}
+if (node.parentNode) {
+var childAnnotation = this._parseNodeAnnotations(node, list, stripWhiteSpace);
+if (childAnnotation) {
+childAnnotation.parent = annote;
+childAnnotation.index = i;
+}
+}
+node = next;
+i++;
+}
+}
+},
+_replaceSlotWithContent: function (slot) {
+var content = slot.ownerDocument.createElement(&#039;content&#039;);
+while (slot.firstChild) {
+content.appendChild(slot.firstChild);
+}
+var attrs = slot.attributes;
+for (var i = 0; i &lt; attrs.length; i++) {
+var attr = attrs[i];
+content.setAttribute(attr.name, attr.value);
+}
+var name = slot.getAttribute(&#039;name&#039;);
+var select = name ? &#039;[slot=\&#039;&#039; + name + &#039;\&#039;]&#039; : &#039;:not([slot])&#039;;
+content.setAttribute(&#039;select&#039;, select);
+slot.parentNode.replaceChild(content, slot);
+return content;
+},
+_parseTemplate: function (node, index, list, parent) {
+var content = document.createDocumentFragment();
+content._notes = this.parseAnnotations(node);
+content.appendChild(node.content);
+list.push({
+bindings: Polymer.nar,
+events: Polymer.nar,
+templateContent: content,
+parent: parent,
+index: index
+});
+},
+_parseNodeAttributeAnnotations: function (node, annotation) {
+var attrs = Array.prototype.slice.call(node.attributes);
+for (var i = attrs.length - 1, a; a = attrs[i]; i--) {
+var n = a.name;
+var v = a.value;
+var b;
+if (n.slice(0, 3) === &#039;on-&#039;) {
+node.removeAttribute(n);
+annotation.events.push({
+name: n.slice(3),
+value: v
+});
+} else if (b = this._parseNodeAttributeAnnotation(node, n, v)) {
+annotation.bindings.push(b);
+} else if (n === &#039;id&#039;) {
+annotation.id = v;
+}
+}
+},
+_parseNodeAttributeAnnotation: function (node, name, value) {
+var parts = this._parseBindings(value);
+if (parts) {
+var origName = name;
+var kind = &#039;property&#039;;
+if (name[name.length - 1] == &#039;$&#039;) {
+name = name.slice(0, -1);
+kind = &#039;attribute&#039;;
+}
+var literal = this._literalFromParts(parts);
+if (literal &amp;&amp; kind == &#039;attribute&#039;) {
+node.setAttribute(name, literal);
+}
+if (node.localName === &#039;input&#039; &amp;&amp; origName === &#039;value&#039;) {
+node.setAttribute(origName, &#039;&#039;);
+}
+node.removeAttribute(origName);
+var propertyName = Polymer.CaseMap.dashToCamelCase(name);
+if (kind === &#039;property&#039;) {
+name = propertyName;
+}
+return {
+kind: kind,
+name: name,
+propertyName: propertyName,
+parts: parts,
+literal: literal,
+isCompound: parts.length !== 1
+};
+}
+},
+findAnnotatedNode: function (root, annote) {
+var parent = annote.parent &amp;&amp; Polymer.Annotations.findAnnotatedNode(root, annote.parent);
+if (parent) {
+for (var n = parent.firstChild, i = 0; n; n = n.nextSibling) {
+if (annote.index === i++) {
+return n;
+}
+}
+} else {
+return root;
+}
+}
+};(function () {
+function resolveCss(cssText, ownerDocument) {
+return cssText.replace(CSS_URL_RX, function (m, pre, url, post) {
+return pre + &#039;\&#039;&#039; + resolve(url.replace(/[&quot;&#039;]/g, &#039;&#039;), ownerDocument) + &#039;\&#039;&#039; + post;
+});
+}
+function resolveAttrs(element, ownerDocument) {
+for (var name in URL_ATTRS) {
+var a$ = URL_ATTRS[name];
+for (var i = 0, l = a$.length, a, at, v; i &lt; l &amp;&amp; (a = a$[i]); i++) {
+if (name === &#039;*&#039; || element.localName === name) {
+at = element.attributes[a];
+v = at &amp;&amp; at.value;
+if (v &amp;&amp; v.search(BINDING_RX) &lt; 0) {
+at.value = a === &#039;style&#039; ? resolveCss(v, ownerDocument) : resolve(v, ownerDocument);
+}
+}
+}
+}
+}
+function resolve(url, ownerDocument) {
+if (url &amp;&amp; ABS_URL.test(url)) {
+return url;
+}
+var resolver = getUrlResolver(ownerDocument);
+resolver.href = url;
+return resolver.href || url;
+}
+var tempDoc;
+var tempDocBase;
+function resolveUrl(url, baseUri) {
+if (!tempDoc) {
+tempDoc = document.implementation.createHTMLDocument(&#039;temp&#039;);
+tempDocBase = tempDoc.createElement(&#039;base&#039;);
+tempDoc.head.appendChild(tempDocBase);
+}
+tempDocBase.href = baseUri;
+return resolve(url, tempDoc);
+}
+function getUrlResolver(ownerDocument) {
+return ownerDocument.__urlResolver || (ownerDocument.__urlResolver = ownerDocument.createElement(&#039;a&#039;));
+}
+var CSS_URL_RX = /(url\()([^)]*)(\))/g;
+var URL_ATTRS = {
+&#039;*&#039;: [
+&#039;href&#039;,
+&#039;src&#039;,
+&#039;style&#039;,
+&#039;url&#039;
+],
+form: [&#039;action&#039;]
+};
+var ABS_URL = /(^\/)|(^#)|(^[\w-\d]*:)/;
+var BINDING_RX = /\{\{|\[\[/;
+Polymer.ResolveUrl = {
+resolveCss: resolveCss,
+resolveAttrs: resolveAttrs,
+resolveUrl: resolveUrl
+};
+}());Polymer.Path = {
+root: function (path) {
+var dotIndex = path.indexOf(&#039;.&#039;);
+if (dotIndex === -1) {
+return path;
+}
+return path.slice(0, dotIndex);
+},
+isDeep: function (path) {
+return path.indexOf(&#039;.&#039;) !== -1;
+},
+isAncestor: function (base, path) {
+return base.indexOf(path + &#039;.&#039;) === 0;
+},
+isDescendant: function (base, path) {
+return path.indexOf(base + &#039;.&#039;) === 0;
+},
+translate: function (base, newBase, path) {
+return newBase + path.slice(base.length);
+},
+matches: function (base, wildcard, path) {
+return base === path || this.isAncestor(base, path) || Boolean(wildcard) &amp;&amp; this.isDescendant(base, path);
+}
+};Polymer.Base._addFeature({
+_prepAnnotations: function () {
+if (!this._template) {
+this._notes = [];
+} else {
+var self = this;
+Polymer.Annotations.prepElement = function (element) {
+self._prepElement(element);
+};
+if (this._template._content &amp;&amp; this._template._content._notes) {
+this._notes = this._template._content._notes;
+} else {
+this._notes = Polymer.Annotations.parseAnnotations(this._template);
+this._processAnnotations(this._notes);
+}
+Polymer.Annotations.prepElement = null;
+}
+},
+_processAnnotations: function (notes) {
+for (var i = 0; i &lt; notes.length; i++) {
+var note = notes[i];
+for (var j = 0; j &lt; note.bindings.length; j++) {
+var b = note.bindings[j];
+for (var k = 0; k &lt; b.parts.length; k++) {
+var p = b.parts[k];
+if (!p.literal) {
+var signature = this._parseMethod(p.value);
+if (signature) {
+p.signature = signature;
+} else {
+p.model = Polymer.Path.root(p.value);
+}
+}
+}
+}
+if (note.templateContent) {
+this._processAnnotations(note.templateContent._notes);
+var pp = note.templateContent._parentProps = this._discoverTemplateParentProps(note.templateContent._notes);
+var bindings = [];
+for (var prop in pp) {
+var name = &#039;_parent_&#039; + prop;
+bindings.push({
+index: note.index,
+kind: &#039;property&#039;,
+name: name,
+propertyName: name,
+parts: [{
+mode: &#039;{&#039;,
+model: prop,
+value: prop
+}]
+});
+}
+note.bindings = note.bindings.concat(bindings);
+}
+}
+},
+_discoverTemplateParentProps: function (notes) {
+var pp = {};
+for (var i = 0, n; i &lt; notes.length &amp;&amp; (n = notes[i]); i++) {
+for (var j = 0, b$ = n.bindings, b; j &lt; b$.length &amp;&amp; (b = b$[j]); j++) {
+for (var k = 0, p$ = b.parts, p; k &lt; p$.length &amp;&amp; (p = p$[k]); k++) {
+if (p.signature) {
+var args = p.signature.args;
+for (var kk = 0; kk &lt; args.length; kk++) {
+var model = args[kk].model;
+if (model) {
+pp[model] = true;
+}
+}
+if (p.signature.dynamicFn) {
+pp[p.signature.method] = true;
+}
+} else {
+if (p.model) {
+pp[p.model] = true;
+}
+}
+}
+}
+if (n.templateContent) {
+var tpp = n.templateContent._parentProps;
+Polymer.Base.mixin(pp, tpp);
+}
+}
+return pp;
+},
+_prepElement: function (element) {
+Polymer.ResolveUrl.resolveAttrs(element, this._template.ownerDocument);
+},
+_findAnnotatedNode: Polymer.Annotations.findAnnotatedNode,
+_marshalAnnotationReferences: function () {
+if (this._template) {
+this._marshalIdNodes();
+this._marshalAnnotatedNodes();
+this._marshalAnnotatedListeners();
+}
+},
+_configureAnnotationReferences: function () {
+var notes = this._notes;
+var nodes = this._nodes;
+for (var i = 0; i &lt; notes.length; i++) {
+var note = notes[i];
+var node = nodes[i];
+this._configureTemplateContent(note, node);
+this._configureCompoundBindings(note, node);
+}
+},
+_configureTemplateContent: function (note, node) {
+if (note.templateContent) {
+node._content = note.templateContent;
+}
+},
+_configureCompoundBindings: function (note, node) {
+var bindings = note.bindings;
+for (var i = 0; i &lt; bindings.length; i++) {
+var binding = bindings[i];
+if (binding.isCompound) {
+var storage = node.__compoundStorage__ || (node.__compoundStorage__ = {});
+var parts = binding.parts;
+var literals = new Array(parts.length);
+for (var j = 0; j &lt; parts.length; j++) {
+literals[j] = parts[j].literal;
+}
+var name = binding.name;
+storage[name] = literals;
+if (binding.literal &amp;&amp; binding.kind == &#039;property&#039;) {
+if (node._configValue) {
+node._configValue(name, binding.literal);
+} else {
+node[name] = binding.literal;
+}
+}
+}
+}
+},
+_marshalIdNodes: function () {
+this.$ = {};
+for (var i = 0, l = this._notes.length, a; i &lt; l &amp;&amp; (a = this._notes[i]); i++) {
+if (a.id) {
+this.$[a.id] = this._findAnnotatedNode(this.root, a);
+}
+}
+},
+_marshalAnnotatedNodes: function () {
+if (this._notes &amp;&amp; this._notes.length) {
+var r = new Array(this._notes.length);
+for (var i = 0; i &lt; this._notes.length; i++) {
+r[i] = this._findAnnotatedNode(this.root, this._notes[i]);
+}
+this._nodes = r;
+}
+},
+_marshalAnnotatedListeners: function () {
+for (var i = 0, l = this._notes.length, a; i &lt; l &amp;&amp; (a = this._notes[i]); i++) {
+if (a.events &amp;&amp; a.events.length) {
+var node = this._findAnnotatedNode(this.root, a);
+for (var j = 0, e$ = a.events, e; j &lt; e$.length &amp;&amp; (e = e$[j]); j++) {
+this.listen(node, e.name, e.value);
+}
+}
+}
+}
+});Polymer.Base._addFeature({
+listeners: {},
+_listenListeners: function (listeners) {
+var node, name, eventName;
+for (eventName in listeners) {
+if (eventName.indexOf(&#039;.&#039;) &lt; 0) {
+node = this;
+name = eventName;
+} else {
+name = eventName.split(&#039;.&#039;);
+node = this.$[name[0]];
+name = name[1];
+}
+this.listen(node, name, listeners[eventName]);
+}
+},
+listen: function (node, eventName, methodName) {
+var handler = this._recallEventHandler(this, eventName, node, methodName);
+if (!handler) {
+handler = this._createEventHandler(node, eventName, methodName);
+}
+if (handler._listening) {
+return;
+}
+this._listen(node, eventName, handler);
+handler._listening = true;
+},
+_boundListenerKey: function (eventName, methodName) {
+return eventName + &#039;:&#039; + methodName;
+},
+_recordEventHandler: function (host, eventName, target, methodName, handler) {
+var hbl = host.__boundListeners;
+if (!hbl) {
+hbl = host.__boundListeners = new WeakMap();
+}
+var bl = hbl.get(target);
+if (!bl) {
+bl = {};
+hbl.set(target, bl);
+}
+var key = this._boundListenerKey(eventName, methodName);
+bl[key] = handler;
+},
+_recallEventHandler: function (host, eventName, target, methodName) {
+var hbl = host.__boundListeners;
+if (!hbl) {
+return;
+}
+var bl = hbl.get(target);
+if (!bl) {
+return;
+}
+var key = this._boundListenerKey(eventName, methodName);
+return bl[key];
+},
+_createEventHandler: function (node, eventName, methodName) {
+var host = this;
+var handler = function (e) {
+if (host[methodName]) {
+host[methodName](e, e.detail);
+} else {
+host._warn(host._logf(&#039;_createEventHandler&#039;, &#039;listener method `&#039; + methodName + &#039;` not defined&#039;));
+}
+};
+handler._listening = false;
+this._recordEventHandler(host, eventName, node, methodName, handler);
+return handler;
+},
+unlisten: function (node, eventName, methodName) {
+var handler = this._recallEventHandler(this, eventName, node, methodName);
+if (handler) {
+this._unlisten(node, eventName, handler);
+handler._listening = false;
+}
+},
+_listen: function (node, eventName, handler) {
+node.addEventListener(eventName, handler);
+},
+_unlisten: function (node, eventName, handler) {
+node.removeEventListener(eventName, handler);
+}
+});(function () {
+&#039;use strict&#039;;
+var wrap = Polymer.DomApi.wrap;
+var HAS_NATIVE_TA = typeof document.head.style.touchAction === &#039;string&#039;;
+var GESTURE_KEY = &#039;__polymerGestures&#039;;
+var HANDLED_OBJ = &#039;__polymerGesturesHandled&#039;;
+var TOUCH_ACTION = &#039;__polymerGesturesTouchAction&#039;;
+var TAP_DISTANCE = 25;
+var TRACK_DISTANCE = 5;
+var TRACK_LENGTH = 2;
+var MOUSE_TIMEOUT = 2500;
+var MOUSE_EVENTS = [
+&#039;mousedown&#039;,
+&#039;mousemove&#039;,
+&#039;mouseup&#039;,
+&#039;click&#039;
+];
+var MOUSE_WHICH_TO_BUTTONS = [
+0,
+1,
+4,
+2
+];
+var MOUSE_HAS_BUTTONS = function () {
+try {
+return new MouseEvent(&#039;test&#039;, { buttons: 1 }).buttons === 1;
+} catch (e) {
+return false;
+}
+}();
+var IS_TOUCH_ONLY = navigator.userAgent.match(/iP(?:[oa]d|hone)|Android/);
+var mouseCanceller = function (mouseEvent) {
+var sc = mouseEvent.sourceCapabilities;
+if (sc &amp;&amp; !sc.firesTouchEvents) {
+return;
+}
+mouseEvent[HANDLED_OBJ] = { skip: true };
+if (mouseEvent.type === &#039;click&#039;) {
+var path = Polymer.dom(mouseEvent).path;
+for (var i = 0; i &lt; path.length; i++) {
+if (path[i] === POINTERSTATE.mouse.target) {
+return;
+}
+}
+mouseEvent.preventDefault();
+mouseEvent.stopPropagation();
+}
+};
+function setupTeardownMouseCanceller(setup) {
+var events = IS_TOUCH_ONLY ? [&#039;click&#039;] : MOUSE_EVENTS;
+for (var i = 0, en; i &lt; events.length; i++) {
+en = events[i];
+if (setup) {
+document.addEventListener(en, mouseCanceller, true);
+} else {
+document.removeEventListener(en, mouseCanceller, true);
+}
+}
+}
+function ignoreMouse() {
+if (!POINTERSTATE.mouse.mouseIgnoreJob) {
+setupTeardownMouseCanceller(true);
+}
+var unset = function () {
+setupTeardownMouseCanceller();
+POINTERSTATE.mouse.target = null;
+POINTERSTATE.mouse.mouseIgnoreJob = null;
+};
+POINTERSTATE.mouse.mouseIgnoreJob = Polymer.Debounce(POINTERSTATE.mouse.mouseIgnoreJob, unset, MOUSE_TIMEOUT);
+}
+function hasLeftMouseButton(ev) {
+var type = ev.type;
+if (MOUSE_EVENTS.indexOf(type) === -1) {
+return false;
+}
+if (type === &#039;mousemove&#039;) {
+var buttons = ev.buttons === undefined ? 1 : ev.buttons;
+if (ev instanceof window.MouseEvent &amp;&amp; !MOUSE_HAS_BUTTONS) {
+buttons = MOUSE_WHICH_TO_BUTTONS[ev.which] || 0;
+}
+return Boolean(buttons &amp; 1);
+} else {
+var button = ev.button === undefined ? 0 : ev.button;
+return button === 0;
+}
+}
+function isSyntheticClick(ev) {
+if (ev.type === &#039;click&#039;) {
+if (ev.detail === 0) {
+return true;
+}
+var t = Gestures.findOriginalTarget(ev);
+var bcr = t.getBoundingClientRect();
+var x = ev.pageX, y = ev.pageY;
+return !(x &gt;= bcr.left &amp;&amp; x &lt;= bcr.right &amp;&amp; (y &gt;= bcr.top &amp;&amp; y &lt;= bcr.bottom));
+}
+return false;
+}
+var POINTERSTATE = {
+mouse: {
+target: null,
+mouseIgnoreJob: null
+},
+touch: {
+x: 0,
+y: 0,
+id: -1,
+scrollDecided: false
+}
+};
+function firstTouchAction(ev) {
+var path = Polymer.dom(ev).path;
+var ta = &#039;auto&#039;;
+for (var i = 0, n; i &lt; path.length; i++) {
+n = path[i];
+if (n[TOUCH_ACTION]) {
+ta = n[TOUCH_ACTION];
+break;
+}
+}
+return ta;
+}
+function trackDocument(stateObj, movefn, upfn) {
+stateObj.movefn = movefn;
+stateObj.upfn = upfn;
+document.addEventListener(&#039;mousemove&#039;, movefn);
+document.addEventListener(&#039;mouseup&#039;, upfn);
+}
+function untrackDocument(stateObj) {
+document.removeEventListener(&#039;mousemove&#039;, stateObj.movefn);
+document.removeEventListener(&#039;mouseup&#039;, stateObj.upfn);
+stateObj.movefn = null;
+stateObj.upfn = null;
+}
+var Gestures = {
+gestures: {},
+recognizers: [],
+deepTargetFind: function (x, y) {
+var node = document.elementFromPoint(x, y);
+var next = node;
+while (next &amp;&amp; next.shadowRoot) {
+next = next.shadowRoot.elementFromPoint(x, y);
+if (next) {
+node = next;
+}
+}
+return node;
+},
+findOriginalTarget: function (ev) {
+if (ev.path) {
+return ev.path[0];
+}
+return ev.target;
+},
+handleNative: function (ev) {
+var handled;
+var type = ev.type;
+var node = wrap(ev.currentTarget);
+var gobj = node[GESTURE_KEY];
+if (!gobj) {
+return;
+}
+var gs = gobj[type];
+if (!gs) {
+return;
+}
+if (!ev[HANDLED_OBJ]) {
+ev[HANDLED_OBJ] = {};
+if (type.slice(0, 5) === &#039;touch&#039;) {
+var t = ev.changedTouches[0];
+if (type === &#039;touchstart&#039;) {
+if (ev.touches.length === 1) {
+POINTERSTATE.touch.id = t.identifier;
+}
+}
+if (POINTERSTATE.touch.id !== t.identifier) {
+return;
+}
+if (!HAS_NATIVE_TA) {
+if (type === &#039;touchstart&#039; || type === &#039;touchmove&#039;) {
+Gestures.handleTouchAction(ev);
+}
+}
+if (type === &#039;touchend&#039;) {
+POINTERSTATE.mouse.target = Polymer.dom(ev).rootTarget;
+ignoreMouse();
+}
+}
+}
+handled = ev[HANDLED_OBJ];
+if (handled.skip) {
+return;
+}
+var recognizers = Gestures.recognizers;
+for (var i = 0, r; i &lt; recognizers.length; i++) {
+r = recognizers[i];
+if (gs[r.name] &amp;&amp; !handled[r.name]) {
+if (r.flow &amp;&amp; r.flow.start.indexOf(ev.type) &gt; -1 &amp;&amp; r.reset) {
+r.reset();
+}
+}
+}
+for (i = 0, r; i &lt; recognizers.length; i++) {
+r = recognizers[i];
+if (gs[r.name] &amp;&amp; !handled[r.name]) {
+handled[r.name] = true;
+r[type](ev);
+}
+}
+},
+handleTouchAction: function (ev) {
+var t = ev.changedTouches[0];
+var type = ev.type;
+if (type === &#039;touchstart&#039;) {
+POINTERSTATE.touch.x = t.clientX;
+POINTERSTATE.touch.y = t.clientY;
+POINTERSTATE.touch.scrollDecided = false;
+} else if (type === &#039;touchmove&#039;) {
+if (POINTERSTATE.touch.scrollDecided) {
+return;
+}
+POINTERSTATE.touch.scrollDecided = true;
+var ta = firstTouchAction(ev);
+var prevent = false;
+var dx = Math.abs(POINTERSTATE.touch.x - t.clientX);
+var dy = Math.abs(POINTERSTATE.touch.y - t.clientY);
+if (!ev.cancelable) {
+} else if (ta === &#039;none&#039;) {
+prevent = true;
+} else if (ta === &#039;pan-x&#039;) {
+prevent = dy &gt; dx;
+} else if (ta === &#039;pan-y&#039;) {
+prevent = dx &gt; dy;
+}
+if (prevent) {
+ev.preventDefault();
+} else {
+Gestures.prevent(&#039;track&#039;);
+}
+}
+},
+add: function (node, evType, handler) {
+node = wrap(node);
+var recognizer = this.gestures[evType];
+var deps = recognizer.deps;
+var name = recognizer.name;
+var gobj = node[GESTURE_KEY];
+if (!gobj) {
+node[GESTURE_KEY] = gobj = {};
+}
+for (var i = 0, dep, gd; i &lt; deps.length; i++) {
+dep = deps[i];
+if (IS_TOUCH_ONLY &amp;&amp; MOUSE_EVENTS.indexOf(dep) &gt; -1 &amp;&amp; dep !== &#039;click&#039;) {
+continue;
+}
+gd = gobj[dep];
+if (!gd) {
+gobj[dep] = gd = { _count: 0 };
+}
+if (gd._count === 0) {
+node.addEventListener(dep, this.handleNative);
+}
+gd[name] = (gd[name] || 0) + 1;
+gd._count = (gd._count || 0) + 1;
+}
+node.addEventListener(evType, handler);
+if (recognizer.touchAction) {
+this.setTouchAction(node, recognizer.touchAction);
+}
+},
+remove: function (node, evType, handler) {
+node = wrap(node);
+var recognizer = this.gestures[evType];
+var deps = recognizer.deps;
+var name = recognizer.name;
+var gobj = node[GESTURE_KEY];
+if (gobj) {
+for (var i = 0, dep, gd; i &lt; deps.length; i++) {
+dep = deps[i];
+gd = gobj[dep];
+if (gd &amp;&amp; gd[name]) {
+gd[name] = (gd[name] || 1) - 1;
+gd._count = (gd._count || 1) - 1;
+if (gd._count === 0) {
+node.removeEventListener(dep, this.handleNative);
+}
+}
+}
+}
+node.removeEventListener(evType, handler);
+},
+register: function (recog) {
+this.recognizers.push(recog);
+for (var i = 0; i &lt; recog.emits.length; i++) {
+this.gestures[recog.emits[i]] = recog;
+}
+},
+findRecognizerByEvent: function (evName) {
+for (var i = 0, r; i &lt; this.recognizers.length; i++) {
+r = this.recognizers[i];
+for (var j = 0, n; j &lt; r.emits.length; j++) {
+n = r.emits[j];
+if (n === evName) {
+return r;
+}
+}
+}
+return null;
+},
+setTouchAction: function (node, value) {
+if (HAS_NATIVE_TA) {
+node.style.touchAction = value;
+}
+node[TOUCH_ACTION] = value;
+},
+fire: function (target, type, detail) {
+var ev = Polymer.Base.fire(type, detail, {
+node: target,
+bubbles: true,
+cancelable: true
+});
+if (ev.defaultPrevented) {
+var preventer = detail.preventer || detail.sourceEvent;
+if (preventer &amp;&amp; preventer.preventDefault) {
+preventer.preventDefault();
+}
+}
+},
+prevent: function (evName) {
+var recognizer = this.findRecognizerByEvent(evName);
+if (recognizer.info) {
+recognizer.info.prevent = true;
+}
+},
+resetMouseCanceller: function () {
+if (POINTERSTATE.mouse.mouseIgnoreJob) {
+POINTERSTATE.mouse.mouseIgnoreJob.complete();
+}
+}
+};
+Gestures.register({
+name: &#039;downup&#039;,
+deps: [
+&#039;mousedown&#039;,
+&#039;touchstart&#039;,
+&#039;touchend&#039;
+],
+flow: {
+start: [
+&#039;mousedown&#039;,
+&#039;touchstart&#039;
+],
+end: [
+&#039;mouseup&#039;,
+&#039;touchend&#039;
+]
+},
+emits: [
+&#039;down&#039;,
+&#039;up&#039;
+],
+info: {
+movefn: null,
+upfn: null
+},
+reset: function () {
+untrackDocument(this.info);
+},
+mousedown: function (e) {
+if (!hasLeftMouseButton(e)) {
+return;
+}
+var t = Gestures.findOriginalTarget(e);
+var self = this;
+var movefn = function movefn(e) {
+if (!hasLeftMouseButton(e)) {
+self.fire(&#039;up&#039;, t, e);
+untrackDocument(self.info);
+}
+};
+var upfn = function upfn(e) {
+if (hasLeftMouseButton(e)) {
+self.fire(&#039;up&#039;, t, e);
+}
+untrackDocument(self.info);
+};
+trackDocument(this.info, movefn, upfn);
+this.fire(&#039;down&#039;, t, e);
+},
+touchstart: function (e) {
+this.fire(&#039;down&#039;, Gestures.findOriginalTarget(e), e.changedTouches[0], e);
+},
+touchend: function (e) {
+this.fire(&#039;up&#039;, Gestures.findOriginalTarget(e), e.changedTouches[0], e);
+},
+fire: function (type, target, event, preventer) {
+Gestures.fire(target, type, {
+x: event.clientX,
+y: event.clientY,
+sourceEvent: event,
+preventer: preventer,
+prevent: function (e) {
+return Gestures.prevent(e);
+}
+});
+}
+});
+Gestures.register({
+name: &#039;track&#039;,
+touchAction: &#039;none&#039;,
+deps: [
+&#039;mousedown&#039;,
+&#039;touchstart&#039;,
+&#039;touchmove&#039;,
+&#039;touchend&#039;
+],
+flow: {
+start: [
+&#039;mousedown&#039;,
+&#039;touchstart&#039;
+],
+end: [
+&#039;mouseup&#039;,
+&#039;touchend&#039;
+]
+},
+emits: [&#039;track&#039;],
+info: {
+x: 0,
+y: 0,
+state: &#039;start&#039;,
+started: false,
+moves: [],
+addMove: function (move) {
+if (this.moves.length &gt; TRACK_LENGTH) {
+this.moves.shift();
+}
+this.moves.push(move);
+},
+movefn: null,
+upfn: null,
+prevent: false
+},
+reset: function () {
+this.info.state = &#039;start&#039;;
+this.info.started = false;
+this.info.moves = [];
+this.info.x = 0;
+this.info.y = 0;
+this.info.prevent = false;
+untrackDocument(this.info);
+},
+hasMovedEnough: function (x, y) {
+if (this.info.prevent) {
+return false;
+}
+if (this.info.started) {
+return true;
+}
+var dx = Math.abs(this.info.x - x);
+var dy = Math.abs(this.info.y - y);
+return dx &gt;= TRACK_DISTANCE || dy &gt;= TRACK_DISTANCE;
+},
+mousedown: function (e) {
+if (!hasLeftMouseButton(e)) {
+return;
+}
+var t = Gestures.findOriginalTarget(e);
+var self = this;
+var movefn = function movefn(e) {
+var x = e.clientX, y = e.clientY;
+if (self.hasMovedEnough(x, y)) {
+self.info.state = self.info.started ? e.type === &#039;mouseup&#039; ? &#039;end&#039; : &#039;track&#039; : &#039;start&#039;;
+if (self.info.state === &#039;start&#039;) {
+Gestures.prevent(&#039;tap&#039;);
+}
+self.info.addMove({
+x: x,
+y: y
+});
+if (!hasLeftMouseButton(e)) {
+self.info.state = &#039;end&#039;;
+untrackDocument(self.info);
+}
+self.fire(t, e);
+self.info.started = true;
+}
+};
+var upfn = function upfn(e) {
+if (self.info.started) {
+movefn(e);
+}
+untrackDocument(self.info);
+};
+trackDocument(this.info, movefn, upfn);
+this.info.x = e.clientX;
+this.info.y = e.clientY;
+},
+touchstart: function (e) {
+var ct = e.changedTouches[0];
+this.info.x = ct.clientX;
+this.info.y = ct.clientY;
+},
+touchmove: function (e) {
+var t = Gestures.findOriginalTarget(e);
+var ct = e.changedTouches[0];
+var x = ct.clientX, y = ct.clientY;
+if (this.hasMovedEnough(x, y)) {
+if (this.info.state === &#039;start&#039;) {
+Gestures.prevent(&#039;tap&#039;);
+}
+this.info.addMove({
+x: x,
+y: y
+});
+this.fire(t, ct);
+this.info.state = &#039;track&#039;;
+this.info.started = true;
+}
+},
+touchend: function (e) {
+var t = Gestures.findOriginalTarget(e);
+var ct = e.changedTouches[0];
+if (this.info.started) {
+this.info.state = &#039;end&#039;;
+this.info.addMove({
+x: ct.clientX,
+y: ct.clientY
+});
+this.fire(t, ct, e);
+}
+},
+fire: function (target, touch, preventer) {
+var secondlast = this.info.moves[this.info.moves.length - 2];
+var lastmove = this.info.moves[this.info.moves.length - 1];
+var dx = lastmove.x - this.info.x;
+var dy = lastmove.y - this.info.y;
+var ddx, ddy = 0;
+if (secondlast) {
+ddx = lastmove.x - secondlast.x;
+ddy = lastmove.y - secondlast.y;
+}
+return Gestures.fire(target, &#039;track&#039;, {
+state: this.info.state,
+x: touch.clientX,
+y: touch.clientY,
+dx: dx,
+dy: dy,
+ddx: ddx,
+ddy: ddy,
+sourceEvent: touch,
+preventer: preventer,
+hover: function () {
+return Gestures.deepTargetFind(touch.clientX, touch.clientY);
+}
+});
+}
+});
+Gestures.register({
+name: &#039;tap&#039;,
+deps: [
+&#039;mousedown&#039;,
+&#039;click&#039;,
+&#039;touchstart&#039;,
+&#039;touchend&#039;
+],
+flow: {
+start: [
+&#039;mousedown&#039;,
+&#039;touchstart&#039;
+],
+end: [
+&#039;click&#039;,
+&#039;touchend&#039;
+]
+},
+emits: [&#039;tap&#039;],
+info: {
+x: NaN,
+y: NaN,
+prevent: false
+},
+reset: function () {
+this.info.x = NaN;
+this.info.y = NaN;
+this.info.prevent = false;
+},
+save: function (e) {
+this.info.x = e.clientX;
+this.info.y = e.clientY;
+},
+mousedown: function (e) {
+if (hasLeftMouseButton(e)) {
+this.save(e);
+}
+},
+click: function (e) {
+if (hasLeftMouseButton(e)) {
+this.forward(e);
+}
+},
+touchstart: function (e) {
+this.save(e.changedTouches[0], e);
+},
+touchend: function (e) {
+this.forward(e.changedTouches[0], e);
+},
+forward: function (e, preventer) {
+var dx = Math.abs(e.clientX - this.info.x);
+var dy = Math.abs(e.clientY - this.info.y);
+var t = Gestures.findOriginalTarget(e);
+if (isNaN(dx) || isNaN(dy) || dx &lt;= TAP_DISTANCE &amp;&amp; dy &lt;= TAP_DISTANCE || isSyntheticClick(e)) {
+if (!this.info.prevent) {
+Gestures.fire(t, &#039;tap&#039;, {
+x: e.clientX,
+y: e.clientY,
+sourceEvent: e,
+preventer: preventer
+});
+}
+}
+}
+});
+var DIRECTION_MAP = {
+x: &#039;pan-x&#039;,
+y: &#039;pan-y&#039;,
+none: &#039;none&#039;,
+all: &#039;auto&#039;
+};
+Polymer.Base._addFeature({
+_setupGestures: function () {
+this.__polymerGestures = null;
+},
+_listen: function (node, eventName, handler) {
+if (Gestures.gestures[eventName]) {
+Gestures.add(node, eventName, handler);
+} else {
+node.addEventListener(eventName, handler);
+}
+},
+_unlisten: function (node, eventName, handler) {
+if (Gestures.gestures[eventName]) {
+Gestures.remove(node, eventName, handler);
+} else {
+node.removeEventListener(eventName, handler);
+}
+},
+setScrollDirection: function (direction, node) {
+node = node || this;
+Gestures.setTouchAction(node, DIRECTION_MAP[direction] || &#039;auto&#039;);
+}
+});
+Polymer.Gestures = Gestures;
+}());(function () {
+&#039;use strict&#039;;
+Polymer.Base._addFeature({
+$$: function (slctr) {
+return Polymer.dom(this.root).querySelector(slctr);
+},
+toggleClass: function (name, bool, node) {
+node = node || this;
+if (arguments.length == 1) {
+bool = !node.classList.contains(name);
+}
+if (bool) {
+Polymer.dom(node).classList.add(name);
+} else {
+Polymer.dom(node).classList.remove(name);
+}
+},
+toggleAttribute: function (name, bool, node) {
+node = node || this;
+if (arguments.length == 1) {
+bool = !node.hasAttribute(name);
+}
+if (bool) {
+Polymer.dom(node).setAttribute(name, &#039;&#039;);
+} else {
+Polymer.dom(node).removeAttribute(name);
+}
+},
+classFollows: function (name, toElement, fromElement) {
+if (fromElement) {
+Polymer.dom(fromElement).classList.remove(name);
+}
+if (toElement) {
+Polymer.dom(toElement).classList.add(name);
+}
+},
+attributeFollows: function (name, toElement, fromElement) {
+if (fromElement) {
+Polymer.dom(fromElement).removeAttribute(name);
+}
+if (toElement) {
+Polymer.dom(toElement).setAttribute(name, &#039;&#039;);
+}
+},
+getEffectiveChildNodes: function () {
+return Polymer.dom(this).getEffectiveChildNodes();
+},
+getEffectiveChildren: function () {
+var list = Polymer.dom(this).getEffectiveChildNodes();
+return list.filter(function (n) {
+return n.nodeType === Node.ELEMENT_NODE;
+});
+},
+getEffectiveTextContent: function () {
+var cn = this.getEffectiveChildNodes();
+var tc = [];
+for (var i = 0, c; c = cn[i]; i++) {
+if (c.nodeType !== Node.COMMENT_NODE) {
+tc.push(Polymer.dom(c).textContent);
+}
+}
+return tc.join(&#039;&#039;);
+},
+queryEffectiveChildren: function (slctr) {
+var e$ = Polymer.dom(this).queryDistributedElements(slctr);
+return e$ &amp;&amp; e$[0];
+},
+queryAllEffectiveChildren: function (slctr) {
+return Polymer.dom(this).queryDistributedElements(slctr);
+},
+getContentChildNodes: function (slctr) {
+var content = Polymer.dom(this.root).querySelector(slctr || &#039;content&#039;);
+return content ? Polymer.dom(content).getDistributedNodes() : [];
+},
+getContentChildren: function (slctr) {
+return this.getContentChildNodes(slctr).filter(function (n) {
+return n.nodeType === Node.ELEMENT_NODE;
+});
+},
+fire: function (type, detail, options) {
+options = options || Polymer.nob;
+var node = options.node || this;
+detail = detail === null || detail === undefined ? {} : detail;
+var bubbles = options.bubbles === undefined ? true : options.bubbles;
+var cancelable = Boolean(options.cancelable);
+var useCache = options._useCache;
+var event = this._getEvent(type, bubbles, cancelable, useCache);
+event.detail = detail;
+if (useCache) {
+this.__eventCache[type] = null;
+}
+node.dispatchEvent(event);
+if (useCache) {
+this.__eventCache[type] = event;
+}
+return event;
+},
+__eventCache: {},
+_getEvent: function (type, bubbles, cancelable, useCache) {
+var event = useCache &amp;&amp; this.__eventCache[type];
+if (!event || (event.bubbles != bubbles || event.cancelable != cancelable)) {
+event = new Event(type, {
+bubbles: Boolean(bubbles),
+cancelable: cancelable
+});
+}
+return event;
+},
+async: function (callback, waitTime) {
+var self = this;
+return Polymer.Async.run(function () {
+callback.call(self);
+}, waitTime);
+},
+cancelAsync: function (handle) {
+Polymer.Async.cancel(handle);
+},
+arrayDelete: function (path, item) {
+var index;
+if (Array.isArray(path)) {
+index = path.indexOf(item);
+if (index &gt;= 0) {
+return path.splice(index, 1);
+}
+} else {
+var arr = this._get(path);
+index = arr.indexOf(item);
+if (index &gt;= 0) {
+return this.splice(path, index, 1);
+}
+}
+},
+transform: function (transform, node) {
+node = node || this;
+node.style.webkitTransform = transform;
+node.style.transform = transform;
+},
+translate3d: function (x, y, z, node) {
+node = node || this;
+this.transform(&#039;translate3d(&#039; + x + &#039;,&#039; + y + &#039;,&#039; + z + &#039;)&#039;, node);
+},
+importHref: function (href, onload, onerror, optAsync) {
+var link = document.createElement(&#039;link&#039;);
+link.rel = &#039;import&#039;;
+link.href = href;
+var list = Polymer.Base.importHref.imported = Polymer.Base.importHref.imported || {};
+var cached = list[link.href];
+var imprt = cached || link;
+var self = this;
+if (onload) {
+var loadListener = function (e) {
+e.target.__firedLoad = true;
+e.target.removeEventListener(&#039;load&#039;, loadListener);
+return onload.call(self, e);
+};
+imprt.addEventListener(&#039;load&#039;, loadListener);
+}
+if (onerror) {
+var errorListener = function (e) {
+e.target.__firedError = true;
+e.target.removeEventListener(&#039;error&#039;, errorListener);
+return onerror.call(self, e);
+};
+imprt.addEventListener(&#039;error&#039;, errorListener);
+}
+if (cached) {
+if (cached.__firedLoad) {
+cached.dispatchEvent(new Event(&#039;load&#039;));
+}
+if (cached.__firedError) {
+cached.dispatchEvent(new Event(&#039;error&#039;));
+}
+} else {
+list[link.href] = link;
+optAsync = Boolean(optAsync);
+if (optAsync) {
+link.setAttribute(&#039;async&#039;, &#039;&#039;);
+}
+document.head.appendChild(link);
+}
+return imprt;
+},
+create: function (tag, props) {
+var elt = document.createElement(tag);
+if (props) {
+for (var n in props) {
+elt[n] = props[n];
+}
+}
+return elt;
+},
+isLightDescendant: function (node) {
+return this !== node &amp;&amp; this.contains(node) &amp;&amp; Polymer.dom(this).getOwnerRoot() === Polymer.dom(node).getOwnerRoot();
+},
+isLocalDescendant: function (node) {
+return this.root === Polymer.dom(node).getOwnerRoot();
+}
+});
+if (!Polymer.Settings.useNativeCustomElements) {
+var importHref = Polymer.Base.importHref;
+Polymer.Base.importHref = function (href, onload, onerror, optAsync) {
+CustomElements.ready = false;
+var loadFn = function (e) {
+CustomElements.upgradeDocumentTree(document);
+CustomElements.ready = true;
+if (onload) {
+return onload.call(this, e);
+}
+};
+return importHref.call(this, href, loadFn, onerror, optAsync);
+};
+}
+}());Polymer.Bind = {
+prepareModel: function (model) {
+Polymer.Base.mixin(model, this._modelApi);
+},
+_modelApi: {
+_notifyChange: function (source, event, value) {
+value = value === undefined ? this[source] : value;
+event = event || Polymer.CaseMap.camelToDashCase(source) + &#039;-changed&#039;;
+this.fire(event, { value: value }, {
+bubbles: false,
+cancelable: false,
+_useCache: true
+});
+},
+_propertySetter: function (property, value, effects, fromAbove) {
+var old = this.__data__[property];
+if (old !== value &amp;&amp; (old === old || value === value)) {
+this.__data__[property] = value;
+if (typeof value == &#039;object&#039;) {
+this._clearPath(property);
+}
+if (this._propertyChanged) {
+this._propertyChanged(property, value, old);
+}
+if (effects) {
+this._effectEffects(property, value, effects, old, fromAbove);
+}
+}
+return old;
+},
+__setProperty: function (property, value, quiet, node) {
+node = node || this;
+var effects = node._propertyEffects &amp;&amp; node._propertyEffects[property];
+if (effects) {
+node._propertySetter(property, value, effects, quiet);
+} else if (node[property] !== value) {
+node[property] = value;
+}
+},
+_effectEffects: function (property, value, effects, old, fromAbove) {
+for (var i = 0, l = effects.length, fx; i &lt; l &amp;&amp; (fx = effects[i]); i++) {
+fx.fn.call(this, property, this[property], fx.effect, old, fromAbove);
+}
+},
+_clearPath: function (path) {
+for (var prop in this.__data__) {
+if (Polymer.Path.isDescendant(path, prop)) {
+this.__data__[prop] = undefined;
+}
+}
+}
+},
+ensurePropertyEffects: function (model, property) {
+if (!model._propertyEffects) {
+model._propertyEffects = {};
+}
+var fx = model._propertyEffects[property];
+if (!fx) {
+fx = model._propertyEffects[property] = [];
+}
+return fx;
+},
+addPropertyEffect: function (model, property, kind, effect) {
+var fx = this.ensurePropertyEffects(model, property);
+var propEffect = {
+kind: kind,
+effect: effect,
+fn: Polymer.Bind[&#039;_&#039; + kind + &#039;Effect&#039;]
+};
+fx.push(propEffect);
+return propEffect;
+},
+createBindings: function (model) {
+var fx$ = model._propertyEffects;
+if (fx$) {
+for (var n in fx$) {
+var fx = fx$[n];
+fx.sort(this._sortPropertyEffects);
+this._createAccessors(model, n, fx);
+}
+}
+},
+_sortPropertyEffects: function () {
+var EFFECT_ORDER = {
+&#039;compute&#039;: 0,
+&#039;annotation&#039;: 1,
+&#039;annotatedComputation&#039;: 2,
+&#039;reflect&#039;: 3,
+&#039;notify&#039;: 4,
+&#039;observer&#039;: 5,
+&#039;complexObserver&#039;: 6,
+&#039;function&#039;: 7
+};
+return function (a, b) {
+return EFFECT_ORDER[a.kind] - EFFECT_ORDER[b.kind];
+};
+}(),
+_createAccessors: function (model, property, effects) {
+var defun = {
+get: function () {
+return this.__data__[property];
+}
+};
+var setter = function (value) {
+this._propertySetter(property, value, effects);
+};
+var info = model.getPropertyInfo &amp;&amp; model.getPropertyInfo(property);
+if (info &amp;&amp; info.readOnly) {
+if (!info.computed) {
+model[&#039;_set&#039; + this.upper(property)] = setter;
+}
+} else {
+defun.set = setter;
+}
+Object.defineProperty(model, property, defun);
+},
+upper: function (name) {
+return name[0].toUpperCase() + name.substring(1);
+},
+_addAnnotatedListener: function (model, index, property, path, event, negated) {
+if (!model._bindListeners) {
+model._bindListeners = [];
+}
+var fn = this._notedListenerFactory(property, path, Polymer.Path.isDeep(path), negated);
+var eventName = event || Polymer.CaseMap.camelToDashCase(property) + &#039;-changed&#039;;
+model._bindListeners.push({
+index: index,
+property: property,
+path: path,
+changedFn: fn,
+event: eventName
+});
+},
+_isEventBogus: function (e, target) {
+return e.path &amp;&amp; e.path[0] !== target;
+},
+_notedListenerFactory: function (property, path, isStructured, negated) {
+return function (target, value, targetPath) {
+if (targetPath) {
+var newPath = Polymer.Path.translate(property, path, targetPath);
+this._notifyPath(newPath, value);
+} else {
+value = target[property];
+if (negated) {
+value = !value;
+}
+if (!isStructured) {
+this[path] = value;
+} else {
+if (this.__data__[path] != value) {
+this.set(path, value);
+}
+}
+}
+};
+},
+prepareInstance: function (inst) {
+inst.__data__ = Object.create(null);
+},
+setupBindListeners: function (inst) {
+var b$ = inst._bindListeners;
+for (var i = 0, l = b$.length, info; i &lt; l &amp;&amp; (info = b$[i]); i++) {
+var node = inst._nodes[info.index];
+this._addNotifyListener(node, inst, info.event, info.changedFn);
+}
+},
+_addNotifyListener: function (element, context, event, changedFn) {
+element.addEventListener(event, function (e) {
+return context._notifyListener(changedFn, e);
+});
+}
+};Polymer.Base.extend(Polymer.Bind, {
+_shouldAddListener: function (effect) {
+return effect.name &amp;&amp; effect.kind != &#039;attribute&#039; &amp;&amp; effect.kind != &#039;text&#039; &amp;&amp; !effect.isCompound &amp;&amp; effect.parts[0].mode === &#039;{&#039;;
+},
+_annotationEffect: function (source, value, effect) {
+if (source != effect.value) {
+value = this._get(effect.value);
+this.__data__[effect.value] = value;
+}
+this._applyEffectValue(effect, value);
+},
+_reflectEffect: function (source, value, effect) {
+this.reflectPropertyToAttribute(source, effect.attribute, value);
+},
+_notifyEffect: function (source, value, effect, old, fromAbove) {
+if (!fromAbove) {
+this._notifyChange(source, effect.event, value);
+}
+},
+_functionEffect: function (source, value, fn, old, fromAbove) {
+fn.call(this, source, value, old, fromAbove);
+},
+_observerEffect: function (source, value, effect, old) {
+var fn = this[effect.method];
+if (fn) {
+fn.call(this, value, old);
+} else {
+this._warn(this._logf(&#039;_observerEffect&#039;, &#039;observer method `&#039; + effect.method + &#039;` not defined&#039;));
+}
+},
+_complexObserverEffect: function (source, value, effect) {
+var fn = this[effect.method];
+if (fn) {
+var args = Polymer.Bind._marshalArgs(this.__data__, effect, source, value);
+if (args) {
+fn.apply(this, args);
+}
+} else if (effect.dynamicFn) {
+} else {
+this._warn(this._logf(&#039;_complexObserverEffect&#039;, &#039;observer method `&#039; + effect.method + &#039;` not defined&#039;));
+}
+},
+_computeEffect: function (source, value, effect) {
+var fn = this[effect.method];
+if (fn) {
+var args = Polymer.Bind._marshalArgs(this.__data__, effect, source, value);
+if (args) {
+var computedvalue = fn.apply(this, args);
+this.__setProperty(effect.name, computedvalue);
+}
+} else if (effect.dynamicFn) {
+} else {
+this._warn(this._logf(&#039;_computeEffect&#039;, &#039;compute method `&#039; + effect.method + &#039;` not defined&#039;));
+}
+},
+_annotatedComputationEffect: function (source, value, effect) {
+var computedHost = this._rootDataHost || this;
+var fn = computedHost[effect.method];
+if (fn) {
+var args = Polymer.Bind._marshalArgs(this.__data__, effect, source, value);
+if (args) {
+var computedvalue = fn.apply(computedHost, args);
+this._applyEffectValue(effect, computedvalue);
+}
+} else if (effect.dynamicFn) {
+} else {
+computedHost._warn(computedHost._logf(&#039;_annotatedComputationEffect&#039;, &#039;compute method `&#039; + effect.method + &#039;` not defined&#039;));
+}
+},
+_marshalArgs: function (model, effect, path, value) {
+var values = [];
+var args = effect.args;
+var bailoutEarly = args.length &gt; 1 || effect.dynamicFn;
+for (var i = 0, l = args.length; i &lt; l; i++) {
+var arg = args[i];
+var name = arg.name;
+var v;
+if (arg.literal) {
+v = arg.value;
+} else if (path === name) {
+v = value;
+} else {
+v = model[name];
+if (v === undefined &amp;&amp; arg.structured) {
+v = Polymer.Base._get(name, model);
+}
+}
+if (bailoutEarly &amp;&amp; v === undefined) {
+return;
+}
+if (arg.wildcard) {
+var matches = Polymer.Path.isAncestor(path, name);
+values[i] = {
+path: matches ? path : name,
+value: matches ? value : v,
+base: v
+};
+} else {
+values[i] = v;
+}
+}
+return values;
+}
+});Polymer.Base._addFeature({
+_addPropertyEffect: function (property, kind, effect) {
+var prop = Polymer.Bind.addPropertyEffect(this, property, kind, effect);
+prop.pathFn = this[&#039;_&#039; + prop.kind + &#039;PathEffect&#039;];
+},
+_prepEffects: function () {
+Polymer.Bind.prepareModel(this);
+this._addAnnotationEffects(this._notes);
+},
+_prepBindings: function () {
+Polymer.Bind.createBindings(this);
+},
+_addPropertyEffects: function (properties) {
+if (properties) {
+for (var p in properties) {
+var prop = properties[p];
+if (prop.observer) {
+this._addObserverEffect(p, prop.observer);
+}
+if (prop.computed) {
+prop.readOnly = true;
+this._addComputedEffect(p, prop.computed);
+}
+if (prop.notify) {
+this._addPropertyEffect(p, &#039;notify&#039;, { event: Polymer.CaseMap.camelToDashCase(p) + &#039;-changed&#039; });
+}
+if (prop.reflectToAttribute) {
+var attr = Polymer.CaseMap.camelToDashCase(p);
+if (attr[0] === &#039;-&#039;) {
+this._warn(this._logf(&#039;_addPropertyEffects&#039;, &#039;Property &#039; + p + &#039; cannot be reflected to attribute &#039; + attr + &#039; because &quot;-&quot; is not a valid starting attribute name. Use a lowercase first letter for the property instead.&#039;));
+} else {
+this._addPropertyEffect(p, &#039;reflect&#039;, { attribute: attr });
+}
+}
+if (prop.readOnly) {
+Polymer.Bind.ensurePropertyEffects(this, p);
+}
+}
+}
+},
+_addComputedEffect: function (name, expression) {
+var sig = this._parseMethod(expression);
+var dynamicFn = sig.dynamicFn;
+for (var i = 0, arg; i &lt; sig.args.length &amp;&amp; (arg = sig.args[i]); i++) {
+this._addPropertyEffect(arg.model, &#039;compute&#039;, {
+method: sig.method,
+args: sig.args,
+trigger: arg,
+name: name,
+dynamicFn: dynamicFn
+});
+}
+if (dynamicFn) {
+this._addPropertyEffect(sig.method, &#039;compute&#039;, {
+method: sig.method,
+args: sig.args,
+trigger: null,
+name: name,
+dynamicFn: dynamicFn
+});
+}
+},
+_addObserverEffect: function (property, observer) {
+this._addPropertyEffect(property, &#039;observer&#039;, {
+method: observer,
+property: property
+});
+},
+_addComplexObserverEffects: function (observers) {
+if (observers) {
+for (var i = 0, o; i &lt; observers.length &amp;&amp; (o = observers[i]); i++) {
+this._addComplexObserverEffect(o);
+}
+}
+},
+_addComplexObserverEffect: function (observer) {
+var sig = this._parseMethod(observer);
+if (!sig) {
+throw new Error(&#039;Malformed observer expression \&#039;&#039; + observer + &#039;\&#039;&#039;);
+}
+var dynamicFn = sig.dynamicFn;
+for (var i = 0, arg; i &lt; sig.args.length &amp;&amp; (arg = sig.args[i]); i++) {
+this._addPropertyEffect(arg.model, &#039;complexObserver&#039;, {
+method: sig.method,
+args: sig.args,
+trigger: arg,
+dynamicFn: dynamicFn
+});
+}
+if (dynamicFn) {
+this._addPropertyEffect(sig.method, &#039;complexObserver&#039;, {
+method: sig.method,
+args: sig.args,
+trigger: null,
+dynamicFn: dynamicFn
+});
+}
+},
+_addAnnotationEffects: function (notes) {
+for (var i = 0, note; i &lt; notes.length &amp;&amp; (note = notes[i]); i++) {
+var b$ = note.bindings;
+for (var j = 0, binding; j &lt; b$.length &amp;&amp; (binding = b$[j]); j++) {
+this._addAnnotationEffect(binding, i);
+}
+}
+},
+_addAnnotationEffect: function (note, index) {
+if (Polymer.Bind._shouldAddListener(note)) {
+Polymer.Bind._addAnnotatedListener(this, index, note.name, note.parts[0].value, note.parts[0].event, note.parts[0].negate);
+}
+for (var i = 0; i &lt; note.parts.length; i++) {
+var part = note.parts[i];
+if (part.signature) {
+this._addAnnotatedComputationEffect(note, part, index);
+} else if (!part.literal) {
+if (note.kind === &#039;attribute&#039; &amp;&amp; note.name[0] === &#039;-&#039;) {
+this._warn(this._logf(&#039;_addAnnotationEffect&#039;, &#039;Cannot set attribute &#039; + note.name + &#039; because &quot;-&quot; is not a valid attribute starting character&#039;));
+} else {
+this._addPropertyEffect(part.model, &#039;annotation&#039;, {
+kind: note.kind,
+index: index,
+name: note.name,
+propertyName: note.propertyName,
+value: part.value,
+isCompound: note.isCompound,
+compoundIndex: part.compoundIndex,
+event: part.event,
+customEvent: part.customEvent,
+negate: part.negate
+});
+}
+}
+}
+},
+_addAnnotatedComputationEffect: function (note, part, index) {
+var sig = part.signature;
+if (sig.static) {
+this.__addAnnotatedComputationEffect(&#039;__static__&#039;, index, note, part, null);
+} else {
+for (var i = 0, arg; i &lt; sig.args.length &amp;&amp; (arg = sig.args[i]); i++) {
+if (!arg.literal) {
+this.__addAnnotatedComputationEffect(arg.model, index, note, part, arg);
+}
+}
+if (sig.dynamicFn) {
+this.__addAnnotatedComputationEffect(sig.method, index, note, part, null);
+}
+}
+},
+__addAnnotatedComputationEffect: function (property, index, note, part, trigger) {
+this._addPropertyEffect(property, &#039;annotatedComputation&#039;, {
+index: index,
+isCompound: note.isCompound,
+compoundIndex: part.compoundIndex,
+kind: note.kind,
+name: note.name,
+negate: part.negate,
+method: part.signature.method,
+args: part.signature.args,
+trigger: trigger,
+dynamicFn: part.signature.dynamicFn
+});
+},
+_parseMethod: function (expression) {
+var m = expression.match(/([^\s]+?)\(([\s\S]*)\)/);
+if (m) {
+var sig = {
+method: m[1],
+static: true
+};
+if (this.getPropertyInfo(sig.method) !== Polymer.nob) {
+sig.static = false;
+sig.dynamicFn = true;
+}
+if (m[2].trim()) {
+var args = m[2].replace(/\\,/g, &#039;&amp;comma;&#039;).split(&#039;,&#039;);
+return this._parseArgs(args, sig);
+} else {
+sig.args = Polymer.nar;
+return sig;
+}
+}
+},
+_parseArgs: function (argList, sig) {
+sig.args = argList.map(function (rawArg) {
+var arg = this._parseArg(rawArg);
+if (!arg.literal) {
+sig.static = false;
+}
+return arg;
+}, this);
+return sig;
+},
+_parseArg: function (rawArg) {
+var arg = rawArg.trim().replace(/&amp;comma;/g, &#039;,&#039;).replace(/\\(.)/g, &#039;$1&#039;);
+var a = { name: arg };
+var fc = arg[0];
+if (fc === &#039;-&#039;) {
+fc = arg[1];
+}
+if (fc &gt;= &#039;0&#039; &amp;&amp; fc &lt;= &#039;9&#039;) {
+fc = &#039;#&#039;;
+}
+switch (fc) {
+case &#039;\&#039;&#039;:
+case &#039;&quot;&#039;:
+a.value = arg.slice(1, -1);
+a.literal = true;
+break;
+case &#039;#&#039;:
+a.value = Number(arg);
+a.literal = true;
+break;
+}
+if (!a.literal) {
+a.model = Polymer.Path.root(arg);
+a.structured = Polymer.Path.isDeep(arg);
+if (a.structured) {
+a.wildcard = arg.slice(-2) == &#039;.*&#039;;
+if (a.wildcard) {
+a.name = arg.slice(0, -2);
+}
+}
+}
+return a;
+},
+_marshalInstanceEffects: function () {
+Polymer.Bind.prepareInstance(this);
+if (this._bindListeners) {
+Polymer.Bind.setupBindListeners(this);
+}
+},
+_applyEffectValue: function (info, value) {
+var node = this._nodes[info.index];
+var property = info.name;
+value = this._computeFinalAnnotationValue(node, property, value, info);
+if (info.kind == &#039;attribute&#039;) {
+this.serializeValueToAttribute(value, property, node);
+} else {
+var pinfo = node._propertyInfo &amp;&amp; node._propertyInfo[property];
+if (pinfo &amp;&amp; pinfo.readOnly) {
+return;
+}
+this.__setProperty(property, value, false, node);
+}
+},
+_computeFinalAnnotationValue: function (node, property, value, info) {
+if (info.negate) {
+value = !value;
+}
+if (info.isCompound) {
+var storage = node.__compoundStorage__[property];
+storage[info.compoundIndex] = value;
+value = storage.join(&#039;&#039;);
+}
+if (info.kind !== &#039;attribute&#039;) {
+if (property === &#039;className&#039;) {
+value = this._scopeElementClass(node, value);
+}
+if (property === &#039;textContent&#039; || node.localName == &#039;input&#039; &amp;&amp; property == &#039;value&#039;) {
+value = value == undefined ? &#039;&#039; : value;
+}
+}
+return value;
+},
+_executeStaticEffects: function () {
+if (this._propertyEffects &amp;&amp; this._propertyEffects.__static__) {
+this._effectEffects(&#039;__static__&#039;, null, this._propertyEffects.__static__);
+}
+}
+});(function () {
+var usePolyfillProto = Polymer.Settings.usePolyfillProto;
+Polymer.Base._addFeature({
+_setupConfigure: function (initialConfig) {
+this._config = {};
+this._handlers = [];
+this._aboveConfig = null;
+if (initialConfig) {
+for (var i in initialConfig) {
+if (initialConfig[i] !== undefined) {
+this._config[i] = initialConfig[i];
+}
+}
+}
+},
+_marshalAttributes: function () {
+this._takeAttributesToModel(this._config);
+},
+_attributeChangedImpl: function (name) {
+var model = this._clientsReadied ? this : this._config;
+this._setAttributeToProperty(model, name);
+},
+_configValue: function (name, value) {
+var info = this._propertyInfo[name];
+if (!info || !info.readOnly) {
+this._config[name] = value;
+}
+},
+_beforeClientsReady: function () {
+this._configure();
+},
+_configure: function () {
+this._configureAnnotationReferences();
+this._configureInstanceProperties();
+this._aboveConfig = this.mixin({}, this._config);
+var config = {};
+for (var i = 0; i &lt; this.behaviors.length; i++) {
+this._configureProperties(this.behaviors[i].properties, config);
+}
+this._configureProperties(this.properties, config);
+this.mixin(config, this._aboveConfig);
+this._config = config;
+if (this._clients &amp;&amp; this._clients.length) {
+this._distributeConfig(this._config);
+}
+},
+_configureInstanceProperties: function () {
+for (var i in this._propertyEffects) {
+if (!usePolyfillProto &amp;&amp; this.hasOwnProperty(i)) {
+this._configValue(i, this[i]);
+delete this[i];
+}
+}
+},
+_configureProperties: function (properties, config) {
+for (var i in properties) {
+var c = properties[i];
+if (c.value !== undefined) {
+var value = c.value;
+if (typeof value == &#039;function&#039;) {
+value = value.call(this, this._config);
+}
+config[i] = value;
+}
+}
+},
+_distributeConfig: function (config) {
+var fx$ = this._propertyEffects;
+if (fx$) {
+for (var p in config) {
+var fx = fx$[p];
+if (fx) {
+for (var i = 0, l = fx.length, x; i &lt; l &amp;&amp; (x = fx[i]); i++) {
+if (x.kind === &#039;annotation&#039;) {
+var node = this._nodes[x.effect.index];
+var name = x.effect.propertyName;
+var isAttr = x.effect.kind == &#039;attribute&#039;;
+var hasEffect = node._propertyEffects &amp;&amp; node._propertyEffects[name];
+if (node._configValue &amp;&amp; (hasEffect || !isAttr)) {
+var value = p === x.effect.value ? config[p] : this._get(x.effect.value, config);
+value = this._computeFinalAnnotationValue(node, name, value, x.effect);
+if (isAttr) {
+value = node.deserialize(this.serialize(value), node._propertyInfo[name].type);
+}
+node._configValue(name, value);
+}
+}
+}
+}
+}
+}
+},
+_afterClientsReady: function () {
+this._executeStaticEffects();
+this._applyConfig(this._config, this._aboveConfig);
+this._flushHandlers();
+},
+_applyConfig: function (config, aboveConfig) {
+for (var n in config) {
+if (this[n] === undefined) {
+this.__setProperty(n, config[n], n in aboveConfig);
+}
+}
+},
+_notifyListener: function (fn, e) {
+if (!Polymer.Bind._isEventBogus(e, e.target)) {
+var value, path;
+if (e.detail) {
+value = e.detail.value;
+path = e.detail.path;
+}
+if (!this._clientsReadied) {
+this._queueHandler([
+fn,
+e.target,
+value,
+path
+]);
+} else {
+return fn.call(this, e.target, value, path);
+}
+}
+},
+_queueHandler: function (args) {
+this._handlers.push(args);
+},
+_flushHandlers: function () {
+var h$ = this._handlers;
+for (var i = 0, l = h$.length, h; i &lt; l &amp;&amp; (h = h$[i]); i++) {
+h[0].call(this, h[1], h[2], h[3]);
+}
+this._handlers = [];
+}
+});
+}());(function () {
+&#039;use strict&#039;;
+var Path = Polymer.Path;
+Polymer.Base._addFeature({
+notifyPath: function (path, value, fromAbove) {
+var info = {};
+var v = this._get(path, this, info);
+if (arguments.length === 1) {
+value = v;
+}
+if (info.path) {
+this._notifyPath(info.path, value, fromAbove);
+}
+},
+_notifyPath: function (path, value, fromAbove) {
+var old = this._propertySetter(path, value);
+if (old !== value &amp;&amp; (old === old || value === value)) {
+this._pathEffector(path, value);
+if (!fromAbove) {
+this._notifyPathUp(path, value);
+}
+return true;
+}
+},
+_getPathParts: function (path) {
+if (Array.isArray(path)) {
+var parts = [];
+for (var i = 0; i &lt; path.length; i++) {
+var args = path[i].toString().split(&#039;.&#039;);
+for (var j = 0; j &lt; args.length; j++) {
+parts.push(args[j]);
+}
+}
+return parts;
+} else {
+return path.toString().split(&#039;.&#039;);
+}
+},
+set: function (path, value, root) {
+var prop = root || this;
+var parts = this._getPathParts(path);
+var array;
+var last = parts[parts.length - 1];
+if (parts.length &gt; 1) {
+for (var i = 0; i &lt; parts.length - 1; i++) {
+var part = parts[i];
+if (array &amp;&amp; part[0] == &#039;#&#039;) {
+prop = Polymer.Collection.get(array).getItem(part);
+} else {
+prop = prop[part];
+if (array &amp;&amp; parseInt(part, 10) == part) {
+parts[i] = Polymer.Collection.get(array).getKey(prop);
+}
+}
+if (!prop) {
+return;
+}
+array = Array.isArray(prop) ? prop : null;
+}
+if (array) {
+var coll = Polymer.Collection.get(array);
+var old, key;
+if (last[0] == &#039;#&#039;) {
+key = last;
+old = coll.getItem(key);
+last = array.indexOf(old);
+coll.setItem(key, value);
+} else if (parseInt(last, 10) == last) {
+old = prop[last];
+key = coll.getKey(old);
+parts[i] = key;
+coll.setItem(key, value);
+}
+}
+prop[last] = value;
+if (!root) {
+this._notifyPath(parts.join(&#039;.&#039;), value);
+}
+} else {
+prop[path] = value;
+}
+},
+get: function (path, root) {
+return this._get(path, root);
+},
+_get: function (path, root, info) {
+var prop = root || this;
+var parts = this._getPathParts(path);
+var array;
+for (var i = 0; i &lt; parts.length; i++) {
+if (!prop) {
+return;
+}
+var part = parts[i];
+if (array &amp;&amp; part[0] == &#039;#&#039;) {
+prop = Polymer.Collection.get(array).getItem(part);
+} else {
+prop = prop[part];
+if (info &amp;&amp; array &amp;&amp; parseInt(part, 10) == part) {
+parts[i] = Polymer.Collection.get(array).getKey(prop);
+}
+}
+array = Array.isArray(prop) ? prop : null;
+}
+if (info) {
+info.path = parts.join(&#039;.&#039;);
+}
+return prop;
+},
+_pathEffector: function (path, value) {
+var model = Path.root(path);
+var fx$ = this._propertyEffects &amp;&amp; this._propertyEffects[model];
+if (fx$) {
+for (var i = 0, fx; i &lt; fx$.length &amp;&amp; (fx = fx$[i]); i++) {
+var fxFn = fx.pathFn;
+if (fxFn) {
+fxFn.call(this, path, value, fx.effect);
+}
+}
+}
+if (this._boundPaths) {
+this._notifyBoundPaths(path, value);
+}
+},
+_annotationPathEffect: function (path, value, effect) {
+if (Path.matches(effect.value, false, path)) {
+Polymer.Bind._annotationEffect.call(this, path, value, effect);
+} else if (!effect.negate &amp;&amp; Path.isDescendant(effect.value, path)) {
+var node = this._nodes[effect.index];
+if (node &amp;&amp; node._notifyPath) {
+var newPath = Path.translate(effect.value, effect.name, path);
+node._notifyPath(newPath, value, true);
+}
+}
+},
+_complexObserverPathEffect: function (path, value, effect) {
+if (Path.matches(effect.trigger.name, effect.trigger.wildcard, path)) {
+Polymer.Bind._complexObserverEffect.call(this, path, value, effect);
+}
+},
+_computePathEffect: function (path, value, effect) {
+if (Path.matches(effect.trigger.name, effect.trigger.wildcard, path)) {
+Polymer.Bind._computeEffect.call(this, path, value, effect);
+}
+},
+_annotatedComputationPathEffect: function (path, value, effect) {
+if (Path.matches(effect.trigger.name, effect.trigger.wildcard, path)) {
+Polymer.Bind._annotatedComputationEffect.call(this, path, value, effect);
+}
+},
+linkPaths: function (to, from) {
+this._boundPaths = this._boundPaths || {};
+if (from) {
+this._boundPaths[to] = from;
+} else {
+this.unlinkPaths(to);
+}
+},
+unlinkPaths: function (path) {
+if (this._boundPaths) {
+delete this._boundPaths[path];
+}
+},
+_notifyBoundPaths: function (path, value) {
+for (var a in this._boundPaths) {
+var b = this._boundPaths[a];
+if (Path.isDescendant(a, path)) {
+this._notifyPath(Path.translate(a, b, path), value);
+} else if (Path.isDescendant(b, path)) {
+this._notifyPath(Path.translate(b, a, path), value);
+}
+}
+},
+_notifyPathUp: function (path, value) {
+var rootName = Path.root(path);
+var dashCaseName = Polymer.CaseMap.camelToDashCase(rootName);
+var eventName = dashCaseName + this._EVENT_CHANGED;
+this.fire(eventName, {
+path: path,
+value: value
+}, {
+bubbles: false,
+_useCache: true
+});
+},
+_EVENT_CHANGED: &#039;-changed&#039;,
+notifySplices: function (path, splices) {
+var info = {};
+var array = this._get(path, this, info);
+this._notifySplices(array, info.path, splices);
+},
+_notifySplices: function (array, path, splices) {
+var change = {
+keySplices: Polymer.Collection.applySplices(array, splices),
+indexSplices: splices
+};
+var splicesPath = path + &#039;.splices&#039;;
+this._notifyPath(splicesPath, change);
+this._notifyPath(path + &#039;.length&#039;, array.length);
+this.__data__[splicesPath] = {
+keySplices: null,
+indexSplices: null
+};
+},
+_notifySplice: function (array, path, index, added, removed) {
+this._notifySplices(array, path, [{
+index: index,
+addedCount: added,
+removed: removed,
+object: array,
+type: &#039;splice&#039;
+}]);
+},
+push: function (path) {
+var info = {};
+var array = this._get(path, this, info);
+var args = Array.prototype.slice.call(arguments, 1);
+var len = array.length;
+var ret = array.push.apply(array, args);
+if (args.length) {
+this._notifySplice(array, info.path, len, args.length, []);
+}
+return ret;
+},
+pop: function (path) {
+var info = {};
+var array = this._get(path, this, info);
+var hadLength = Boolean(array.length);
+var args = Array.prototype.slice.call(arguments, 1);
+var ret = array.pop.apply(array, args);
+if (hadLength) {
+this._notifySplice(array, info.path, array.length, 0, [ret]);
+}
+return ret;
+},
+splice: function (path, start) {
+var info = {};
+var array = this._get(path, this, info);
+if (start &lt; 0) {
+start = array.length - Math.floor(-start);
+} else {
+start = Math.floor(start);
+}
+if (!start) {
+start = 0;
+}
+var args = Array.prototype.slice.call(arguments, 1);
+var ret = array.splice.apply(array, args);
+var addedCount = Math.max(args.length - 2, 0);
+if (addedCount || ret.length) {
+this._notifySplice(array, info.path, start, addedCount, ret);
+}
+return ret;
+},
+shift: function (path) {
+var info = {};
+var array = this._get(path, this, info);
+var hadLength = Boolean(array.length);
+var args = Array.prototype.slice.call(arguments, 1);
+var ret = array.shift.apply(array, args);
+if (hadLength) {
+this._notifySplice(array, info.path, 0, 0, [ret]);
+}
+return ret;
+},
+unshift: function (path) {
+var info = {};
+var array = this._get(path, this, info);
+var args = Array.prototype.slice.call(arguments, 1);
+var ret = array.unshift.apply(array, args);
+if (args.length) {
+this._notifySplice(array, info.path, 0, args.length, []);
+}
+return ret;
+},
+prepareModelNotifyPath: function (model) {
+this.mixin(model, {
+fire: Polymer.Base.fire,
+_getEvent: Polymer.Base._getEvent,
+__eventCache: Polymer.Base.__eventCache,
+notifyPath: Polymer.Base.notifyPath,
+_get: Polymer.Base._get,
+_EVENT_CHANGED: Polymer.Base._EVENT_CHANGED,
+_notifyPath: Polymer.Base._notifyPath,
+_notifyPathUp: Polymer.Base._notifyPathUp,
+_pathEffector: Polymer.Base._pathEffector,
+_annotationPathEffect: Polymer.Base._annotationPathEffect,
+_complexObserverPathEffect: Polymer.Base._complexObserverPathEffect,
+_annotatedComputationPathEffect: Polymer.Base._annotatedComputationPathEffect,
+_computePathEffect: Polymer.Base._computePathEffect,
+_notifyBoundPaths: Polymer.Base._notifyBoundPaths,
+_getPathParts: Polymer.Base._getPathParts
+});
+}
+});
+}());Polymer.Base._addFeature({
+resolveUrl: function (url) {
+var module = Polymer.DomModule.import(this.is);
+var root = &#039;&#039;;
+if (module) {
+var assetPath = module.getAttribute(&#039;assetpath&#039;) || &#039;&#039;;
+root = Polymer.ResolveUrl.resolveUrl(assetPath, module.ownerDocument.baseURI);
+}
+return Polymer.ResolveUrl.resolveUrl(url, root);
+}
+});Polymer.CssParse = function () {
+return {
+parse: function (text) {
+text = this._clean(text);
+return this._parseCss(this._lex(text), text);
+},
+_clean: function (cssText) {
+return cssText.replace(this._rx.comments, &#039;&#039;).replace(this._rx.port, &#039;&#039;);
+},
+_lex: function (text) {
+var root = {
+start: 0,
+end: text.length
+};
+var n = root;
+for (var i = 0, l = text.length; i &lt; l; i++) {
+switch (text[i]) {
+case this.OPEN_BRACE:
+if (!n.rules) {
+n.rules = [];
+}
+var p = n;
+var previous = p.rules[p.rules.length - 1];
+n = {
+start: i + 1,
+parent: p,
+previous: previous
+};
+p.rules.push(n);
+break;
+case this.CLOSE_BRACE:
+n.end = i + 1;
+n = n.parent || root;
+break;
+}
+}
+return root;
+},
+_parseCss: function (node, text) {
+var t = text.substring(node.start, node.end - 1);
+node.parsedCssText = node.cssText = t.trim();
+if (node.parent) {
+var ss = node.previous ? node.previous.end : node.parent.start;
+t = text.substring(ss, node.start - 1);
+t = this._expandUnicodeEscapes(t);
+t = t.replace(this._rx.multipleSpaces, &#039; &#039;);
+t = t.substring(t.lastIndexOf(&#039;;&#039;) + 1);
+var s = node.parsedSelector = node.selector = t.trim();
+node.atRule = s.indexOf(this.AT_START) === 0;
+if (node.atRule) {
+if (s.indexOf(this.MEDIA_START) === 0) {
+node.type = this.types.MEDIA_RULE;
+} else if (s.match(this._rx.keyframesRule)) {
+node.type = this.types.KEYFRAMES_RULE;
+node.keyframesName = node.selector.split(this._rx.multipleSpaces).pop();
+}
+} else {
+if (s.indexOf(this.VAR_START) === 0) {
+node.type = this.types.MIXIN_RULE;
+} else {
+node.type = this.types.STYLE_RULE;
+}
+}
+}
+var r$ = node.rules;
+if (r$) {
+for (var i = 0, l = r$.length, r; i &lt; l &amp;&amp; (r = r$[i]); i++) {
+this._parseCss(r, text);
+}
+}
+return node;
+},
+_expandUnicodeEscapes: function (s) {
+return s.replace(/\\([0-9a-f]{1,6})\s/gi, function () {
+var code = arguments[1], repeat = 6 - code.length;
+while (repeat--) {
+code = &#039;0&#039; + code;
+}
+return &#039;\\&#039; + code;
+});
+},
+stringify: function (node, preserveProperties, text) {
+text = text || &#039;&#039;;
+var cssText = &#039;&#039;;
+if (node.cssText || node.rules) {
+var r$ = node.rules;
+if (r$ &amp;&amp; !this._hasMixinRules(r$)) {
+for (var i = 0, l = r$.length, r; i &lt; l &amp;&amp; (r = r$[i]); i++) {
+cssText = this.stringify(r, preserveProperties, cssText);
+}
+} else {
+cssText = preserveProperties ? node.cssText : this.removeCustomProps(node.cssText);
+cssText = cssText.trim();
+if (cssText) {
+cssText = &#039;  &#039; + cssText + &#039;\n&#039;;
+}
+}
+}
+if (cssText) {
+if (node.selector) {
+text += node.selector + &#039; &#039; + this.OPEN_BRACE + &#039;\n&#039;;
+}
+text += cssText;
+if (node.selector) {
+text += this.CLOSE_BRACE + &#039;\n\n&#039;;
+}
+}
+return text;
+},
+_hasMixinRules: function (rules) {
+return rules[0].selector.indexOf(this.VAR_START) === 0;
+},
+removeCustomProps: function (cssText) {
+cssText = this.removeCustomPropAssignment(cssText);
+return this.removeCustomPropApply(cssText);
+},
+removeCustomPropAssignment: function (cssText) {
+return cssText.replace(this._rx.customProp, &#039;&#039;).replace(this._rx.mixinProp, &#039;&#039;);
+},
+removeCustomPropApply: function (cssText) {
+return cssText.replace(this._rx.mixinApply, &#039;&#039;).replace(this._rx.varApply, &#039;&#039;);
+},
+types: {
+STYLE_RULE: 1,
+KEYFRAMES_RULE: 7,
+MEDIA_RULE: 4,
+MIXIN_RULE: 1000
+},
+OPEN_BRACE: &#039;{&#039;,
+CLOSE_BRACE: &#039;}&#039;,
+_rx: {
+comments: /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//gim,
+port: /@import[^;]*;/gim,
+customProp: /(?:^[^;\-\s}]+)?--[^;{}]*?:[^{};]*?(?:[;\n]|$)/gim,
+mixinProp: /(?:^[^;\-\s}]+)?--[^;{}]*?:[^{};]*?{[^}]*?}(?:[;\n]|$)?/gim,
+mixinApply: /@apply\s*\(?[^);]*\)?\s*(?:[;\n]|$)?/gim,
+varApply: /[^;:]*?:[^;]*?var\([^;]*\)(?:[;\n]|$)?/gim,
+keyframesRule: /^@[^\s]*keyframes/,
+multipleSpaces: /\s+/g
+},
+VAR_START: &#039;--&#039;,
+MEDIA_START: &#039;@media&#039;,
+AT_START: &#039;@&#039;
+};
+}();Polymer.StyleUtil = function () {
+var settings = Polymer.Settings;
+return {
+NATIVE_VARIABLES: Polymer.Settings.useNativeCSSProperties,
+MODULE_STYLES_SELECTOR: &#039;style, link[rel=import][type~=css], template&#039;,
+INCLUDE_ATTR: &#039;include&#039;,
+toCssText: function (rules, callback) {
+if (typeof rules === &#039;string&#039;) {
+rules = this.parser.parse(rules);
+}
+if (callback) {
+this.forEachRule(rules, callback);
+}
+return this.parser.stringify(rules, this.NATIVE_VARIABLES);
+},
+forRulesInStyles: function (styles, styleRuleCallback, keyframesRuleCallback) {
+if (styles) {
+for (var i = 0, l = styles.length, s; i &lt; l &amp;&amp; (s = styles[i]); i++) {
+this.forEachRuleInStyle(s, styleRuleCallback, keyframesRuleCallback);
+}
+}
+},
+forActiveRulesInStyles: function (styles, styleRuleCallback, keyframesRuleCallback) {
+if (styles) {
+for (var i = 0, l = styles.length, s; i &lt; l &amp;&amp; (s = styles[i]); i++) {
+this.forEachRuleInStyle(s, styleRuleCallback, keyframesRuleCallback, true);
+}
+}
+},
+rulesForStyle: function (style) {
+if (!style.__cssRules &amp;&amp; style.textContent) {
+style.__cssRules = this.parser.parse(style.textContent);
+}
+return style.__cssRules;
+},
+isKeyframesSelector: function (rule) {
+return rule.parent &amp;&amp; rule.parent.type === this.ruleTypes.KEYFRAMES_RULE;
+},
+forEachRuleInStyle: function (style, styleRuleCallback, keyframesRuleCallback, onlyActiveRules) {
+var rules = this.rulesForStyle(style);
+var styleCallback, keyframeCallback;
+if (styleRuleCallback) {
+styleCallback = function (rule) {
+styleRuleCallback(rule, style);
+};
+}
+if (keyframesRuleCallback) {
+keyframeCallback = function (rule) {
+keyframesRuleCallback(rule, style);
+};
+}
+this.forEachRule(rules, styleCallback, keyframeCallback, onlyActiveRules);
+},
+forEachRule: function (node, styleRuleCallback, keyframesRuleCallback, onlyActiveRules) {
+if (!node) {
+return;
+}
+var skipRules = false;
+if (onlyActiveRules) {
+if (node.type === this.ruleTypes.MEDIA_RULE) {
+var matchMedia = node.selector.match(this.rx.MEDIA_MATCH);
+if (matchMedia) {
+if (!window.matchMedia(matchMedia[1]).matches) {
+skipRules = true;
+}
+}
+}
+}
+if (node.type === this.ruleTypes.STYLE_RULE) {
+styleRuleCallback(node);
+} else if (keyframesRuleCallback &amp;&amp; node.type === this.ruleTypes.KEYFRAMES_RULE) {
+keyframesRuleCallback(node);
+} else if (node.type === this.ruleTypes.MIXIN_RULE) {
+skipRules = true;
+}
+var r$ = node.rules;
+if (r$ &amp;&amp; !skipRules) {
+for (var i = 0, l = r$.length, r; i &lt; l &amp;&amp; (r = r$[i]); i++) {
+this.forEachRule(r, styleRuleCallback, keyframesRuleCallback, onlyActiveRules);
+}
+}
+},
+applyCss: function (cssText, moniker, target, contextNode) {
+var style = this.createScopeStyle(cssText, moniker);
+return this.applyStyle(style, target, contextNode);
+},
+applyStyle: function (style, target, contextNode) {
+target = target || document.head;
+var after = contextNode &amp;&amp; contextNode.nextSibling || target.firstChild;
+this.__lastHeadApplyNode = style;
+return target.insertBefore(style, after);
+},
+createScopeStyle: function (cssText, moniker) {
+var style = document.createElement(&#039;style&#039;);
+if (moniker) {
+style.setAttribute(&#039;scope&#039;, moniker);
+}
+style.textContent = cssText;
+return style;
+},
+__lastHeadApplyNode: null,
+applyStylePlaceHolder: function (moniker) {
+var placeHolder = document.createComment(&#039; Shady DOM styles for &#039; + moniker + &#039; &#039;);
+var after = this.__lastHeadApplyNode ? this.__lastHeadApplyNode.nextSibling : null;
+var scope = document.head;
+scope.insertBefore(placeHolder, after || scope.firstChild);
+this.__lastHeadApplyNode = placeHolder;
+return placeHolder;
+},
+cssFromModules: function (moduleIds, warnIfNotFound) {
+var modules = moduleIds.trim().split(&#039; &#039;);
+var cssText = &#039;&#039;;
+for (var i = 0; i &lt; modules.length; i++) {
+cssText += this.cssFromModule(modules[i], warnIfNotFound);
+}
+return cssText;
+},
+cssFromModule: function (moduleId, warnIfNotFound) {
+var m = Polymer.DomModule.import(moduleId);
+if (m &amp;&amp; !m._cssText) {
+m._cssText = this.cssFromElement(m);
+}
+if (!m &amp;&amp; warnIfNotFound) {
+console.warn(&#039;Could not find style data in module named&#039;, moduleId);
+}
+return m &amp;&amp; m._cssText || &#039;&#039;;
+},
+cssFromElement: function (element) {
+var cssText = &#039;&#039;;
+var content = element.content || element;
+var e$ = Polymer.TreeApi.arrayCopy(content.querySelectorAll(this.MODULE_STYLES_SELECTOR));
+for (var i = 0, e; i &lt; e$.length; i++) {
+e = e$[i];
+if (e.localName === &#039;template&#039;) {
+if (!e.hasAttribute(&#039;preserve-content&#039;)) {
+cssText += this.cssFromElement(e);
+}
+} else {
+if (e.localName === &#039;style&#039;) {
+var include = e.getAttribute(this.INCLUDE_ATTR);
+if (include) {
+cssText += this.cssFromModules(include, true);
+}
+e = e.__appliedElement || e;
+e.parentNode.removeChild(e);
+cssText += this.resolveCss(e.textContent, element.ownerDocument);
+} else if (e.import &amp;&amp; e.import.body) {
+cssText += this.resolveCss(e.import.body.textContent, e.import);
+}
+}
+}
+return cssText;
+},
+isTargetedBuild: function (buildType) {
+return settings.useNativeShadow ? buildType === &#039;shadow&#039; : buildType === &#039;shady&#039;;
+},
+cssBuildTypeForModule: function (module) {
+var dm = Polymer.DomModule.import(module);
+if (dm) {
+return this.getCssBuildType(dm);
+}
+},
+getCssBuildType: function (element) {
+return element.getAttribute(&#039;css-build&#039;);
+},
+_findMatchingParen: function (text, start) {
+var level = 0;
+for (var i = start, l = text.length; i &lt; l; i++) {
+switch (text[i]) {
+case &#039;(&#039;:
+level++;
+break;
+case &#039;)&#039;:
+if (--level === 0) {
+return i;
+}
+break;
+}
+}
+return -1;
+},
+processVariableAndFallback: function (str, callback) {
+var start = str.indexOf(&#039;var(&#039;);
+if (start === -1) {
+return callback(str, &#039;&#039;, &#039;&#039;, &#039;&#039;);
+}
+var end = this._findMatchingParen(str, start + 3);
+var inner = str.substring(start + 4, end);
+var prefix = str.substring(0, start);
+var suffix = this.processVariableAndFallback(str.substring(end + 1), callback);
+var comma = inner.indexOf(&#039;,&#039;);
+if (comma === -1) {
+return callback(prefix, inner.trim(), &#039;&#039;, suffix);
+}
+var value = inner.substring(0, comma).trim();
+var fallback = inner.substring(comma + 1).trim();
+return callback(prefix, value, fallback, suffix);
+},
+rx: {
+VAR_ASSIGN: /(?:^|[;\s{]\s*)(--[\w-]*?)\s*:\s*(?:([^;{]*)|{([^}]*)})(?:(?=[;\s}])|$)/gi,
+MIXIN_MATCH: /(?:^|\W+)@apply\s*\(?([^);\n]*)\)?/gi,
+VAR_CONSUMED: /(--[\w-]+)\s*([:,;)]|$)/gi,
+ANIMATION_MATCH: /(animation\s*:)|(animation-name\s*:)/,
+MEDIA_MATCH: /@media[^(]*(\([^)]*\))/,
+IS_VAR: /^--/,
+BRACKETED: /\{[^}]*\}/g,
+HOST_PREFIX: &#039;(?:^|[^.#[:])&#039;,
+HOST_SUFFIX: &#039;($|[.:[\\s&gt;+~])&#039;
+},
+resolveCss: Polymer.ResolveUrl.resolveCss,
+parser: Polymer.CssParse,
+ruleTypes: Polymer.CssParse.types
+};
+}();Polymer.StyleTransformer = function () {
+var styleUtil = Polymer.StyleUtil;
+var settings = Polymer.Settings;
+var api = {
+dom: function (node, scope, useAttr, shouldRemoveScope) {
+this._transformDom(node, scope || &#039;&#039;, useAttr, shouldRemoveScope);
+},
+_transformDom: function (node, selector, useAttr, shouldRemoveScope) {
+if (node.setAttribute) {
+this.element(node, selector, useAttr, shouldRemoveScope);
+}
+var c$ = Polymer.dom(node).childNodes;
+for (var i = 0; i &lt; c$.length; i++) {
+this._transformDom(c$[i], selector, useAttr, shouldRemoveScope);
+}
+},
+element: function (element, scope, useAttr, shouldRemoveScope) {
+if (useAttr) {
+if (shouldRemoveScope) {
+element.removeAttribute(SCOPE_NAME);
+} else {
+element.setAttribute(SCOPE_NAME, scope);
+}
+} else {
+if (scope) {
+if (element.classList) {
+if (shouldRemoveScope) {
+element.classList.remove(SCOPE_NAME);
+element.classList.remove(scope);
+} else {
+element.classList.add(SCOPE_NAME);
+element.classList.add(scope);
+}
+} else if (element.getAttribute) {
+var c = element.getAttribute(CLASS);
+if (shouldRemoveScope) {
+if (c) {
+element.setAttribute(CLASS, c.replace(SCOPE_NAME, &#039;&#039;).replace(scope, &#039;&#039;));
+}
+} else {
+element.setAttribute(CLASS, (c ? c + &#039; &#039; : &#039;&#039;) + SCOPE_NAME + &#039; &#039; + scope);
+}
+}
+}
+}
+},
+elementStyles: function (element, callback) {
+var styles = element._styles;
+var cssText = &#039;&#039;;
+var cssBuildType = element.__cssBuild;
+var passthrough = settings.useNativeShadow || cssBuildType === &#039;shady&#039;;
+var cb;
+if (passthrough) {
+var self = this;
+cb = function (rule) {
+rule.selector = self._slottedToContent(rule.selector);
+rule.selector = rule.selector.replace(ROOT, &#039;:host &gt; *&#039;);
+if (callback) {
+callback(rule);
+}
+};
+}
+for (var i = 0, l = styles.length, s; i &lt; l &amp;&amp; (s = styles[i]); i++) {
+var rules = styleUtil.rulesForStyle(s);
+cssText += passthrough ? styleUtil.toCssText(rules, cb) : this.css(rules, element.is, element.extends, callback, element._scopeCssViaAttr) + &#039;\n\n&#039;;
+}
+return cssText.trim();
+},
+css: function (rules, scope, ext, callback, useAttr) {
+var hostScope = this._calcHostScope(scope, ext);
+scope = this._calcElementScope(scope, useAttr);
+var self = this;
+return styleUtil.toCssText(rules, function (rule) {
+if (!rule.isScoped) {
+self.rule(rule, scope, hostScope);
+rule.isScoped = true;
+}
+if (callback) {
+callback(rule, scope, hostScope);
+}
+});
+},
+_calcElementScope: function (scope, useAttr) {
+if (scope) {
+return useAttr ? CSS_ATTR_PREFIX + scope + CSS_ATTR_SUFFIX : CSS_CLASS_PREFIX + scope;
+} else {
+return &#039;&#039;;
+}
+},
+_calcHostScope: function (scope, ext) {
+return ext ? &#039;[is=&#039; + scope + &#039;]&#039; : scope;
+},
+rule: function (rule, scope, hostScope) {
+this._transformRule(rule, this._transformComplexSelector, scope, hostScope);
+},
+_transformRule: function (rule, transformer, scope, hostScope) {
+rule.selector = rule.transformedSelector = this._transformRuleCss(rule, transformer, scope, hostScope);
+},
+_transformRuleCss: function (rule, transformer, scope, hostScope) {
+var p$ = rule.selector.split(COMPLEX_SELECTOR_SEP);
+if (!styleUtil.isKeyframesSelector(rule)) {
+for (var i = 0, l = p$.length, p; i &lt; l &amp;&amp; (p = p$[i]); i++) {
+p$[i] = transformer.call(this, p, scope, hostScope);
+}
+}
+return p$.join(COMPLEX_SELECTOR_SEP);
+},
+_transformComplexSelector: function (selector, scope, hostScope) {
+var stop = false;
+var hostContext = false;
+var self = this;
+selector = selector.trim();
+selector = this._slottedToContent(selector);
+selector = selector.replace(ROOT, &#039;:host &gt; *&#039;);
+selector = selector.replace(CONTENT_START, HOST + &#039; $1&#039;);
+selector = selector.replace(SIMPLE_SELECTOR_SEP, function (m, c, s) {
+if (!stop) {
+var info = self._transformCompoundSelector(s, c, scope, hostScope);
+stop = stop || info.stop;
+hostContext = hostContext || info.hostContext;
+c = info.combinator;
+s = info.value;
+} else {
+s = s.replace(SCOPE_JUMP, &#039; &#039;);
+}
+return c + s;
+});
+if (hostContext) {
+selector = selector.replace(HOST_CONTEXT_PAREN, function (m, pre, paren, post) {
+return pre + paren + &#039; &#039; + hostScope + post + COMPLEX_SELECTOR_SEP + &#039; &#039; + pre + hostScope + paren + post;
+});
+}
+return selector;
+},
+_transformCompoundSelector: function (selector, combinator, scope, hostScope) {
+var jumpIndex = selector.search(SCOPE_JUMP);
+var hostContext = false;
+if (selector.indexOf(HOST_CONTEXT) &gt;= 0) {
+hostContext = true;
+} else if (selector.indexOf(HOST) &gt;= 0) {
+selector = this._transformHostSelector(selector, hostScope);
+} else if (jumpIndex !== 0) {
+selector = scope ? this._transformSimpleSelector(selector, scope) : selector;
+}
+if (selector.indexOf(CONTENT) &gt;= 0) {
+combinator = &#039;&#039;;
+}
+var stop;
+if (jumpIndex &gt;= 0) {
+selector = selector.replace(SCOPE_JUMP, &#039; &#039;);
+stop = true;
+}
+return {
+value: selector,
+combinator: combinator,
+stop: stop,
+hostContext: hostContext
+};
+},
+_transformSimpleSelector: function (selector, scope) {
+var p$ = selector.split(PSEUDO_PREFIX);
+p$[0] += scope;
+return p$.join(PSEUDO_PREFIX);
+},
+_transformHostSelector: function (selector, hostScope) {
+var m = selector.match(HOST_PAREN);
+var paren = m &amp;&amp; m[2].trim() || &#039;&#039;;
+if (paren) {
+if (!paren[0].match(SIMPLE_SELECTOR_PREFIX)) {
+var typeSelector = paren.split(SIMPLE_SELECTOR_PREFIX)[0];
+if (typeSelector === hostScope) {
+return paren;
+} else {
+return SELECTOR_NO_MATCH;
+}
+} else {
+return selector.replace(HOST_PAREN, function (m, host, paren) {
+return hostScope + paren;
+});
+}
+} else {
+return selector.replace(HOST, hostScope);
+}
+},
+documentRule: function (rule) {
+rule.selector = rule.parsedSelector;
+this.normalizeRootSelector(rule);
+if (!settings.useNativeShadow) {
+this._transformRule(rule, this._transformDocumentSelector);
+}
+},
+normalizeRootSelector: function (rule) {
+rule.selector = rule.selector.replace(ROOT, &#039;html&#039;);
+},
+_transformDocumentSelector: function (selector) {
+return selector.match(SCOPE_JUMP) ? this._transformComplexSelector(selector, SCOPE_DOC_SELECTOR) : this._transformSimpleSelector(selector.trim(), SCOPE_DOC_SELECTOR);
+},
+_slottedToContent: function (cssText) {
+return cssText.replace(SLOTTED_PAREN, CONTENT + &#039;&gt; $1&#039;);
+},
+SCOPE_NAME: &#039;style-scope&#039;
+};
+var SCOPE_NAME = api.SCOPE_NAME;
+var SCOPE_DOC_SELECTOR = &#039;:not([&#039; + SCOPE_NAME + &#039;])&#039; + &#039;:not(.&#039; + SCOPE_NAME + &#039;)&#039;;
+var COMPLEX_SELECTOR_SEP = &#039;,&#039;;
+var SIMPLE_SELECTOR_SEP = /(^|[\s&gt;+~]+)((?:\[.+?\]|[^\s&gt;+~=\[])+)/g;
+var SIMPLE_SELECTOR_PREFIX = /[[.:#*]/;
+var HOST = &#039;:host&#039;;
+var ROOT = &#039;:root&#039;;
+var HOST_PAREN = /(:host)(?:\(((?:\([^)(]*\)|[^)(]*)+?)\))/;
+var HOST_CONTEXT = &#039;:host-context&#039;;
+var HOST_CONTEXT_PAREN = /(.*)(?::host-context)(?:\(((?:\([^)(]*\)|[^)(]*)+?)\))(.*)/;
+var CONTENT = &#039;::content&#039;;
+var SCOPE_JUMP = /::content|::shadow|\/deep\//;
+var CSS_CLASS_PREFIX = &#039;.&#039;;
+var CSS_ATTR_PREFIX = &#039;[&#039; + SCOPE_NAME + &#039;~=&#039;;
+var CSS_ATTR_SUFFIX = &#039;]&#039;;
+var PSEUDO_PREFIX = &#039;:&#039;;
+var CLASS = &#039;class&#039;;
+var CONTENT_START = new RegExp(&#039;^(&#039; + CONTENT + &#039;)&#039;);
+var SELECTOR_NO_MATCH = &#039;should_not_match&#039;;
+var SLOTTED_PAREN = /(?:::slotted)(?:\(((?:\([^)(]*\)|[^)(]*)+?)\))/g;
+return api;
+}();Polymer.StyleExtends = function () {
+var styleUtil = Polymer.StyleUtil;
+return {
+hasExtends: function (cssText) {
+return Boolean(cssText.match(this.rx.EXTEND));
+},
+transform: function (style) {
+var rules = styleUtil.rulesForStyle(style);
+var self = this;
+styleUtil.forEachRule(rules, function (rule) {
+self._mapRuleOntoParent(rule);
+if (rule.parent) {
+var m;
+while (m = self.rx.EXTEND.exec(rule.cssText)) {
+var extend = m[1];
+var extendor = self._findExtendor(extend, rule);
+if (extendor) {
+self._extendRule(rule, extendor);
+}
+}
+}
+rule.cssText = rule.cssText.replace(self.rx.EXTEND, &#039;&#039;);
+});
+return styleUtil.toCssText(rules, function (rule) {
+if (rule.selector.match(self.rx.STRIP)) {
+rule.cssText = &#039;&#039;;
+}
+}, true);
+},
+_mapRuleOntoParent: function (rule) {
+if (rule.parent) {
+var map = rule.parent.map || (rule.parent.map = {});
+var parts = rule.selector.split(&#039;,&#039;);
+for (var i = 0, p; i &lt; parts.length; i++) {
+p = parts[i];
+map[p.trim()] = rule;
+}
+return map;
+}
+},
+_findExtendor: function (extend, rule) {
+return rule.parent &amp;&amp; rule.parent.map &amp;&amp; rule.parent.map[extend] || this._findExtendor(extend, rule.parent);
+},
+_extendRule: function (target, source) {
+if (target.parent !== source.parent) {
+this._cloneAndAddRuleToParent(source, target.parent);
+}
+target.extends = target.extends || [];
+target.extends.push(source);
+source.selector = source.selector.replace(this.rx.STRIP, &#039;&#039;);
+source.selector = (source.selector &amp;&amp; source.selector + &#039;,\n&#039;) + target.selector;
+if (source.extends) {
+source.extends.forEach(function (e) {
+this._extendRule(target, e);
+}, this);
+}
+},
+_cloneAndAddRuleToParent: function (rule, parent) {
+rule = Object.create(rule);
+rule.parent = parent;
+if (rule.extends) {
+rule.extends = rule.extends.slice();
+}
+parent.rules.push(rule);
+},
+rx: {
+EXTEND: /@extends\(([^)]*)\)\s*?;/gim,
+STRIP: /%[^,]*$/
+}
+};
+}();Polymer.ApplyShim = function () {
+&#039;use strict&#039;;
+var styleUtil = Polymer.StyleUtil;
+var MIXIN_MATCH = styleUtil.rx.MIXIN_MATCH;
+var VAR_ASSIGN = styleUtil.rx.VAR_ASSIGN;
+var BAD_VAR = /var\(\s*(--[^,]*),\s*(--[^)]*)\)/g;
+var APPLY_NAME_CLEAN = /;\s*/m;
+var INITIAL_INHERIT = /^\s*(initial)|(inherit)\s*$/;
+var MIXIN_VAR_SEP = &#039;_-_&#039;;
+var mixinMap = {};
+function mapSet(name, props) {
+name = name.trim();
+mixinMap[name] = {
+properties: props,
+dependants: {}
+};
+}
+function mapGet(name) {
+name = name.trim();
+return mixinMap[name];
+}
+function replaceInitialOrInherit(property, value) {
+var match = INITIAL_INHERIT.exec(value);
+if (match) {
+if (match[1]) {
+value = ApplyShim._getInitialValueForProperty(property);
+} else {
+value = &#039;apply-shim-inherit&#039;;
+}
+}
+return value;
+}
+function cssTextToMap(text) {
+var props = text.split(&#039;;&#039;);
+var property, value;
+var out = {};
+for (var i = 0, p, sp; i &lt; props.length; i++) {
+p = props[i];
+if (p) {
+sp = p.split(&#039;:&#039;);
+if (sp.length &gt; 1) {
+property = sp[0].trim();
+value = replaceInitialOrInherit(property, sp.slice(1).join(&#039;:&#039;));
+out[property] = value;
+}
+}
+}
+return out;
+}
+function invalidateMixinEntry(mixinEntry) {
+var currentProto = ApplyShim.__currentElementProto;
+var currentElementName = currentProto &amp;&amp; currentProto.is;
+for (var elementName in mixinEntry.dependants) {
+if (elementName !== currentElementName) {
+mixinEntry.dependants[elementName].__applyShimInvalid = true;
+}
+}
+}
+function produceCssProperties(matchText, propertyName, valueProperty, valueMixin) {
+if (valueProperty) {
+styleUtil.processVariableAndFallback(valueProperty, function (prefix, value) {
+if (value &amp;&amp; mapGet(value)) {
+valueMixin = &#039;@apply &#039; + value + &#039;;&#039;;
+}
+});
+}
+if (!valueMixin) {
+return matchText;
+}
+var mixinAsProperties = consumeCssProperties(valueMixin);
+var prefix = matchText.slice(0, matchText.indexOf(&#039;--&#039;));
+var mixinValues = cssTextToMap(mixinAsProperties);
+var combinedProps = mixinValues;
+var mixinEntry = mapGet(propertyName);
+var oldProps = mixinEntry &amp;&amp; mixinEntry.properties;
+if (oldProps) {
+combinedProps = Object.create(oldProps);
+combinedProps = Polymer.Base.mixin(combinedProps, mixinValues);
+} else {
+mapSet(propertyName, combinedProps);
+}
+var out = [];
+var p, v;
+var needToInvalidate = false;
+for (p in combinedProps) {
+v = mixinValues[p];
+if (v === undefined) {
+v = &#039;initial&#039;;
+}
+if (oldProps &amp;&amp; !(p in oldProps)) {
+needToInvalidate = true;
+}
+out.push(propertyName + MIXIN_VAR_SEP + p + &#039;: &#039; + v);
+}
+if (needToInvalidate) {
+invalidateMixinEntry(mixinEntry);
+}
+if (mixinEntry) {
+mixinEntry.properties = combinedProps;
+}
+if (valueProperty) {
+prefix = matchText + &#039;;&#039; + prefix;
+}
+return prefix + out.join(&#039;; &#039;) + &#039;;&#039;;
+}
+function fixVars(matchText, varA, varB) {
+return &#039;var(&#039; + varA + &#039;,&#039; + &#039;var(&#039; + varB + &#039;))&#039;;
+}
+function atApplyToCssProperties(mixinName, fallbacks) {
+mixinName = mixinName.replace(APPLY_NAME_CLEAN, &#039;&#039;);
+var vars = [];
+var mixinEntry = mapGet(mixinName);
+if (!mixinEntry) {
+mapSet(mixinName, {});
+mixinEntry = mapGet(mixinName);
+}
+if (mixinEntry) {
+var currentProto = ApplyShim.__currentElementProto;
+if (currentProto) {
+mixinEntry.dependants[currentProto.is] = currentProto;
+}
+var p, parts, f;
+for (p in mixinEntry.properties) {
+f = fallbacks &amp;&amp; fallbacks[p];
+parts = [
+p,
+&#039;: var(&#039;,
+mixinName,
+MIXIN_VAR_SEP,
+p
+];
+if (f) {
+parts.push(&#039;,&#039;, f);
+}
+parts.push(&#039;)&#039;);
+vars.push(parts.join(&#039;&#039;));
+}
+}
+return vars.join(&#039;; &#039;);
+}
+function consumeCssProperties(text) {
+var m;
+while (m = MIXIN_MATCH.exec(text)) {
+var matchText = m[0];
+var mixinName = m[1];
+var idx = m.index;
+var applyPos = idx + matchText.indexOf(&#039;@apply&#039;);
+var afterApplyPos = idx + matchText.length;
+var textBeforeApply = text.slice(0, applyPos);
+var textAfterApply = text.slice(afterApplyPos);
+var defaults = cssTextToMap(textBeforeApply);
+var replacement = atApplyToCssProperties(mixinName, defaults);
+text = [
+textBeforeApply,
+replacement,
+textAfterApply
+].join(&#039;&#039;);
+MIXIN_MATCH.lastIndex = idx + replacement.length;
+}
+return text;
+}
+var ApplyShim = {
+_measureElement: null,
+_map: mixinMap,
+_separator: MIXIN_VAR_SEP,
+transform: function (styles, elementProto) {
+this.__currentElementProto = elementProto;
+styleUtil.forRulesInStyles(styles, this._boundFindDefinitions);
+styleUtil.forRulesInStyles(styles, this._boundFindApplications);
+if (elementProto) {
+elementProto.__applyShimInvalid = false;
+}
+this.__currentElementProto = null;
+},
+_findDefinitions: function (rule) {
+var cssText = rule.parsedCssText;
+cssText = cssText.replace(BAD_VAR, fixVars);
+cssText = cssText.replace(VAR_ASSIGN, produceCssProperties);
+rule.cssText = cssText;
+if (rule.selector === &#039;:root&#039;) {
+rule.selector = &#039;:host &gt; *&#039;;
+}
+},
+_findApplications: function (rule) {
+rule.cssText = consumeCssProperties(rule.cssText);
+},
+transformRule: function (rule) {
+this._findDefinitions(rule);
+this._findApplications(rule);
+},
+_getInitialValueForProperty: function (property) {
+if (!this._measureElement) {
+this._measureElement = document.createElement(&#039;meta&#039;);
+this._measureElement.style.all = &#039;initial&#039;;
+document.head.appendChild(this._measureElement);
+}
+return window.getComputedStyle(this._measureElement).getPropertyValue(property);
+}
+};
+ApplyShim._boundTransformRule = ApplyShim.transformRule.bind(ApplyShim);
+ApplyShim._boundFindDefinitions = ApplyShim._findDefinitions.bind(ApplyShim);
+ApplyShim._boundFindApplications = ApplyShim._findApplications.bind(ApplyShim);
+return ApplyShim;
+}();(function () {
+var prepElement = Polymer.Base._prepElement;
+var nativeShadow = Polymer.Settings.useNativeShadow;
+var styleUtil = Polymer.StyleUtil;
+var styleTransformer = Polymer.StyleTransformer;
+var styleExtends = Polymer.StyleExtends;
+var applyShim = Polymer.ApplyShim;
+var settings = Polymer.Settings;
+Polymer.Base._addFeature({
+_prepElement: function (element) {
+if (this._encapsulateStyle &amp;&amp; this.__cssBuild !== &#039;shady&#039;) {
+styleTransformer.element(element, this.is, this._scopeCssViaAttr);
+}
+prepElement.call(this, element);
+},
+_prepStyles: function () {
+if (this._encapsulateStyle === undefined) {
+this._encapsulateStyle = !nativeShadow;
+}
+if (!nativeShadow) {
+this._scopeStyle = styleUtil.applyStylePlaceHolder(this.is);
+}
+this.__cssBuild = styleUtil.cssBuildTypeForModule(this.is);
+},
+_prepShimStyles: function () {
+if (this._template) {
+var hasTargetedCssBuild = styleUtil.isTargetedBuild(this.__cssBuild);
+if (settings.useNativeCSSProperties &amp;&amp; this.__cssBuild === &#039;shadow&#039; &amp;&amp; hasTargetedCssBuild) {
+return;
+}
+this._styles = this._styles || this._collectStyles();
+if (settings.useNativeCSSProperties &amp;&amp; !this.__cssBuild) {
+applyShim.transform(this._styles, this);
+}
+var cssText = settings.useNativeCSSProperties &amp;&amp; hasTargetedCssBuild ? this._styles.length &amp;&amp; this._styles[0].textContent.trim() : styleTransformer.elementStyles(this);
+this._prepStyleProperties();
+if (!this._needsStyleProperties() &amp;&amp; cssText) {
+styleUtil.applyCss(cssText, this.is, nativeShadow ? this._template.content : null, this._scopeStyle);
+}
+} else {
+this._styles = [];
+}
+},
+_collectStyles: function () {
+var styles = [];
+var cssText = &#039;&#039;, m$ = this.styleModules;
+if (m$) {
+for (var i = 0, l = m$.length, m; i &lt; l &amp;&amp; (m = m$[i]); i++) {
+cssText += styleUtil.cssFromModule(m);
+}
+}
+cssText += styleUtil.cssFromModule(this.is);
+var p = this._template &amp;&amp; this._template.parentNode;
+if (this._template &amp;&amp; (!p || p.id.toLowerCase() !== this.is)) {
+cssText += styleUtil.cssFromElement(this._template);
+}
+if (cssText) {
+var style = document.createElement(&#039;style&#039;);
+style.textContent = cssText;
+if (styleExtends.hasExtends(style.textContent)) {
+cssText = styleExtends.transform(style);
+}
+styles.push(style);
+}
+return styles;
+},
+_elementAdd: function (node) {
+if (this._encapsulateStyle) {
+if (node.__styleScoped) {
+node.__styleScoped = false;
+} else {
+styleTransformer.dom(node, this.is, this._scopeCssViaAttr);
+}
+}
+},
+_elementRemove: function (node) {
+if (this._encapsulateStyle) {
+styleTransformer.dom(node, this.is, this._scopeCssViaAttr, true);
+}
+},
+scopeSubtree: function (container, shouldObserve) {
+if (nativeShadow) {
+return;
+}
+var self = this;
+var scopify = function (node) {
+if (node.nodeType === Node.ELEMENT_NODE) {
+var className = node.getAttribute(&#039;class&#039;);
+node.setAttribute(&#039;class&#039;, self._scopeElementClass(node, className));
+var n$ = node.querySelectorAll(&#039;*&#039;);
+for (var i = 0, n; i &lt; n$.length &amp;&amp; (n = n$[i]); i++) {
+className = n.getAttribute(&#039;class&#039;);
+n.setAttribute(&#039;class&#039;, self._scopeElementClass(n, className));
+}
+}
+};
+scopify(container);
+if (shouldObserve) {
+var mo = new MutationObserver(function (mxns) {
+for (var i = 0, m; i &lt; mxns.length &amp;&amp; (m = mxns[i]); i++) {
+if (m.addedNodes) {
+for (var j = 0; j &lt; m.addedNodes.length; j++) {
+scopify(m.addedNodes[j]);
+}
+}
+}
+});
+mo.observe(container, {
+childList: true,
+subtree: true
+});
+return mo;
+}
+}
+});
+}());Polymer.StyleProperties = function () {
+&#039;use strict&#039;;
+var matchesSelector = Polymer.DomApi.matchesSelector;
+var styleUtil = Polymer.StyleUtil;
+var styleTransformer = Polymer.StyleTransformer;
+var IS_IE = navigator.userAgent.match(&#039;Trident&#039;);
+var settings = Polymer.Settings;
+return {
+decorateStyles: function (styles, scope) {
+var self = this, props = {}, keyframes = [], ruleIndex = 0;
+var scopeSelector = styleTransformer._calcHostScope(scope.is, scope.extends);
+styleUtil.forRulesInStyles(styles, function (rule, style) {
+self.decorateRule(rule);
+rule.index = ruleIndex++;
+self.whenHostOrRootRule(scope, rule, style, function (info) {
+if (rule.parent.type === styleUtil.ruleTypes.MEDIA_RULE) {
+scope.__notStyleScopeCacheable = true;
+}
+if (info.isHost) {
+var hostContextOrFunction = info.selector.split(&#039; &#039;).some(function (s) {
+return s.indexOf(scopeSelector) === 0 &amp;&amp; s.length !== scopeSelector.length;
+});
+scope.__notStyleScopeCacheable = scope.__notStyleScopeCacheable || hostContextOrFunction;
+}
+});
+self.collectPropertiesInCssText(rule.propertyInfo.cssText, props);
+}, function onKeyframesRule(rule) {
+keyframes.push(rule);
+});
+styles._keyframes = keyframes;
+var names = [];
+for (var i in props) {
+names.push(i);
+}
+return names;
+},
+decorateRule: function (rule) {
+if (rule.propertyInfo) {
+return rule.propertyInfo;
+}
+var info = {}, properties = {};
+var hasProperties = this.collectProperties(rule, properties);
+if (hasProperties) {
+info.properties = properties;
+rule.rules = null;
+}
+info.cssText = this.collectCssText(rule);
+rule.propertyInfo = info;
+return info;
+},
+collectProperties: function (rule, properties) {
+var info = rule.propertyInfo;
+if (info) {
+if (info.properties) {
+Polymer.Base.mixin(properties, info.properties);
+return true;
+}
+} else {
+var m, rx = this.rx.VAR_ASSIGN;
+var cssText = rule.parsedCssText;
+var value;
+var any;
+while (m = rx.exec(cssText)) {
+value = (m[2] || m[3]).trim();
+if (value !== &#039;inherit&#039;) {
+properties[m[1].trim()] = value;
+}
+any = true;
+}
+return any;
+}
+},
+collectCssText: function (rule) {
+return this.collectConsumingCssText(rule.parsedCssText);
+},
+collectConsumingCssText: function (cssText) {
+return cssText.replace(this.rx.BRACKETED, &#039;&#039;).replace(this.rx.VAR_ASSIGN, &#039;&#039;);
+},
+collectPropertiesInCssText: function (cssText, props) {
+var m;
+while (m = this.rx.VAR_CONSUMED.exec(cssText)) {
+var name = m[1];
+if (m[2] !== &#039;:&#039;) {
+props[name] = true;
+}
+}
+},
+reify: function (props) {
+var names = Object.getOwnPropertyNames(props);
+for (var i = 0, n; i &lt; names.length; i++) {
+n = names[i];
+props[n] = this.valueForProperty(props[n], props);
+}
+},
+valueForProperty: function (property, props) {
+if (property) {
+if (property.indexOf(&#039;;&#039;) &gt;= 0) {
+property = this.valueForProperties(property, props);
+} else {
+var self = this;
+var fn = function (prefix, value, fallback, suffix) {
+var propertyValue = self.valueForProperty(props[value], props);
+if (!propertyValue || propertyValue === &#039;initial&#039;) {
+propertyValue = self.valueForProperty(props[fallback] || fallback, props) || fallback;
+} else if (propertyValue === &#039;apply-shim-inherit&#039;) {
+propertyValue = &#039;inherit&#039;;
+}
+return prefix + (propertyValue || &#039;&#039;) + suffix;
+};
+property = styleUtil.processVariableAndFallback(property, fn);
+}
+}
+return property &amp;&amp; property.trim() || &#039;&#039;;
+},
+valueForProperties: function (property, props) {
+var parts = property.split(&#039;;&#039;);
+for (var i = 0, p, m; i &lt; parts.length; i++) {
+if (p = parts[i]) {
+this.rx.MIXIN_MATCH.lastIndex = 0;
+m = this.rx.MIXIN_MATCH.exec(p);
+if (m) {
+p = this.valueForProperty(props[m[1]], props);
+} else {
+var colon = p.indexOf(&#039;:&#039;);
+if (colon !== -1) {
+var pp = p.substring(colon);
+pp = pp.trim();
+pp = this.valueForProperty(pp, props) || pp;
+p = p.substring(0, colon) + pp;
+}
+}
+parts[i] = p &amp;&amp; p.lastIndexOf(&#039;;&#039;) === p.length - 1 ? p.slice(0, -1) : p || &#039;&#039;;
+}
+}
+return parts.join(&#039;;&#039;);
+},
+applyProperties: function (rule, props) {
+var output = &#039;&#039;;
+if (!rule.propertyInfo) {
+this.decorateRule(rule);
+}
+if (rule.propertyInfo.cssText) {
+output = this.valueForProperties(rule.propertyInfo.cssText, props);
+}
+rule.cssText = output;
+},
+applyKeyframeTransforms: function (rule, keyframeTransforms) {
+var input = rule.cssText;
+var output = rule.cssText;
+if (rule.hasAnimations == null) {
+rule.hasAnimations = this.rx.ANIMATION_MATCH.test(input);
+}
+if (rule.hasAnimations) {
+var transform;
+if (rule.keyframeNamesToTransform == null) {
+rule.keyframeNamesToTransform = [];
+for (var keyframe in keyframeTransforms) {
+transform = keyframeTransforms[keyframe];
+output = transform(input);
+if (input !== output) {
+input = output;
+rule.keyframeNamesToTransform.push(keyframe);
+}
+}
+} else {
+for (var i = 0; i &lt; rule.keyframeNamesToTransform.length; ++i) {
+transform = keyframeTransforms[rule.keyframeNamesToTransform[i]];
+input = transform(input);
+}
+output = input;
+}
+}
+rule.cssText = output;
+},
+propertyDataFromStyles: function (styles, element) {
+var props = {}, self = this;
+var o = [];
+styleUtil.forActiveRulesInStyles(styles, function (rule) {
+if (!rule.propertyInfo) {
+self.decorateRule(rule);
+}
+var selectorToMatch = rule.transformedSelector || rule.parsedSelector;
+if (element &amp;&amp; rule.propertyInfo.properties &amp;&amp; selectorToMatch) {
+if (matchesSelector.call(element, selectorToMatch)) {
+self.collectProperties(rule, props);
+addToBitMask(rule.index, o);
+}
+}
+});
+return {
+properties: props,
+key: o
+};
+},
+_rootSelector: /:root|:host\s*&gt;\s*\*/,
+_checkRoot: function (hostScope, selector) {
+return Boolean(selector.match(this._rootSelector)) || hostScope === &#039;html&#039; &amp;&amp; selector.indexOf(&#039;html&#039;) &gt; -1;
+},
+whenHostOrRootRule: function (scope, rule, style, callback) {
+if (!rule.propertyInfo) {
+self.decorateRule(rule);
+}
+if (!rule.propertyInfo.properties) {
+return;
+}
+var hostScope = scope.is ? styleTransformer._calcHostScope(scope.is, scope.extends) : &#039;html&#039;;
+var parsedSelector = rule.parsedSelector;
+var isRoot = this._checkRoot(hostScope, parsedSelector);
+var isHost = !isRoot &amp;&amp; parsedSelector.indexOf(&#039;:host&#039;) === 0;
+var cssBuild = scope.__cssBuild || style.__cssBuild;
+if (cssBuild === &#039;shady&#039;) {
+isRoot = parsedSelector === hostScope + &#039; &gt; *.&#039; + hostScope || parsedSelector.indexOf(&#039;html&#039;) &gt; -1;
+isHost = !isRoot &amp;&amp; parsedSelector.indexOf(hostScope) === 0;
+}
+if (!isRoot &amp;&amp; !isHost) {
+return;
+}
+var selectorToMatch = hostScope;
+if (isHost) {
+if (settings.useNativeShadow &amp;&amp; !rule.transformedSelector) {
+rule.transformedSelector = styleTransformer._transformRuleCss(rule, styleTransformer._transformComplexSelector, scope.is, hostScope);
+}
+selectorToMatch = rule.transformedSelector || rule.parsedSelector;
+}
+if (isRoot &amp;&amp; hostScope === &#039;html&#039;) {
+selectorToMatch = rule.transformedSelector || rule.parsedSelector;
+}
+callback({
+selector: selectorToMatch,
+isHost: isHost,
+isRoot: isRoot
+});
+},
+hostAndRootPropertiesForScope: function (scope) {
+var hostProps = {}, rootProps = {}, self = this;
+styleUtil.forActiveRulesInStyles(scope._styles, function (rule, style) {
+self.whenHostOrRootRule(scope, rule, style, function (info) {
+var element = scope._element || scope;
+if (matchesSelector.call(element, info.selector)) {
+if (info.isHost) {
+self.collectProperties(rule, hostProps);
+} else {
+self.collectProperties(rule, rootProps);
+}
+}
+});
+});
+return {
+rootProps: rootProps,
+hostProps: hostProps
+};
+},
+transformStyles: function (element, properties, scopeSelector) {
+var self = this;
+var hostSelector = styleTransformer._calcHostScope(element.is, element.extends);
+var rxHostSelector = element.extends ? &#039;\\&#039; + hostSelector.slice(0, -1) + &#039;\\]&#039; : hostSelector;
+var hostRx = new RegExp(this.rx.HOST_PREFIX + rxHostSelector + this.rx.HOST_SUFFIX);
+var keyframeTransforms = this._elementKeyframeTransforms(element, scopeSelector);
+return styleTransformer.elementStyles(element, function (rule) {
+self.applyProperties(rule, properties);
+if (!settings.useNativeShadow &amp;&amp; !Polymer.StyleUtil.isKeyframesSelector(rule) &amp;&amp; rule.cssText) {
+self.applyKeyframeTransforms(rule, keyframeTransforms);
+self._scopeSelector(rule, hostRx, hostSelector, element._scopeCssViaAttr, scopeSelector);
+}
+});
+},
+_elementKeyframeTransforms: function (element, scopeSelector) {
+var keyframesRules = element._styles._keyframes;
+var keyframeTransforms = {};
+if (!settings.useNativeShadow &amp;&amp; keyframesRules) {
+for (var i = 0, keyframesRule = keyframesRules[i]; i &lt; keyframesRules.length; keyframesRule = keyframesRules[++i]) {
+this._scopeKeyframes(keyframesRule, scopeSelector);
+keyframeTransforms[keyframesRule.keyframesName] = this._keyframesRuleTransformer(keyframesRule);
+}
+}
+return keyframeTransforms;
+},
+_keyframesRuleTransformer: function (keyframesRule) {
+return function (cssText) {
+return cssText.replace(keyframesRule.keyframesNameRx, keyframesRule.transformedKeyframesName);
+};
+},
+_scopeKeyframes: function (rule, scopeId) {
+rule.keyframesNameRx = new RegExp(rule.keyframesName, &#039;g&#039;);
+rule.transformedKeyframesName = rule.keyframesName + &#039;-&#039; + scopeId;
+rule.transformedSelector = rule.transformedSelector || rule.selector;
+rule.selector = rule.transformedSelector.replace(rule.keyframesName, rule.transformedKeyframesName);
+},
+_scopeSelector: function (rule, hostRx, hostSelector, viaAttr, scopeId) {
+rule.transformedSelector = rule.transformedSelector || rule.selector;
+var selector = rule.transformedSelector;
+var scope = viaAttr ? &#039;[&#039; + styleTransformer.SCOPE_NAME + &#039;~=&#039; + scopeId + &#039;]&#039; : &#039;.&#039; + scopeId;
+var parts = selector.split(&#039;,&#039;);
+for (var i = 0, l = parts.length, p; i &lt; l &amp;&amp; (p = parts[i]); i++) {
+parts[i] = p.match(hostRx) ? p.replace(hostSelector, scope) : scope + &#039; &#039; + p;
+}
+rule.selector = parts.join(&#039;,&#039;);
+},
+applyElementScopeSelector: function (element, selector, old, viaAttr) {
+var c = viaAttr ? element.getAttribute(styleTransformer.SCOPE_NAME) : element.getAttribute(&#039;class&#039;) || &#039;&#039;;
+var v = old ? c.replace(old, selector) : (c ? c + &#039; &#039; : &#039;&#039;) + this.XSCOPE_NAME + &#039; &#039; + selector;
+if (c !== v) {
+if (viaAttr) {
+element.setAttribute(styleTransformer.SCOPE_NAME, v);
+} else {
+element.setAttribute(&#039;class&#039;, v);
+}
+}
+},
+applyElementStyle: function (element, properties, selector, style) {
+var cssText = style ? style.textContent || &#039;&#039; : this.transformStyles(element, properties, selector);
+var s = element._customStyle;
+if (s &amp;&amp; !settings.useNativeShadow &amp;&amp; s !== style) {
+s._useCount--;
+if (s._useCount &lt;= 0 &amp;&amp; s.parentNode) {
+s.parentNode.removeChild(s);
+}
+}
+if (settings.useNativeShadow) {
+if (element._customStyle) {
+element._customStyle.textContent = cssText;
+style = element._customStyle;
+} else if (cssText) {
+style = styleUtil.applyCss(cssText, selector, element.root, element._scopeStyle);
+}
+} else {
+if (!style) {
+if (cssText) {
+style = styleUtil.applyCss(cssText, selector, null, element._scopeStyle);
+}
+} else if (!style.parentNode) {
+if (IS_IE &amp;&amp; cssText.indexOf(&#039;@media&#039;) &gt; -1) {
+style.textContent = cssText;
+}
+styleUtil.applyStyle(style, null, element._scopeStyle);
+}
+}
+if (style) {
+style._useCount = style._useCount || 0;
+if (element._customStyle != style) {
+style._useCount++;
+}
+element._customStyle = style;
+}
+return style;
+},
+mixinCustomStyle: function (props, customStyle) {
+var v;
+for (var i in customStyle) {
+v = customStyle[i];
+if (v || v === 0) {
+props[i] = v;
+}
+}
+},
+updateNativeStyleProperties: function (element, properties) {
+var oldPropertyNames = element.__customStyleProperties;
+if (oldPropertyNames) {
+for (var i = 0; i &lt; oldPropertyNames.length; i++) {
+element.style.removeProperty(oldPropertyNames[i]);
+}
+}
+var propertyNames = [];
+for (var p in properties) {
+if (properties[p] !== null) {
+element.style.setProperty(p, properties[p]);
+propertyNames.push(p);
+}
+}
+element.__customStyleProperties = propertyNames;
+},
+rx: styleUtil.rx,
+XSCOPE_NAME: &#039;x-scope&#039;
+};
+function addToBitMask(n, bits) {
+var o = parseInt(n / 32);
+var v = 1 &lt;&lt; n % 32;
+bits[o] = (bits[o] || 0) | v;
+}
+}();(function () {
+Polymer.StyleCache = function () {
+this.cache = {};
+};
+Polymer.StyleCache.prototype = {
+MAX: 100,
+store: function (is, data, keyValues, keyStyles) {
+data.keyValues = keyValues;
+data.styles = keyStyles;
+var s$ = this.cache[is] = this.cache[is] || [];
+s$.push(data);
+if (s$.length &gt; this.MAX) {
+s$.shift();
+}
+},
+retrieve: function (is, keyValues, keyStyles) {
+var cache = this.cache[is];
+if (cache) {
+for (var i = cache.length - 1, data; i &gt;= 0; i--) {
+data = cache[i];
+if (keyStyles === data.styles &amp;&amp; this._objectsEqual(keyValues, data.keyValues)) {
+return data;
+}
+}
+}
+},
+clear: function () {
+this.cache = {};
+},
+_objectsEqual: function (target, source) {
+var t, s;
+for (var i in target) {
+t = target[i], s = source[i];
+if (!(typeof t === &#039;object&#039; &amp;&amp; t ? this._objectsStrictlyEqual(t, s) : t === s)) {
+return false;
+}
+}
+if (Array.isArray(target)) {
+return target.length === source.length;
+}
+return true;
+},
+_objectsStrictlyEqual: function (target, source) {
+return this._objectsEqual(target, source) &amp;&amp; this._objectsEqual(source, target);
+}
+};
+}());Polymer.StyleDefaults = function () {
+var styleProperties = Polymer.StyleProperties;
+var StyleCache = Polymer.StyleCache;
+var nativeVariables = Polymer.Settings.useNativeCSSProperties;
+var api = {
+_styles: [],
+_properties: null,
+customStyle: {},
+_styleCache: new StyleCache(),
+_element: Polymer.DomApi.wrap(document.documentElement),
+addStyle: function (style) {
+this._styles.push(style);
+this._properties = null;
+},
+get _styleProperties() {
+if (!this._properties) {
+styleProperties.decorateStyles(this._styles, this);
+this._styles._scopeStyleProperties = null;
+this._properties = styleProperties.hostAndRootPropertiesForScope(this).rootProps;
+styleProperties.mixinCustomStyle(this._properties, this.customStyle);
+styleProperties.reify(this._properties);
+}
+return this._properties;
+},
+hasStyleProperties: function () {
+return Boolean(this._properties);
+},
+_needsStyleProperties: function () {
+},
+_computeStyleProperties: function () {
+return this._styleProperties;
+},
+updateStyles: function (properties) {
+this._properties = null;
+if (properties) {
+Polymer.Base.mixin(this.customStyle, properties);
+}
+this._styleCache.clear();
+for (var i = 0, s; i &lt; this._styles.length; i++) {
+s = this._styles[i];
+s = s.__importElement || s;
+s._apply();
+}
+if (nativeVariables) {
+styleProperties.updateNativeStyleProperties(document.documentElement, this.customStyle);
+}
+}
+};
+return api;
+}();(function () {
+&#039;use strict&#039;;
+var serializeValueToAttribute = Polymer.Base.serializeValueToAttribute;
+var propertyUtils = Polymer.StyleProperties;
+var styleTransformer = Polymer.StyleTransformer;
+var styleDefaults = Polymer.StyleDefaults;
+var nativeShadow = Polymer.Settings.useNativeShadow;
+var nativeVariables = Polymer.Settings.useNativeCSSProperties;
+Polymer.Base._addFeature({
+_prepStyleProperties: function () {
+if (!nativeVariables) {
+this._ownStylePropertyNames = this._styles &amp;&amp; this._styles.length ? propertyUtils.decorateStyles(this._styles, this) : null;
+}
+},
+customStyle: null,
+getComputedStyleValue: function (property) {
+return !nativeVariables &amp;&amp; this._styleProperties &amp;&amp; this._styleProperties[property] || getComputedStyle(this).getPropertyValue(property);
+},
+_setupStyleProperties: function () {
+this.customStyle = {};
+this._styleCache = null;
+this._styleProperties = null;
+this._scopeSelector = null;
+this._ownStyleProperties = null;
+this._customStyle = null;
+},
+_needsStyleProperties: function () {
+return Boolean(!nativeVariables &amp;&amp; this._ownStylePropertyNames &amp;&amp; this._ownStylePropertyNames.length);
+},
+_validateApplyShim: function () {
+if (this.__applyShimInvalid) {
+Polymer.ApplyShim.transform(this._styles, this.__proto__);
+var cssText = styleTransformer.elementStyles(this);
+if (nativeShadow) {
+var templateStyle = this._template.content.querySelector(&#039;style&#039;);
+if (templateStyle) {
+templateStyle.textContent = cssText;
+}
+} else {
+var shadyStyle = this._scopeStyle &amp;&amp; this._scopeStyle.nextSibling;
+if (shadyStyle) {
+shadyStyle.textContent = cssText;
+}
+}
+}
+},
+_beforeAttached: function () {
+if ((!this._scopeSelector || this.__stylePropertiesInvalid) &amp;&amp; this._needsStyleProperties()) {
+this.__stylePropertiesInvalid = false;
+this._updateStyleProperties();
+}
+},
+_findStyleHost: function () {
+var e = this, root;
+while (root = Polymer.dom(e).getOwnerRoot()) {
+if (Polymer.isInstance(root.host)) {
+return root.host;
+}
+e = root.host;
+}
+return styleDefaults;
+},
+_updateStyleProperties: function () {
+var info, scope = this._findStyleHost();
+if (!scope._styleProperties) {
+scope._computeStyleProperties();
+}
+if (!scope._styleCache) {
+scope._styleCache = new Polymer.StyleCache();
+}
+var scopeData = propertyUtils.propertyDataFromStyles(scope._styles, this);
+var scopeCacheable = !this.__notStyleScopeCacheable;
+if (scopeCacheable) {
+scopeData.key.customStyle = this.customStyle;
+info = scope._styleCache.retrieve(this.is, scopeData.key, this._styles);
+}
+var scopeCached = Boolean(info);
+if (scopeCached) {
+this._styleProperties = info._styleProperties;
+} else {
+this._computeStyleProperties(scopeData.properties);
+}
+this._computeOwnStyleProperties();
+if (!scopeCached) {
+info = styleCache.retrieve(this.is, this._ownStyleProperties, this._styles);
+}
+var globalCached = Boolean(info) &amp;&amp; !scopeCached;
+var style = this._applyStyleProperties(info);
+if (!scopeCached) {
+style = style &amp;&amp; nativeShadow ? style.cloneNode(true) : style;
+info = {
+style: style,
+_scopeSelector: this._scopeSelector,
+_styleProperties: this._styleProperties
+};
+if (scopeCacheable) {
+scopeData.key.customStyle = {};
+this.mixin(scopeData.key.customStyle, this.customStyle);
+scope._styleCache.store(this.is, info, scopeData.key, this._styles);
+}
+if (!globalCached) {
+styleCache.store(this.is, Object.create(info), this._ownStyleProperties, this._styles);
+}
+}
+},
+_computeStyleProperties: function (scopeProps) {
+var scope = this._findStyleHost();
+if (!scope._styleProperties) {
+scope._computeStyleProperties();
+}
+var props = Object.create(scope._styleProperties);
+var hostAndRootProps = propertyUtils.hostAndRootPropertiesForScope(this);
+this.mixin(props, hostAndRootProps.hostProps);
+scopeProps = scopeProps || propertyUtils.propertyDataFromStyles(scope._styles, this).properties;
+this.mixin(props, scopeProps);
+this.mixin(props, hostAndRootProps.rootProps);
+propertyUtils.mixinCustomStyle(props, this.customStyle);
+propertyUtils.reify(props);
+this._styleProperties = props;
+},
+_computeOwnStyleProperties: function () {
+var props = {};
+for (var i = 0, n; i &lt; this._ownStylePropertyNames.length; i++) {
+n = this._ownStylePropertyNames[i];
+props[n] = this._styleProperties[n];
+}
+this._ownStyleProperties = props;
+},
+_scopeCount: 0,
+_applyStyleProperties: function (info) {
+var oldScopeSelector = this._scopeSelector;
+this._scopeSelector = info ? info._scopeSelector : this.is + &#039;-&#039; + this.__proto__._scopeCount++;
+var style = propertyUtils.applyElementStyle(this, this._styleProperties, this._scopeSelector, info &amp;&amp; info.style);
+if (!nativeShadow) {
+propertyUtils.applyElementScopeSelector(this, this._scopeSelector, oldScopeSelector, this._scopeCssViaAttr);
+}
+return style;
+},
+serializeValueToAttribute: function (value, attribute, node) {
+node = node || this;
+if (attribute === &#039;class&#039; &amp;&amp; !nativeShadow) {
+var host = node === this ? this.domHost || this.dataHost : this;
+if (host) {
+value = host._scopeElementClass(node, value);
+}
+}
+node = this.shadyRoot &amp;&amp; this.shadyRoot._hasDistributed ? Polymer.dom(node) : node;
+serializeValueToAttribute.call(this, value, attribute, node);
+},
+_scopeElementClass: function (element, selector) {
+if (!nativeShadow &amp;&amp; !this._scopeCssViaAttr) {
+selector = (selector ? selector + &#039; &#039; : &#039;&#039;) + SCOPE_NAME + &#039; &#039; + this.is + (element._scopeSelector ? &#039; &#039; + XSCOPE_NAME + &#039; &#039; + element._scopeSelector : &#039;&#039;);
+}
+return selector;
+},
+updateStyles: function (properties) {
+if (properties) {
+this.mixin(this.customStyle, properties);
+}
+if (nativeVariables) {
+propertyUtils.updateNativeStyleProperties(this, this.customStyle);
+} else {
+if (this.isAttached) {
+if (this._needsStyleProperties()) {
+this._updateStyleProperties();
+} else {
+this._styleProperties = null;
+}
+} else {
+this.__stylePropertiesInvalid = true;
+}
+if (this._styleCache) {
+this._styleCache.clear();
+}
+this._updateRootStyles();
+}
+},
+_updateRootStyles: function (root) {
+root = root || this.root;
+var c$ = Polymer.dom(root)._query(function (e) {
+return e.shadyRoot || e.shadowRoot;
+});
+for (var i = 0, l = c$.length, c; i &lt; l &amp;&amp; (c = c$[i]); i++) {
+if (c.updateStyles) {
+c.updateStyles();
+}
+}
+}
+});
+Polymer.updateStyles = function (properties) {
+styleDefaults.updateStyles(properties);
+Polymer.Base._updateRootStyles(document);
+};
+var styleCache = new Polymer.StyleCache();
+Polymer.customStyleCache = styleCache;
+var SCOPE_NAME = styleTransformer.SCOPE_NAME;
+var XSCOPE_NAME = propertyUtils.XSCOPE_NAME;
+}());Polymer.Base._addFeature({
+_registerFeatures: function () {
+this._prepIs();
+this._prepConstructor();
+this._prepStyles();
+},
+_finishRegisterFeatures: function () {
+this._prepTemplate();
+this._prepShimStyles();
+this._prepAnnotations();
+this._prepEffects();
+this._prepBehaviors();
+this._prepPropertyInfo();
+this._prepBindings();
+this._prepShady();
+},
+_prepBehavior: function (b) {
+this._addPropertyEffects(b.properties);
+this._addComplexObserverEffects(b.observers);
+this._addHostAttributes(b.hostAttributes);
+},
+_initFeatures: function () {
+this._setupGestures();
+this._setupConfigure();
+this._setupStyleProperties();
+this._setupDebouncers();
+this._setupShady();
+this._registerHost();
+if (this._template) {
+this._validateApplyShim();
+this._poolContent();
+this._beginHosting();
+this._stampTemplate();
+this._endHosting();
+this._marshalAnnotationReferences();
+}
+this._marshalInstanceEffects();
+this._marshalBehaviors();
+this._marshalHostAttributes();
+this._marshalAttributes();
+this._tryReady();
+},
+_marshalBehavior: function (b) {
+if (b.listeners) {
+this._listenListeners(b.listeners);
+}
+}
+});(function () {
+var propertyUtils = Polymer.StyleProperties;
+var styleUtil = Polymer.StyleUtil;
+var cssParse = Polymer.CssParse;
+var styleDefaults = Polymer.StyleDefaults;
+var styleTransformer = Polymer.StyleTransformer;
+var applyShim = Polymer.ApplyShim;
+var debounce = Polymer.Debounce;
+var settings = Polymer.Settings;
+var updateDebouncer;
+Polymer({
+is: &#039;custom-style&#039;,
+extends: &#039;style&#039;,
+_template: null,
+properties: { include: String },
+ready: function () {
+this.__appliedElement = this.__appliedElement || this;
+this.__cssBuild = styleUtil.getCssBuildType(this);
+if (this.__appliedElement !== this) {
+this.__appliedElement.__cssBuild = this.__cssBuild;
+}
+this._tryApply();
+},
+attached: function () {
+this._tryApply();
+},
+_tryApply: function () {
+if (!this._appliesToDocument) {
+if (this.parentNode &amp;&amp; this.parentNode.localName !== &#039;dom-module&#039;) {
+this._appliesToDocument = true;
+var e = this.__appliedElement;
+if (!settings.useNativeCSSProperties) {
+this.__needsUpdateStyles = styleDefaults.hasStyleProperties();
+styleDefaults.addStyle(e);
+}
+if (e.textContent || this.include) {
+this._apply(true);
+} else {
+var self = this;
+var observer = new MutationObserver(function () {
+observer.disconnect();
+self._apply(true);
+});
+observer.observe(e, { childList: true });
+}
+}
+}
+},
+_updateStyles: function () {
+Polymer.updateStyles();
+},
+_apply: function (initialApply) {
+var e = this.__appliedElement;
+if (this.include) {
+e.textContent = styleUtil.cssFromModules(this.include, true) + e.textContent;
+}
+if (!e.textContent) {
+return;
+}
+var buildType = this.__cssBuild;
+var targetedBuild = styleUtil.isTargetedBuild(buildType);
+if (settings.useNativeCSSProperties &amp;&amp; targetedBuild) {
+return;
+}
+var styleRules = styleUtil.rulesForStyle(e);
+if (!targetedBuild) {
+styleUtil.forEachRule(styleRules, function (rule) {
+styleTransformer.documentRule(rule);
+});
+if (settings.useNativeCSSProperties &amp;&amp; !buildType) {
+applyShim.transform([e]);
+}
+}
+if (settings.useNativeCSSProperties) {
+e.textContent = styleUtil.toCssText(styleRules);
+} else {
+var self = this;
+var fn = function fn() {
+self._flushCustomProperties();
+};
+if (initialApply) {
+Polymer.RenderStatus.whenReady(fn);
+} else {
+fn();
+}
+}
+},
+_flushCustomProperties: function () {
+if (this.__needsUpdateStyles) {
+this.__needsUpdateStyles = false;
+updateDebouncer = debounce(updateDebouncer, this._updateStyles);
+} else {
+this._applyCustomProperties();
+}
+},
+_applyCustomProperties: function () {
+var element = this.__appliedElement;
+this._computeStyleProperties();
+var props = this._styleProperties;
+var rules = styleUtil.rulesForStyle(element);
+if (!rules) {
+return;
+}
+element.textContent = styleUtil.toCssText(rules, function (rule) {
+var css = rule.cssText = rule.parsedCssText;
+if (rule.propertyInfo &amp;&amp; rule.propertyInfo.cssText) {
+css = cssParse.removeCustomPropAssignment(css);
+rule.cssText = propertyUtils.valueForProperties(css, props);
+}
+});
+}
+});
+}());Polymer.Templatizer = {
+properties: { __hideTemplateChildren__: { observer: &#039;_showHideChildren&#039; } },
+_instanceProps: Polymer.nob,
+_parentPropPrefix: &#039;_parent_&#039;,
+templatize: function (template) {
+this._templatized = template;
+if (!template._content) {
+template._content = template.content;
+}
+if (template._content._ctor) {
+this.ctor = template._content._ctor;
+this._prepParentProperties(this.ctor.prototype, template);
+return;
+}
+var archetype = Object.create(Polymer.Base);
+this._customPrepAnnotations(archetype, template);
+this._prepParentProperties(archetype, template);
+archetype._prepEffects();
+this._customPrepEffects(archetype);
+archetype._prepBehaviors();
+archetype._prepPropertyInfo();
+archetype._prepBindings();
+archetype._notifyPathUp = this._notifyPathUpImpl;
+archetype._scopeElementClass = this._scopeElementClassImpl;
+archetype.listen = this._listenImpl;
+archetype._showHideChildren = this._showHideChildrenImpl;
+archetype.__setPropertyOrig = this.__setProperty;
+archetype.__setProperty = this.__setPropertyImpl;
+var _constructor = this._constructorImpl;
+var ctor = function TemplateInstance(model, host) {
+_constructor.call(this, model, host);
+};
+ctor.prototype = archetype;
+archetype.constructor = ctor;
+template._content._ctor = ctor;
+this.ctor = ctor;
+},
+_getRootDataHost: function () {
+return this.dataHost &amp;&amp; this.dataHost._rootDataHost || this.dataHost;
+},
+_showHideChildrenImpl: function (hide) {
+var c = this._children;
+for (var i = 0; i &lt; c.length; i++) {
+var n = c[i];
+if (Boolean(hide) != Boolean(n.__hideTemplateChildren__)) {
+if (n.nodeType === Node.TEXT_NODE) {
+if (hide) {
+n.__polymerTextContent__ = n.textContent;
+n.textContent = &#039;&#039;;
+} else {
+n.textContent = n.__polymerTextContent__;
+}
+} else if (n.style) {
+if (hide) {
+n.__polymerDisplay__ = n.style.display;
+n.style.display = &#039;none&#039;;
+} else {
+n.style.display = n.__polymerDisplay__;
+}
+}
+}
+n.__hideTemplateChildren__ = hide;
+}
+},
+__setPropertyImpl: function (property, value, fromAbove, node) {
+if (node &amp;&amp; node.__hideTemplateChildren__ &amp;&amp; property == &#039;textContent&#039;) {
+property = &#039;__polymerTextContent__&#039;;
+}
+this.__setPropertyOrig(property, value, fromAbove, node);
+},
+_debounceTemplate: function (fn) {
+Polymer.dom.addDebouncer(this.debounce(&#039;_debounceTemplate&#039;, fn));
+},
+_flushTemplates: function () {
+Polymer.dom.flush();
+},
+_customPrepEffects: function (archetype) {
+var parentProps = archetype._parentProps;
+for (var prop in parentProps) {
+archetype._addPropertyEffect(prop, &#039;function&#039;, this._createHostPropEffector(prop));
+}
+for (prop in this._instanceProps) {
+archetype._addPropertyEffect(prop, &#039;function&#039;, this._createInstancePropEffector(prop));
+}
+},
+_customPrepAnnotations: function (archetype, template) {
+archetype._template = template;
+var c = template._content;
+if (!c._notes) {
+var rootDataHost = archetype._rootDataHost;
+if (rootDataHost) {
+Polymer.Annotations.prepElement = function () {
+rootDataHost._prepElement();
+};
+}
+c._notes = Polymer.Annotations.parseAnnotations(template);
+Polymer.Annotations.prepElement = null;
+this._processAnnotations(c._notes);
+}
+archetype._notes = c._notes;
+archetype._parentProps = c._parentProps;
+},
+_prepParentProperties: function (archetype, template) {
+var parentProps = this._parentProps = archetype._parentProps;
+if (this._forwardParentProp &amp;&amp; parentProps) {
+var proto = archetype._parentPropProto;
+var prop;
+if (!proto) {
+for (prop in this._instanceProps) {
+delete parentProps[prop];
+}
+proto = archetype._parentPropProto = Object.create(null);
+if (template != this) {
+Polymer.Bind.prepareModel(proto);
+Polymer.Base.prepareModelNotifyPath(proto);
+}
+for (prop in parentProps) {
+var parentProp = this._parentPropPrefix + prop;
+var effects = [
+{
+kind: &#039;function&#039;,
+effect: this._createForwardPropEffector(prop),
+fn: Polymer.Bind._functionEffect
+},
+{
+kind: &#039;notify&#039;,
+fn: Polymer.Bind._notifyEffect,
+effect: { event: Polymer.CaseMap.camelToDashCase(parentProp) + &#039;-changed&#039; }
+}
+];
+Polymer.Bind._createAccessors(proto, parentProp, effects);
+}
+}
+var self = this;
+if (template != this) {
+Polymer.Bind.prepareInstance(template);
+template._forwardParentProp = function (source, value) {
+self._forwardParentProp(source, value);
+};
+}
+this._extendTemplate(template, proto);
+template._pathEffector = function (path, value, fromAbove) {
+return self._pathEffectorImpl(path, value, fromAbove);
+};
+}
+},
+_createForwardPropEffector: function (prop) {
+return function (source, value) {
+this._forwardParentProp(prop, value);
+};
+},
+_createHostPropEffector: function (prop) {
+var prefix = this._parentPropPrefix;
+return function (source, value) {
+this.dataHost._templatized[prefix + prop] = value;
+};
+},
+_createInstancePropEffector: function (prop) {
+return function (source, value, old, fromAbove) {
+if (!fromAbove) {
+this.dataHost._forwardInstanceProp(this, prop, value);
+}
+};
+},
+_extendTemplate: function (template, proto) {
+var n$ = Object.getOwnPropertyNames(proto);
+if (proto._propertySetter) {
+template._propertySetter = proto._propertySetter;
+}
+for (var i = 0, n; i &lt; n$.length &amp;&amp; (n = n$[i]); i++) {
+var val = template[n];
+var pd = Object.getOwnPropertyDescriptor(proto, n);
+Object.defineProperty(template, n, pd);
+if (val !== undefined) {
+template._propertySetter(n, val);
+}
+}
+},
+_showHideChildren: function (hidden) {
+},
+_forwardInstancePath: function (inst, path, value) {
+},
+_forwardInstanceProp: function (inst, prop, value) {
+},
+_notifyPathUpImpl: function (path, value) {
+var dataHost = this.dataHost;
+var root = Polymer.Path.root(path);
+dataHost._forwardInstancePath.call(dataHost, this, path, value);
+if (root in dataHost._parentProps) {
+dataHost._templatized._notifyPath(dataHost._parentPropPrefix + path, value);
+}
+},
+_pathEffectorImpl: function (path, value, fromAbove) {
+if (this._forwardParentPath) {
+if (path.indexOf(this._parentPropPrefix) === 0) {
+var subPath = path.substring(this._parentPropPrefix.length);
+var model = Polymer.Path.root(subPath);
+if (model in this._parentProps) {
+this._forwardParentPath(subPath, value);
+}
+}
+}
+Polymer.Base._pathEffector.call(this._templatized, path, value, fromAbove);
+},
+_constructorImpl: function (model, host) {
+this._rootDataHost = host._getRootDataHost();
+this._setupConfigure(model);
+this._registerHost(host);
+this._beginHosting();
+this.root = this.instanceTemplate(this._template);
+this.root.__noContent = !this._notes._hasContent;
+this.root.__styleScoped = true;
+this._endHosting();
+this._marshalAnnotatedNodes();
+this._marshalInstanceEffects();
+this._marshalAnnotatedListeners();
+var children = [];
+for (var n = this.root.firstChild; n; n = n.nextSibling) {
+children.push(n);
+n._templateInstance = this;
+}
+this._children = children;
+if (host.__hideTemplateChildren__) {
+this._showHideChildren(true);
+}
+this._tryReady();
+},
+_listenImpl: function (node, eventName, methodName) {
+var model = this;
+var host = this._rootDataHost;
+var handler = host._createEventHandler(node, eventName, methodName);
+var decorated = function (e) {
+e.model = model;
+handler(e);
+};
+host._listen(node, eventName, decorated);
+},
+_scopeElementClassImpl: function (node, value) {
+var host = this._rootDataHost;
+if (host) {
+return host._scopeElementClass(node, value);
+}
+return value;
+},
+stamp: function (model) {
+model = model || {};
+if (this._parentProps) {
+var templatized = this._templatized;
+for (var prop in this._parentProps) {
+if (model[prop] === undefined) {
+model[prop] = templatized[this._parentPropPrefix + prop];
+}
+}
+}
+return new this.ctor(model, this);
+},
+modelForElement: function (el) {
+var model;
+while (el) {
+if (model = el._templateInstance) {
+if (model.dataHost != this) {
+el = model.dataHost;
+} else {
+return model;
+}
+} else {
+el = el.parentNode;
+}
+}
+}
+};Polymer({
+is: &#039;dom-template&#039;,
+extends: &#039;template&#039;,
+_template: null,
+behaviors: [Polymer.Templatizer],
+ready: function () {
+this.templatize(this);
+}
+});Polymer._collections = new WeakMap();
+Polymer.Collection = function (userArray) {
+Polymer._collections.set(userArray, this);
+this.userArray = userArray;
+this.store = userArray.slice();
+this.initMap();
+};
+Polymer.Collection.prototype = {
+constructor: Polymer.Collection,
+initMap: function () {
+var omap = this.omap = new WeakMap();
+var pmap = this.pmap = {};
+var s = this.store;
+for (var i = 0; i &lt; s.length; i++) {
+var item = s[i];
+if (item &amp;&amp; typeof item == &#039;object&#039;) {
+omap.set(item, i);
+} else {
+pmap[item] = i;
+}
+}
+},
+add: function (item) {
+var key = this.store.push(item) - 1;
+if (item &amp;&amp; typeof item == &#039;object&#039;) {
+this.omap.set(item, key);
+} else {
+this.pmap[item] = key;
+}
+return &#039;#&#039; + key;
+},
+removeKey: function (key) {
+if (key = this._parseKey(key)) {
+this._removeFromMap(this.store[key]);
+delete this.store[key];
+}
+},
+_removeFromMap: function (item) {
+if (item &amp;&amp; typeof item == &#039;object&#039;) {
+this.omap.delete(item);
+} else {
+delete this.pmap[item];
+}
+},
+remove: function (item) {
+var key = this.getKey(item);
+this.removeKey(key);
+return key;
+},
+getKey: function (item) {
+var key;
+if (item &amp;&amp; typeof item == &#039;object&#039;) {
+key = this.omap.get(item);
+} else {
+key = this.pmap[item];
+}
+if (key != undefined) {
+return &#039;#&#039; + key;
+}
+},
+getKeys: function () {
+return Object.keys(this.store).map(function (key) {
+return &#039;#&#039; + key;
+});
+},
+_parseKey: function (key) {
+if (key &amp;&amp; key[0] == &#039;#&#039;) {
+return key.slice(1);
+}
+},
+setItem: function (key, item) {
+if (key = this._parseKey(key)) {
+var old = this.store[key];
+if (old) {
+this._removeFromMap(old);
+}
+if (item &amp;&amp; typeof item == &#039;object&#039;) {
+this.omap.set(item, key);
+} else {
+this.pmap[item] = key;
+}
+this.store[key] = item;
+}
+},
+getItem: function (key) {
+if (key = this._parseKey(key)) {
+return this.store[key];
+}
+},
+getItems: function () {
+var items = [], store = this.store;
+for (var key in store) {
+items.push(store[key]);
+}
+return items;
+},
+_applySplices: function (splices) {
+var keyMap = {}, key;
+for (var i = 0, s; i &lt; splices.length &amp;&amp; (s = splices[i]); i++) {
+s.addedKeys = [];
+for (var j = 0; j &lt; s.removed.length; j++) {
+key = this.getKey(s.removed[j]);
+keyMap[key] = keyMap[key] ? null : -1;
+}
+for (j = 0; j &lt; s.addedCount; j++) {
+var item = this.userArray[s.index + j];
+key = this.getKey(item);
+key = key === undefined ? this.add(item) : key;
+keyMap[key] = keyMap[key] ? null : 1;
+s.addedKeys.push(key);
+}
+}
+var removed = [];
+var added = [];
+for (key in keyMap) {
+if (keyMap[key] &lt; 0) {
+this.removeKey(key);
+removed.push(key);
+}
+if (keyMap[key] &gt; 0) {
+added.push(key);
+}
+}
+return [{
+removed: removed,
+added: added
+}];
+}
+};
+Polymer.Collection.get = function (userArray) {
+return Polymer._collections.get(userArray) || new Polymer.Collection(userArray);
+};
+Polymer.Collection.applySplices = function (userArray, splices) {
+var coll = Polymer._collections.get(userArray);
+return coll ? coll._applySplices(splices) : null;
+};Polymer({
+is: &#039;dom-repeat&#039;,
+extends: &#039;template&#039;,
+_template: null,
+properties: {
+items: { type: Array },
+as: {
+type: String,
+value: &#039;item&#039;
+},
+indexAs: {
+type: String,
+value: &#039;index&#039;
+},
+sort: {
+type: Function,
+observer: &#039;_sortChanged&#039;
+},
+filter: {
+type: Function,
+observer: &#039;_filterChanged&#039;
+},
+observe: {
+type: String,
+observer: &#039;_observeChanged&#039;
+},
+delay: Number,
+renderedItemCount: {
+type: Number,
+notify: true,
+readOnly: true
+},
+initialCount: {
+type: Number,
+observer: &#039;_initializeChunking&#039;
+},
+targetFramerate: {
+type: Number,
+value: 20
+},
+_targetFrameTime: {
+type: Number,
+computed: &#039;_computeFrameTime(targetFramerate)&#039;
+}
+},
+behaviors: [Polymer.Templatizer],
+observers: [&#039;_itemsChanged(items.*)&#039;],
+created: function () {
+this._instances = [];
+this._pool = [];
+this._limit = Infinity;
+var self = this;
+this._boundRenderChunk = function () {
+self._renderChunk();
+};
+},
+detached: function () {
+this.__isDetached = true;
+for (var i = 0; i &lt; this._instances.length; i++) {
+this._detachInstance(i);
+}
+},
+attached: function () {
+if (this.__isDetached) {
+this.__isDetached = false;
+var parent = Polymer.dom(Polymer.dom(this).parentNode);
+for (var i = 0; i &lt; this._instances.length; i++) {
+this._attachInstance(i, parent);
+}
+}
+},
+ready: function () {
+this._instanceProps = { __key__: true };
+this._instanceProps[this.as] = true;
+this._instanceProps[this.indexAs] = true;
+if (!this.ctor) {
+this.templatize(this);
+}
+},
+_sortChanged: function (sort) {
+var dataHost = this._getRootDataHost();
+this._sortFn = sort &amp;&amp; (typeof sort == &#039;function&#039; ? sort : function () {
+return dataHost[sort].apply(dataHost, arguments);
+});
+this._needFullRefresh = true;
+if (this.items) {
+this._debounceTemplate(this._render);
+}
+},
+_filterChanged: function (filter) {
+var dataHost = this._getRootDataHost();
+this._filterFn = filter &amp;&amp; (typeof filter == &#039;function&#039; ? filter : function () {
+return dataHost[filter].apply(dataHost, arguments);
+});
+this._needFullRefresh = true;
+if (this.items) {
+this._debounceTemplate(this._render);
+}
+},
+_computeFrameTime: function (rate) {
+return Math.ceil(1000 / rate);
+},
+_initializeChunking: function () {
+if (this.initialCount) {
+this._limit = this.initialCount;
+this._chunkCount = this.initialCount;
+this._lastChunkTime = performance.now();
+}
+},
+_tryRenderChunk: function () {
+if (this.items &amp;&amp; this._limit &lt; this.items.length) {
+this.debounce(&#039;renderChunk&#039;, this._requestRenderChunk);
+}
+},
+_requestRenderChunk: function () {
+requestAnimationFrame(this._boundRenderChunk);
+},
+_renderChunk: function () {
+var currChunkTime = performance.now();
+var ratio = this._targetFrameTime / (currChunkTime - this._lastChunkTime);
+this._chunkCount = Math.round(this._chunkCount * ratio) || 1;
+this._limit += this._chunkCount;
+this._lastChunkTime = currChunkTime;
+this._debounceTemplate(this._render);
+},
+_observeChanged: function () {
+this._observePaths = this.observe &amp;&amp; this.observe.replace(&#039;.*&#039;, &#039;.&#039;).split(&#039; &#039;);
+},
+_itemsChanged: function (change) {
+if (change.path == &#039;items&#039;) {
+if (Array.isArray(this.items)) {
+this.collection = Polymer.Collection.get(this.items);
+} else if (!this.items) {
+this.collection = null;
+} else {
+this._error(this._logf(&#039;dom-repeat&#039;, &#039;expected array for `items`,&#039; + &#039; found&#039;, this.items));
+}
+this._keySplices = [];
+this._indexSplices = [];
+this._needFullRefresh = true;
+this._initializeChunking();
+this._debounceTemplate(this._render);
+} else if (change.path == &#039;items.splices&#039;) {
+this._keySplices = this._keySplices.concat(change.value.keySplices);
+this._indexSplices = this._indexSplices.concat(change.value.indexSplices);
+this._debounceTemplate(this._render);
+} else {
+var subpath = change.path.slice(6);
+this._forwardItemPath(subpath, change.value);
+this._checkObservedPaths(subpath);
+}
+},
+_checkObservedPaths: function (path) {
+if (this._observePaths) {
+path = path.substring(path.indexOf(&#039;.&#039;) + 1);
+var paths = this._observePaths;
+for (var i = 0; i &lt; paths.length; i++) {
+if (path.indexOf(paths[i]) === 0) {
+this._needFullRefresh = true;
+if (this.delay) {
+this.debounce(&#039;render&#039;, this._render, this.delay);
+} else {
+this._debounceTemplate(this._render);
+}
+return;
+}
+}
+}
+},
+render: function () {
+this._needFullRefresh = true;
+this._debounceTemplate(this._render);
+this._flushTemplates();
+},
+_render: function () {
+if (this._needFullRefresh) {
+this._applyFullRefresh();
+this._needFullRefresh = false;
+} else if (this._keySplices.length) {
+if (this._sortFn) {
+this._applySplicesUserSort(this._keySplices);
+} else {
+if (this._filterFn) {
+this._applyFullRefresh();
+} else {
+this._applySplicesArrayOrder(this._indexSplices);
+}
+}
+} else {
+}
+this._keySplices = [];
+this._indexSplices = [];
+var keyToIdx = this._keyToInstIdx = {};
+for (var i = this._instances.length - 1; i &gt;= 0; i--) {
+var inst = this._instances[i];
+if (inst.isPlaceholder &amp;&amp; i &lt; this._limit) {
+inst = this._insertInstance(i, inst.__key__);
+} else if (!inst.isPlaceholder &amp;&amp; i &gt;= this._limit) {
+inst = this._downgradeInstance(i, inst.__key__);
+}
+keyToIdx[inst.__key__] = i;
+if (!inst.isPlaceholder) {
+inst.__setProperty(this.indexAs, i, true);
+}
+}
+this._pool.length = 0;
+this._setRenderedItemCount(this._instances.length);
+this.fire(&#039;dom-change&#039;);
+this._tryRenderChunk();
+},
+_applyFullRefresh: function () {
+var c = this.collection;
+var keys;
+if (this._sortFn) {
+keys = c ? c.getKeys() : [];
+} else {
+keys = [];
+var items = this.items;
+if (items) {
+for (var i = 0; i &lt; items.length; i++) {
+keys.push(c.getKey(items[i]));
+}
+}
+}
+var self = this;
+if (this._filterFn) {
+keys = keys.filter(function (a) {
+return self._filterFn(c.getItem(a));
+});
+}
+if (this._sortFn) {
+keys.sort(function (a, b) {
+return self._sortFn(c.getItem(a), c.getItem(b));
+});
+}
+for (i = 0; i &lt; keys.length; i++) {
+var key = keys[i];
+var inst = this._instances[i];
+if (inst) {
+inst.__key__ = key;
+if (!inst.isPlaceholder &amp;&amp; i &lt; this._limit) {
+inst.__setProperty(this.as, c.getItem(key), true);
+}
+} else if (i &lt; this._limit) {
+this._insertInstance(i, key);
+} else {
+this._insertPlaceholder(i, key);
+}
+}
+for (var j = this._instances.length - 1; j &gt;= i; j--) {
+this._detachAndRemoveInstance(j);
+}
+},
+_numericSort: function (a, b) {
+return a - b;
+},
+_applySplicesUserSort: function (splices) {
+var c = this.collection;
+var keyMap = {};
+var key;
+for (var i = 0, s; i &lt; splices.length &amp;&amp; (s = splices[i]); i++) {
+for (var j = 0; j &lt; s.removed.length; j++) {
+key = s.removed[j];
+keyMap[key] = keyMap[key] ? null : -1;
+}
+for (j = 0; j &lt; s.added.length; j++) {
+key = s.added[j];
+keyMap[key] = keyMap[key] ? null : 1;
+}
+}
+var removedIdxs = [];
+var addedKeys = [];
+for (key in keyMap) {
+if (keyMap[key] === -1) {
+removedIdxs.push(this._keyToInstIdx[key]);
+}
+if (keyMap[key] === 1) {
+addedKeys.push(key);
+}
+}
+if (removedIdxs.length) {
+removedIdxs.sort(this._numericSort);
+for (i = removedIdxs.length - 1; i &gt;= 0; i--) {
+var idx = removedIdxs[i];
+if (idx !== undefined) {
+this._detachAndRemoveInstance(idx);
+}
+}
+}
+var self = this;
+if (addedKeys.length) {
+if (this._filterFn) {
+addedKeys = addedKeys.filter(function (a) {
+return self._filterFn(c.getItem(a));
+});
+}
+addedKeys.sort(function (a, b) {
+return self._sortFn(c.getItem(a), c.getItem(b));
+});
+var start = 0;
+for (i = 0; i &lt; addedKeys.length; i++) {
+start = this._insertRowUserSort(start, addedKeys[i]);
+}
+}
+},
+_insertRowUserSort: function (start, key) {
+var c = this.collection;
+var item = c.getItem(key);
+var end = this._instances.length - 1;
+var idx = -1;
+while (start &lt;= end) {
+var mid = start + end &gt;&gt; 1;
+var midKey = this._instances[mid].__key__;
+var cmp = this._sortFn(c.getItem(midKey), item);
+if (cmp &lt; 0) {
+start = mid + 1;
+} else if (cmp &gt; 0) {
+end = mid - 1;
+} else {
+idx = mid;
+break;
+}
+}
+if (idx &lt; 0) {
+idx = end + 1;
+}
+this._insertPlaceholder(idx, key);
+return idx;
+},
+_applySplicesArrayOrder: function (splices) {
+for (var i = 0, s; i &lt; splices.length &amp;&amp; (s = splices[i]); i++) {
+for (var j = 0; j &lt; s.removed.length; j++) {
+this._detachAndRemoveInstance(s.index);
+}
+for (j = 0; j &lt; s.addedKeys.length; j++) {
+this._insertPlaceholder(s.index + j, s.addedKeys[j]);
+}
+}
+},
+_detachInstance: function (idx) {
+var inst = this._instances[idx];
+if (!inst.isPlaceholder) {
+for (var i = 0; i &lt; inst._children.length; i++) {
+var el = inst._children[i];
+Polymer.dom(inst.root).appendChild(el);
+}
+return inst;
+}
+},
+_attachInstance: function (idx, parent) {
+var inst = this._instances[idx];
+if (!inst.isPlaceholder) {
+parent.insertBefore(inst.root, this);
+}
+},
+_detachAndRemoveInstance: function (idx) {
+var inst = this._detachInstance(idx);
+if (inst) {
+this._pool.push(inst);
+}
+this._instances.splice(idx, 1);
+},
+_insertPlaceholder: function (idx, key) {
+this._instances.splice(idx, 0, {
+isPlaceholder: true,
+__key__: key
+});
+},
+_stampInstance: function (idx, key) {
+var model = { __key__: key };
+model[this.as] = this.collection.getItem(key);
+model[this.indexAs] = idx;
+return this.stamp(model);
+},
+_insertInstance: function (idx, key) {
+var inst = this._pool.pop();
+if (inst) {
+inst.__setProperty(this.as, this.collection.getItem(key), true);
+inst.__setProperty(&#039;__key__&#039;, key, true);
+} else {
+inst = this._stampInstance(idx, key);
+}
+var beforeRow = this._instances[idx + 1];
+var beforeNode = beforeRow &amp;&amp; !beforeRow.isPlaceholder ? beforeRow._children[0] : this;
+var parentNode = Polymer.dom(this).parentNode;
+Polymer.dom(parentNode).insertBefore(inst.root, beforeNode);
+this._instances[idx] = inst;
+return inst;
+},
+_downgradeInstance: function (idx, key) {
+var inst = this._detachInstance(idx);
+if (inst) {
+this._pool.push(inst);
+}
+inst = {
+isPlaceholder: true,
+__key__: key
+};
+this._instances[idx] = inst;
+return inst;
+},
+_showHideChildren: function (hidden) {
+for (var i = 0; i &lt; this._instances.length; i++) {
+this._instances[i]._showHideChildren(hidden);
+}
+},
+_forwardInstanceProp: function (inst, prop, value) {
+if (prop == this.as) {
+var idx;
+if (this._sortFn || this._filterFn) {
+idx = this.items.indexOf(this.collection.getItem(inst.__key__));
+} else {
+idx = inst[this.indexAs];
+}
+this.set(&#039;items.&#039; + idx, value);
+}
+},
+_forwardInstancePath: function (inst, path, value) {
+if (path.indexOf(this.as + &#039;.&#039;) === 0) {
+this._notifyPath(&#039;items.&#039; + inst.__key__ + &#039;.&#039; + path.slice(this.as.length + 1), value);
+}
+},
+_forwardParentProp: function (prop, value) {
+var i$ = this._instances;
+for (var i = 0, inst; i &lt; i$.length &amp;&amp; (inst = i$[i]); i++) {
+if (!inst.isPlaceholder) {
+inst.__setProperty(prop, value, true);
+}
+}
+},
+_forwardParentPath: function (path, value) {
+var i$ = this._instances;
+for (var i = 0, inst; i &lt; i$.length &amp;&amp; (inst = i$[i]); i++) {
+if (!inst.isPlaceholder) {
+inst._notifyPath(path, value, true);
+}
+}
+},
+_forwardItemPath: function (path, value) {
+if (this._keyToInstIdx) {
+var dot = path.indexOf(&#039;.&#039;);
+var key = path.substring(0, dot &lt; 0 ? path.length : dot);
+var idx = this._keyToInstIdx[key];
+var inst = this._instances[idx];
+if (inst &amp;&amp; !inst.isPlaceholder) {
+if (dot &gt;= 0) {
+path = this.as + &#039;.&#039; + path.substring(dot + 1);
+inst._notifyPath(path, value, true);
+} else {
+inst.__setProperty(this.as, value, true);
+}
+}
+}
+},
+itemForElement: function (el) {
+var instance = this.modelForElement(el);
+return instance &amp;&amp; instance[this.as];
+},
+keyForElement: function (el) {
+var instance = this.modelForElement(el);
+return instance &amp;&amp; instance.__key__;
+},
+indexForElement: function (el) {
+var instance = this.modelForElement(el);
+return instance &amp;&amp; instance[this.indexAs];
+}
+});Polymer({
+is: &#039;array-selector&#039;,
+_template: null,
+properties: {
+items: {
+type: Array,
+observer: &#039;clearSelection&#039;
+},
+multi: {
+type: Boolean,
+value: false,
+observer: &#039;clearSelection&#039;
+},
+selected: {
+type: Object,
+notify: true
+},
+selectedItem: {
+type: Object,
+notify: true
+},
+toggle: {
+type: Boolean,
+value: false
+}
+},
+clearSelection: function () {
+if (Array.isArray(this.selected)) {
+for (var i = 0; i &lt; this.selected.length; i++) {
+this.unlinkPaths(&#039;selected.&#039; + i);
+}
+} else {
+this.unlinkPaths(&#039;selected&#039;);
+this.unlinkPaths(&#039;selectedItem&#039;);
+}
+if (this.multi) {
+if (!this.selected || this.selected.length) {
+this.selected = [];
+this._selectedColl = Polymer.Collection.get(this.selected);
+}
+} else {
+this.selected = null;
+this._selectedColl = null;
+}
+this.selectedItem = null;
+},
+isSelected: function (item) {
+if (this.multi) {
+return this._selectedColl.getKey(item) !== undefined;
+} else {
+return this.selected == item;
+}
+},
+deselect: function (item) {
+if (this.multi) {
+if (this.isSelected(item)) {
+var skey = this._selectedColl.getKey(item);
+this.arrayDelete(&#039;selected&#039;, item);
+this.unlinkPaths(&#039;selected.&#039; + skey);
+}
+} else {
+this.selected = null;
+this.selectedItem = null;
+this.unlinkPaths(&#039;selected&#039;);
+this.unlinkPaths(&#039;selectedItem&#039;);
+}
+},
+select: function (item) {
+var icol = Polymer.Collection.get(this.items);
+var key = icol.getKey(item);
+if (this.multi) {
+if (this.isSelected(item)) {
+if (this.toggle) {
+this.deselect(item);
+}
+} else {
+this.push(&#039;selected&#039;, item);
+var skey = this._selectedColl.getKey(item);
+this.linkPaths(&#039;selected.&#039; + skey, &#039;items.&#039; + key);
+}
+} else {
+if (this.toggle &amp;&amp; item == this.selected) {
+this.deselect();
+} else {
+this.selected = item;
+this.selectedItem = item;
+this.linkPaths(&#039;selected&#039;, &#039;items.&#039; + key);
+this.linkPaths(&#039;selectedItem&#039;, &#039;items.&#039; + key);
+}
+}
+}
+});Polymer({
+is: &#039;dom-if&#039;,
+extends: &#039;template&#039;,
+_template: null,
+properties: {
+&#039;if&#039;: {
+type: Boolean,
+value: false,
+observer: &#039;_queueRender&#039;
+},
+restamp: {
+type: Boolean,
+value: false,
+observer: &#039;_queueRender&#039;
+}
+},
+behaviors: [Polymer.Templatizer],
+_queueRender: function () {
+this._debounceTemplate(this._render);
+},
+detached: function () {
+if (!this.parentNode || this.parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE &amp;&amp; (!Polymer.Settings.hasShadow || !(this.parentNode instanceof ShadowRoot))) {
+this._teardownInstance();
+}
+},
+attached: function () {
+if (this.if &amp;&amp; this.ctor) {
+this.async(this._ensureInstance);
+}
+},
+render: function () {
+this._flushTemplates();
+},
+_render: function () {
+if (this.if) {
+if (!this.ctor) {
+this.templatize(this);
+}
+this._ensureInstance();
+this._showHideChildren();
+} else if (this.restamp) {
+this._teardownInstance();
+}
+if (!this.restamp &amp;&amp; this._instance) {
+this._showHideChildren();
+}
+if (this.if != this._lastIf) {
+this.fire(&#039;dom-change&#039;);
+this._lastIf = this.if;
+}
+},
+_ensureInstance: function () {
+var parentNode = Polymer.dom(this).parentNode;
+if (parentNode) {
+var parent = Polymer.dom(parentNode);
+if (!this._instance) {
+this._instance = this.stamp();
+var root = this._instance.root;
+parent.insertBefore(root, this);
+} else {
+var c$ = this._instance._children;
+if (c$ &amp;&amp; c$.length) {
+var lastChild = Polymer.dom(this).previousSibling;
+if (lastChild !== c$[c$.length - 1]) {
+for (var i = 0, n; i &lt; c$.length &amp;&amp; (n = c$[i]); i++) {
+parent.insertBefore(n, this);
+}
+}
+}
+}
+}
+},
+_teardownInstance: function () {
+if (this._instance) {
+var c$ = this._instance._children;
+if (c$ &amp;&amp; c$.length) {
+var parent = Polymer.dom(Polymer.dom(c$[0]).parentNode);
+for (var i = 0, n; i &lt; c$.length &amp;&amp; (n = c$[i]); i++) {
+parent.removeChild(n);
+}
+}
+this._instance = null;
+}
+},
+_showHideChildren: function () {
+var hidden = this.__hideTemplateChildren__ || !this.if;
+if (this._instance) {
+this._instance._showHideChildren(hidden);
+}
+},
+_forwardParentProp: function (prop, value) {
+if (this._instance) {
+this._instance.__setProperty(prop, value, true);
+}
+},
+_forwardParentPath: function (path, value) {
+if (this._instance) {
+this._instance._notifyPath(path, value, true);
+}
+}
+});Polymer({
+is: &#039;dom-bind&#039;,
+extends: &#039;template&#039;,
+_template: null,
+created: function () {
+var self = this;
+Polymer.RenderStatus.whenReady(function () {
+if (document.readyState == &#039;loading&#039;) {
+document.addEventListener(&#039;DOMContentLoaded&#039;, function () {
+self._markImportsReady();
+});
+} else {
+self._markImportsReady();
+}
+});
+},
+_ensureReady: function () {
+if (!this._readied) {
+this._readySelf();
+}
+},
+_markImportsReady: function () {
+this._importsReady = true;
+this._ensureReady();
+},
+_registerFeatures: function () {
+this._prepConstructor();
+},
+_insertChildren: function () {
+var parentDom = Polymer.dom(Polymer.dom(this).parentNode);
+parentDom.insertBefore(this.root, this);
+},
+_removeChildren: function () {
+if (this._children) {
+for (var i = 0; i &lt; this._children.length; i++) {
+this.root.appendChild(this._children[i]);
+}
+}
+},
+_initFeatures: function () {
+},
+_scopeElementClass: function (element, selector) {
+if (this.dataHost) {
+return this.dataHost._scopeElementClass(element, selector);
+} else {
+return selector;
+}
+},
+_configureInstanceProperties: function () {
+},
+_prepConfigure: function () {
+var config = {};
+for (var prop in this._propertyEffects) {
+config[prop] = this[prop];
+}
+var setupConfigure = this._setupConfigure;
+this._setupConfigure = function () {
+setupConfigure.call(this, config);
+};
+},
+attached: function () {
+if (this._importsReady) {
+this.render();
+}
+},
+detached: function () {
+this._removeChildren();
+},
+render: function () {
+this._ensureReady();
+if (!this._children) {
+this._template = this;
+this._prepAnnotations();
+this._prepEffects();
+this._prepBehaviors();
+this._prepConfigure();
+this._prepBindings();
+this._prepPropertyInfo();
+Polymer.Base._initFeatures.call(this);
+this._children = Polymer.TreeApi.arrayCopyChildNodes(this.root);
+}
+this._insertChildren();
+this.fire(&#039;dom-change&#039;);
+}
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

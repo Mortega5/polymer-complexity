@@ -1,0 +1,18 @@
+{
+  "name": "polymer-complexity",
+  "version": "1.0.0",
+  "description": "Check complexity of a component",
+  "main": "complexity.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Miguel Ortega Moreno",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "jquery": "^3.1.1",
+    "jsdom": "^9.8.3",
+    "plato": "^1.7.0",
+    "promise": "^7.1.1"
+  }
+}

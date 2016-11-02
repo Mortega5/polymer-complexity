@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - test_component_polymer_polymer-micro.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>test_component_polymer_polymer-micro.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">70.57</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">707</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">92.16</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">8.90</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">(function () {
+function resolve() {
+document.body.removeAttribute(&#039;unresolved&#039;);
+}
+if (window.WebComponents) {
+addEventListener(&#039;WebComponentsReady&#039;, resolve);
+} else {
+if (document.readyState === &#039;interactive&#039; || document.readyState === &#039;complete&#039;) {
+resolve();
+} else {
+addEventListener(&#039;DOMContentLoaded&#039;, resolve);
+}
+}
+}());window.Polymer = {
+Settings: function () {
+var settings = window.Polymer || {};
+if (!settings.noUrlSettings) {
+var parts = location.search.slice(1).split(&#039;&amp;&#039;);
+for (var i = 0, o; i &lt; parts.length &amp;&amp; (o = parts[i]); i++) {
+o = o.split(&#039;=&#039;);
+o[0] &amp;&amp; (settings[o[0]] = o[1] || true);
+}
+}
+settings.wantShadow = settings.dom === &#039;shadow&#039;;
+settings.hasShadow = Boolean(Element.prototype.createShadowRoot);
+settings.nativeShadow = settings.hasShadow &amp;&amp; !window.ShadowDOMPolyfill;
+settings.useShadow = settings.wantShadow &amp;&amp; settings.hasShadow;
+settings.hasNativeImports = Boolean(&#039;import&#039; in document.createElement(&#039;link&#039;));
+settings.useNativeImports = settings.hasNativeImports;
+settings.useNativeCustomElements = !window.CustomElements || window.CustomElements.useNative;
+settings.useNativeShadow = settings.useShadow &amp;&amp; settings.nativeShadow;
+settings.usePolyfillProto = !settings.useNativeCustomElements &amp;&amp; !Object.__proto__;
+settings.hasNativeCSSProperties = !navigator.userAgent.match(&#039;AppleWebKit/601&#039;) &amp;&amp; window.CSS &amp;&amp; CSS.supports &amp;&amp; CSS.supports(&#039;box-shadow&#039;, &#039;0 0 0 var(--foo)&#039;);
+settings.useNativeCSSProperties = settings.hasNativeCSSProperties &amp;&amp; settings.lazyRegister &amp;&amp; settings.useNativeCSSProperties;
+return settings;
+}()
+};(function () {
+var userPolymer = window.Polymer;
+window.Polymer = function (prototype) {
+if (typeof prototype === &#039;function&#039;) {
+prototype = prototype.prototype;
+}
+if (!prototype) {
+prototype = {};
+}
+var factory = desugar(prototype);
+prototype = factory.prototype;
+var options = { prototype: prototype };
+if (prototype.extends) {
+options.extends = prototype.extends;
+}
+Polymer.telemetry._registrate(prototype);
+document.registerElement(prototype.is, options);
+return factory;
+};
+var desugar = function (prototype) {
+var base = Polymer.Base;
+if (prototype.extends) {
+base = Polymer.Base._getExtendedPrototype(prototype.extends);
+}
+prototype = Polymer.Base.chainObject(prototype, base);
+prototype.registerCallback();
+return prototype.constructor;
+};
+if (userPolymer) {
+for (var i in userPolymer) {
+Polymer[i] = userPolymer[i];
+}
+}
+Polymer.Class = desugar;
+}());
+Polymer.telemetry = {
+registrations: [],
+_regLog: function (prototype) {
+console.log(&#039;[&#039; + prototype.is + &#039;]: registered&#039;);
+},
+_registrate: function (prototype) {
+this.registrations.push(prototype);
+Polymer.log &amp;&amp; this._regLog(prototype);
+},
+dumpRegistrations: function () {
+this.registrations.forEach(this._regLog);
+}
+};Object.defineProperty(window, &#039;currentImport&#039;, {
+enumerable: true,
+configurable: true,
+get: function () {
+return (document._currentScript || document.currentScript).ownerDocument;
+}
+});Polymer.RenderStatus = {
+_ready: false,
+_callbacks: [],
+whenReady: function (cb) {
+if (this._ready) {
+cb();
+} else {
+this._callbacks.push(cb);
+}
+},
+_makeReady: function () {
+this._ready = true;
+for (var i = 0; i &lt; this._callbacks.length; i++) {
+this._callbacks[i]();
+}
+this._callbacks = [];
+},
+_catchFirstRender: function () {
+requestAnimationFrame(function () {
+Polymer.RenderStatus._makeReady();
+});
+},
+_afterNextRenderQueue: [],
+_waitingNextRender: false,
+afterNextRender: function (element, fn, args) {
+this._watchNextRender();
+this._afterNextRenderQueue.push([
+element,
+fn,
+args
+]);
+},
+hasRendered: function () {
+return this._ready;
+},
+_watchNextRender: function () {
+if (!this._waitingNextRender) {
+this._waitingNextRender = true;
+var fn = function () {
+Polymer.RenderStatus._flushNextRender();
+};
+if (!this._ready) {
+this.whenReady(fn);
+} else {
+requestAnimationFrame(fn);
+}
+}
+},
+_flushNextRender: function () {
+var self = this;
+setTimeout(function () {
+self._flushRenderCallbacks(self._afterNextRenderQueue);
+self._afterNextRenderQueue = [];
+self._waitingNextRender = false;
+});
+},
+_flushRenderCallbacks: function (callbacks) {
+for (var i = 0, h; i &lt; callbacks.length; i++) {
+h = callbacks[i];
+h[1].apply(h[0], h[2] || Polymer.nar);
+}
+}
+};
+if (window.HTMLImports) {
+HTMLImports.whenReady(function () {
+Polymer.RenderStatus._catchFirstRender();
+});
+} else {
+Polymer.RenderStatus._catchFirstRender();
+}
+Polymer.ImportStatus = Polymer.RenderStatus;
+Polymer.ImportStatus.whenLoaded = Polymer.ImportStatus.whenReady;(function () {
+&#039;use strict&#039;;
+var settings = Polymer.Settings;
+Polymer.Base = {
+__isPolymerInstance__: true,
+_addFeature: function (feature) {
+this.extend(this, feature);
+},
+registerCallback: function () {
+if (settings.lazyRegister === &#039;max&#039;) {
+if (this.beforeRegister) {
+this.beforeRegister();
+}
+} else {
+this._desugarBehaviors();
+this._doBehavior(&#039;beforeRegister&#039;);
+}
+this._registerFeatures();
+if (!settings.lazyRegister) {
+this.ensureRegisterFinished();
+}
+},
+createdCallback: function () {
+if (!this.__hasRegisterFinished) {
+this._ensureRegisterFinished(this.__proto__);
+}
+Polymer.telemetry.instanceCount++;
+this.root = this;
+this._doBehavior(&#039;created&#039;);
+this._initFeatures();
+},
+ensureRegisterFinished: function () {
+this._ensureRegisterFinished(this);
+},
+_ensureRegisterFinished: function (proto) {
+if (proto.__hasRegisterFinished !== proto.is || !proto.is) {
+if (settings.lazyRegister === &#039;max&#039;) {
+proto._desugarBehaviors();
+proto._doBehaviorOnly(&#039;beforeRegister&#039;);
+}
+proto.__hasRegisterFinished = proto.is;
+if (proto._finishRegisterFeatures) {
+proto._finishRegisterFeatures();
+}
+proto._doBehavior(&#039;registered&#039;);
+if (settings.usePolyfillProto &amp;&amp; proto !== this) {
+proto.extend(this, proto);
+}
+}
+},
+attachedCallback: function () {
+var self = this;
+Polymer.RenderStatus.whenReady(function () {
+self.isAttached = true;
+self._doBehavior(&#039;attached&#039;);
+});
+},
+detachedCallback: function () {
+var self = this;
+Polymer.RenderStatus.whenReady(function () {
+self.isAttached = false;
+self._doBehavior(&#039;detached&#039;);
+});
+},
+attributeChangedCallback: function (name, oldValue, newValue) {
+this._attributeChangedImpl(name);
+this._doBehavior(&#039;attributeChanged&#039;, [
+name,
+oldValue,
+newValue
+]);
+},
+_attributeChangedImpl: function (name) {
+this._setAttributeToProperty(this, name);
+},
+extend: function (target, source) {
+if (target &amp;&amp; source) {
+var n$ = Object.getOwnPropertyNames(source);
+for (var i = 0, n; i &lt; n$.length &amp;&amp; (n = n$[i]); i++) {
+this.copyOwnProperty(n, source, target);
+}
+}
+return target || source;
+},
+mixin: function (target, source) {
+for (var i in source) {
+target[i] = source[i];
+}
+return target;
+},
+copyOwnProperty: function (name, source, target) {
+var pd = Object.getOwnPropertyDescriptor(source, name);
+if (pd) {
+Object.defineProperty(target, name, pd);
+}
+},
+_logger: function (level, args) {
+if (args.length === 1 &amp;&amp; Array.isArray(args[0])) {
+args = args[0];
+}
+switch (level) {
+case &#039;log&#039;:
+case &#039;warn&#039;:
+case &#039;error&#039;:
+console[level].apply(console, args);
+break;
+}
+},
+_log: function () {
+var args = Array.prototype.slice.call(arguments, 0);
+this._logger(&#039;log&#039;, args);
+},
+_warn: function () {
+var args = Array.prototype.slice.call(arguments, 0);
+this._logger(&#039;warn&#039;, args);
+},
+_error: function () {
+var args = Array.prototype.slice.call(arguments, 0);
+this._logger(&#039;error&#039;, args);
+},
+_logf: function () {
+return this._logPrefix.concat(this.is).concat(Array.prototype.slice.call(arguments, 0));
+}
+};
+Polymer.Base._logPrefix = function () {
+var color = window.chrome &amp;&amp; !/edge/i.test(navigator.userAgent) || /firefox/i.test(navigator.userAgent);
+return color ? [
+&#039;%c[%s::%s]:&#039;,
+&#039;font-weight: bold; background-color:#EEEE00;&#039;
+] : [&#039;[%s::%s]:&#039;];
+}();
+Polymer.Base.chainObject = function (object, inherited) {
+if (object &amp;&amp; inherited &amp;&amp; object !== inherited) {
+if (!Object.__proto__) {
+object = Polymer.Base.extend(Object.create(inherited), object);
+}
+object.__proto__ = inherited;
+}
+return object;
+};
+Polymer.Base = Polymer.Base.chainObject(Polymer.Base, HTMLElement.prototype);
+if (window.CustomElements) {
+Polymer.instanceof = CustomElements.instanceof;
+} else {
+Polymer.instanceof = function (obj, ctor) {
+return obj instanceof ctor;
+};
+}
+Polymer.isInstance = function (obj) {
+return Boolean(obj &amp;&amp; obj.__isPolymerInstance__);
+};
+Polymer.telemetry.instanceCount = 0;
+}());(function () {
+var modules = {};
+var lcModules = {};
+var findModule = function (id) {
+return modules[id] || lcModules[id.toLowerCase()];
+};
+var DomModule = function () {
+return document.createElement(&#039;dom-module&#039;);
+};
+DomModule.prototype = Object.create(HTMLElement.prototype);
+Polymer.Base.extend(DomModule.prototype, {
+constructor: DomModule,
+createdCallback: function () {
+this.register();
+},
+register: function (id) {
+id = id || this.id || this.getAttribute(&#039;name&#039;) || this.getAttribute(&#039;is&#039;);
+if (id) {
+this.id = id;
+modules[id] = this;
+lcModules[id.toLowerCase()] = this;
+}
+},
+import: function (id, selector) {
+if (id) {
+var m = findModule(id);
+if (!m) {
+forceDomModulesUpgrade();
+m = findModule(id);
+}
+if (m &amp;&amp; selector) {
+m = m.querySelector(selector);
+}
+return m;
+}
+}
+});
+var cePolyfill = window.CustomElements &amp;&amp; !CustomElements.useNative;
+document.registerElement(&#039;dom-module&#039;, DomModule);
+function forceDomModulesUpgrade() {
+if (cePolyfill) {
+var script = document._currentScript || document.currentScript;
+var doc = script &amp;&amp; script.ownerDocument || document;
+var modules = doc.querySelectorAll(&#039;dom-module&#039;);
+for (var i = modules.length - 1, m; i &gt;= 0 &amp;&amp; (m = modules[i]); i--) {
+if (m.__upgraded__) {
+return;
+} else {
+CustomElements.upgrade(m);
+}
+}
+}
+}
+}());Polymer.Base._addFeature({
+_prepIs: function () {
+if (!this.is) {
+var module = (document._currentScript || document.currentScript).parentNode;
+if (module.localName === &#039;dom-module&#039;) {
+var id = module.id || module.getAttribute(&#039;name&#039;) || module.getAttribute(&#039;is&#039;);
+this.is = id;
+}
+}
+if (this.is) {
+this.is = this.is.toLowerCase();
+}
+}
+});Polymer.Base._addFeature({
+behaviors: [],
+_desugarBehaviors: function () {
+if (this.behaviors.length) {
+this.behaviors = this._desugarSomeBehaviors(this.behaviors);
+}
+},
+_desugarSomeBehaviors: function (behaviors) {
+var behaviorSet = [];
+behaviors = this._flattenBehaviorsList(behaviors);
+for (var i = behaviors.length - 1; i &gt;= 0; i--) {
+var b = behaviors[i];
+if (behaviorSet.indexOf(b) === -1) {
+this._mixinBehavior(b);
+behaviorSet.unshift(b);
+}
+}
+return behaviorSet;
+},
+_flattenBehaviorsList: function (behaviors) {
+var flat = [];
+for (var i = 0; i &lt; behaviors.length; i++) {
+var b = behaviors[i];
+if (b instanceof Array) {
+flat = flat.concat(this._flattenBehaviorsList(b));
+} else if (b) {
+flat.push(b);
+} else {
+this._warn(this._logf(&#039;_flattenBehaviorsList&#039;, &#039;behavior is null, check for missing or 404 import&#039;));
+}
+}
+return flat;
+},
+_mixinBehavior: function (b) {
+var n$ = Object.getOwnPropertyNames(b);
+for (var i = 0, n; i &lt; n$.length &amp;&amp; (n = n$[i]); i++) {
+if (!Polymer.Base._behaviorProperties[n] &amp;&amp; !this.hasOwnProperty(n)) {
+this.copyOwnProperty(n, b, this);
+}
+}
+},
+_prepBehaviors: function () {
+this._prepFlattenedBehaviors(this.behaviors);
+},
+_prepFlattenedBehaviors: function (behaviors) {
+for (var i = 0, l = behaviors.length; i &lt; l; i++) {
+this._prepBehavior(behaviors[i]);
+}
+this._prepBehavior(this);
+},
+_doBehavior: function (name, args) {
+for (var i = 0; i &lt; this.behaviors.length; i++) {
+this._invokeBehavior(this.behaviors[i], name, args);
+}
+this._invokeBehavior(this, name, args);
+},
+_doBehaviorOnly: function (name, args) {
+for (var i = 0; i &lt; this.behaviors.length; i++) {
+this._invokeBehavior(this.behaviors[i], name, args);
+}
+},
+_invokeBehavior: function (b, name, args) {
+var fn = b[name];
+if (fn) {
+fn.apply(this, args || Polymer.nar);
+}
+},
+_marshalBehaviors: function () {
+for (var i = 0; i &lt; this.behaviors.length; i++) {
+this._marshalBehavior(this.behaviors[i]);
+}
+this._marshalBehavior(this);
+}
+});
+Polymer.Base._behaviorProperties = {
+hostAttributes: true,
+beforeRegister: true,
+registered: true,
+properties: true,
+observers: true,
+listeners: true,
+created: true,
+attached: true,
+detached: true,
+attributeChanged: true,
+ready: true
+};Polymer.Base._addFeature({
+_getExtendedPrototype: function (tag) {
+return this._getExtendedNativePrototype(tag);
+},
+_nativePrototypes: {},
+_getExtendedNativePrototype: function (tag) {
+var p = this._nativePrototypes[tag];
+if (!p) {
+var np = this.getNativePrototype(tag);
+p = this.extend(Object.create(np), Polymer.Base);
+this._nativePrototypes[tag] = p;
+}
+return p;
+},
+getNativePrototype: function (tag) {
+return Object.getPrototypeOf(document.createElement(tag));
+}
+});Polymer.Base._addFeature({
+_prepConstructor: function () {
+this._factoryArgs = this.extends ? [
+this.extends,
+this.is
+] : [this.is];
+var ctor = function () {
+return this._factory(arguments);
+};
+if (this.hasOwnProperty(&#039;extends&#039;)) {
+ctor.extends = this.extends;
+}
+Object.defineProperty(this, &#039;constructor&#039;, {
+value: ctor,
+writable: true,
+configurable: true
+});
+ctor.prototype = this;
+},
+_factory: function (args) {
+var elt = document.createElement.apply(document, this._factoryArgs);
+if (this.factoryImpl) {
+this.factoryImpl.apply(elt, args);
+}
+return elt;
+}
+});Polymer.nob = Object.create(null);
+Polymer.Base._addFeature({
+properties: {},
+getPropertyInfo: function (property) {
+var info = this._getPropertyInfo(property, this.properties);
+if (!info) {
+for (var i = 0; i &lt; this.behaviors.length; i++) {
+info = this._getPropertyInfo(property, this.behaviors[i].properties);
+if (info) {
+return info;
+}
+}
+}
+return info || Polymer.nob;
+},
+_getPropertyInfo: function (property, properties) {
+var p = properties &amp;&amp; properties[property];
+if (typeof p === &#039;function&#039;) {
+p = properties[property] = { type: p };
+}
+if (p) {
+p.defined = true;
+}
+return p;
+},
+_prepPropertyInfo: function () {
+this._propertyInfo = {};
+for (var i = 0; i &lt; this.behaviors.length; i++) {
+this._addPropertyInfo(this._propertyInfo, this.behaviors[i].properties);
+}
+this._addPropertyInfo(this._propertyInfo, this.properties);
+this._addPropertyInfo(this._propertyInfo, this._propertyEffects);
+},
+_addPropertyInfo: function (target, source) {
+if (source) {
+var t, s;
+for (var i in source) {
+t = target[i];
+s = source[i];
+if (i[0] === &#039;_&#039; &amp;&amp; !s.readOnly) {
+continue;
+}
+if (!target[i]) {
+target[i] = {
+type: typeof s === &#039;function&#039; ? s : s.type,
+readOnly: s.readOnly,
+attribute: Polymer.CaseMap.camelToDashCase(i)
+};
+} else {
+if (!t.type) {
+t.type = s.type;
+}
+if (!t.readOnly) {
+t.readOnly = s.readOnly;
+}
+}
+}
+}
+}
+});Polymer.CaseMap = {
+_caseMap: {},
+_rx: {
+dashToCamel: /-[a-z]/g,
+camelToDash: /([A-Z])/g
+},
+dashToCamelCase: function (dash) {
+return this._caseMap[dash] || (this._caseMap[dash] = dash.indexOf(&#039;-&#039;) &lt; 0 ? dash : dash.replace(this._rx.dashToCamel, function (m) {
+return m[1].toUpperCase();
+}));
+},
+camelToDashCase: function (camel) {
+return this._caseMap[camel] || (this._caseMap[camel] = camel.replace(this._rx.camelToDash, &#039;-$1&#039;).toLowerCase());
+}
+};Polymer.Base._addFeature({
+_addHostAttributes: function (attributes) {
+if (!this._aggregatedAttributes) {
+this._aggregatedAttributes = {};
+}
+if (attributes) {
+this.mixin(this._aggregatedAttributes, attributes);
+}
+},
+_marshalHostAttributes: function () {
+if (this._aggregatedAttributes) {
+this._applyAttributes(this, this._aggregatedAttributes);
+}
+},
+_applyAttributes: function (node, attr$) {
+for (var n in attr$) {
+if (!this.hasAttribute(n) &amp;&amp; n !== &#039;class&#039;) {
+var v = attr$[n];
+this.serializeValueToAttribute(v, n, this);
+}
+}
+},
+_marshalAttributes: function () {
+this._takeAttributesToModel(this);
+},
+_takeAttributesToModel: function (model) {
+if (this.hasAttributes()) {
+for (var i in this._propertyInfo) {
+var info = this._propertyInfo[i];
+if (this.hasAttribute(info.attribute)) {
+this._setAttributeToProperty(model, info.attribute, i, info);
+}
+}
+}
+},
+_setAttributeToProperty: function (model, attribute, property, info) {
+if (!this._serializing) {
+property = property || Polymer.CaseMap.dashToCamelCase(attribute);
+info = info || this._propertyInfo &amp;&amp; this._propertyInfo[property];
+if (info &amp;&amp; !info.readOnly) {
+var v = this.getAttribute(attribute);
+model[property] = this.deserialize(v, info.type);
+}
+}
+},
+_serializing: false,
+reflectPropertyToAttribute: function (property, attribute, value) {
+this._serializing = true;
+value = value === undefined ? this[property] : value;
+this.serializeValueToAttribute(value, attribute || Polymer.CaseMap.camelToDashCase(property));
+this._serializing = false;
+},
+serializeValueToAttribute: function (value, attribute, node) {
+var str = this.serialize(value);
+node = node || this;
+if (str === undefined) {
+node.removeAttribute(attribute);
+} else {
+node.setAttribute(attribute, str);
+}
+},
+deserialize: function (value, type) {
+switch (type) {
+case Number:
+value = Number(value);
+break;
+case Boolean:
+value = value != null;
+break;
+case Object:
+try {
+value = JSON.parse(value);
+} catch (x) {
+}
+break;
+case Array:
+try {
+value = JSON.parse(value);
+} catch (x) {
+value = null;
+console.warn(&#039;Polymer::Attributes: couldn`t decode Array as JSON&#039;);
+}
+break;
+case Date:
+value = new Date(value);
+break;
+case String:
+default:
+break;
+}
+return value;
+},
+serialize: function (value) {
+switch (typeof value) {
+case &#039;boolean&#039;:
+return value ? &#039;&#039; : undefined;
+case &#039;object&#039;:
+if (value instanceof Date) {
+return value.toString();
+} else if (value) {
+try {
+return JSON.stringify(value);
+} catch (x) {
+return &#039;&#039;;
+}
+}
+default:
+return value != null ? value : undefined;
+}
+}
+});Polymer.version = &quot;1.7.0&quot;;Polymer.Base._addFeature({
+_registerFeatures: function () {
+this._prepIs();
+this._prepBehaviors();
+this._prepConstructor();
+this._prepPropertyInfo();
+},
+_prepBehavior: function (b) {
+this._addHostAttributes(b.hostAttributes);
+},
+_marshalBehavior: function (b) {
+},
+_initFeatures: function () {
+this._marshalHostAttributes();
+this._marshalBehaviors();
+}
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
