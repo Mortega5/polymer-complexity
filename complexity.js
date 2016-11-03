@@ -10,26 +10,21 @@ var TMP_FOLDER = '.tmp_plato/';
 program
 .version('1.0.0')
 .option('-o --output <output>', 'Directory of output will be stored')
-.option('-r --root <root>','Root directory. Default current')
+.option('-r --root','Root directory. Default current')
 .arguments('<component>')
 .action(function(component){
   program.component = component;
 })
 .parse(process.argv);
-
-program.root = program.root || './';
-console.log(program.component, program.output)
 if (typeof  program.component === 'undefined' || typeof program.output === 'undefined'){
-  program.help();
+    program.help();
 }
 
 // Program
 function getCurrentDir(file){
   var split = file.split('/');
   split.length = split.length -1;
-  // remove reference to current folder
-  if (split[0] === '.') split.splice(0,1);
-  return program.root + split.join('/') + '/';
+  return split.join('/') + '/';
 }
 function removeDotDot(url){
   var realUrl = [];
@@ -43,11 +38,24 @@ function removeDotDot(url){
   }
   return realUrl.join('/');
 }
-// TODO fix: if there're multiple script this code doesnt work
-function getScripts(file, observed) {
+function getScriptFromScript(file){
+  return new Promise(function(resolve, reject){
+    file = removeDotDot(file);
+    fs.readFile(file,function(err, file){
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve([{file:file,script:script}]);
+      }
+    });
+  });
+}
+function getScripts(file) {
   file = removeDotDot(file);
   var html = fs.readFileSync(file, "utf-8");
   var current_dir = getCurrentDir(file);
+
   return new Promise(function(resolve,reject){
     jsdom.env(html,function(err, window){
       if (err){
@@ -55,13 +63,16 @@ function getScripts(file, observed) {
         return;
       }
       var $ = jquery(window);
-      var $scripts = $('script');
+      var $script = $('script').html();
       var $imports = $('link[rel="import"]');
       var promises = [];
+      // get scripts
+
+      // get imports
       if ($imports){
         $imports.each(function(index){
           var file_dir = current_dir + $(this).attr('href');
-          promises.push(getScripts(file_dir, observed));
+          promises.push(getScripts(file_dir));
         });
       }
       if (promises.length >0){
@@ -122,7 +133,7 @@ function createTmp(){
 }
 function createFiles(files){
   var new_dir = [];
-  var errrFn = function(err, file){
+  function errFn(err, file){
     if (err) {
       console.log(err);
       return;
@@ -139,7 +150,7 @@ function createFiles(files){
     fs.write(fd, files[i].script, null, 'utf8', errFn);
   }
   return new_dir;
-};
+}
 
 
 // MAIN
@@ -147,7 +158,8 @@ getScripts(program.component).then(function(results){
   removeRepeted(results);
   createTmp();
   var files_dir = createFiles(results);
-  plato.inspect(files_dir, program.output, {}, function(){
+  console.log(files_dir);
+  plato.inspect(files_dir, program.output || 'results', {}, function(results){
     console.log('Generated results');
     deleteFolderRecursive(TMP_FOLDER);
   });

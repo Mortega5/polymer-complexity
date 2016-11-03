@@ -1,52 +1,4 @@
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 
-<link rel="import" href="../polymer/polymer.html">
-
-<!--
-
-
-Element for get the coordinate of anyname using Google Maps Geocoding
-
-Example:
-```
-<google-geocoding  city="Madrid" api_key="asd3rgsad5Ded-2123DeeEW"></google-geocoding>
-```
-
-
-@demo demo/index.html
-@hero hero.svg
-@element google-geocoding
-@blurb Element for get the coordinate of anyname using Google Maps Geocoding
-@status beta
-@homepage https://github.com/Mortega5/google-geocoding
--->
-
-
-<link rel="import" href="../iron-ajax/iron-ajax.html" />
-
-<dom-module id="google-geocoding">
-  <template>
-  <style>
-  :host {
-    display: none;
-  }
-  </style>
-  <iron-ajax id="requestGeocode"  method="GET"
-  url="https://maps.googleapis.com/maps/api/geocode/json"
-  params="{{geo_params}}"  handle-as="json" on-response="_geocodingResponse"
-  on-error="_gecodingError" on-request="_geocodingResquest">
-</iron-ajax>
-</template>
-
-<script>
 Polymer({
   is: 'google-geocoding',
   /**
@@ -212,5 +164,3 @@ Polymer({
   }
 
 });
-</script>
-</dom-module>
