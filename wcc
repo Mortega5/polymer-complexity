@@ -11,7 +11,8 @@ var http = require('http');
 var https = require('https');
 var connect = require('connect');
 var serveStatic = require('serve-static');
-
+var analyzeCss = require('analyze-css');
+var async = require('async');
 // STATIC FOLDER
 var TMP_FOLDER = '.tmp_plato/';
 
@@ -21,8 +22,6 @@ program
 .option('-o --output <output>', 'Directory of output will be stored')
 .option('-r --recursive', 'Enable recursive analyze')
 .option('-d --delete','Remove output folder if exist')
-.option('-s --server','Deploy a server when plato finnish')
-.option('-p --port','Port of the server. Only if a server is deployed')
 .arguments('<component>')
 .action(function(component){
   program.component = component;
@@ -33,8 +32,7 @@ program
 if (typeof  program.component === 'undefined' || typeof program.output === 'undefined'){
   program.help();
 }
-program.port = program.port || 8080;
-
+program.output = program.output || 'results';
 // Auxiliar functions
 
 /**
@@ -139,7 +137,6 @@ function getScripts(file, recursive) {
       var $script = "";
       var $imports = $('link[rel="import"]');
       var promises = [];
-
       // get scripts
       $('script').each(function(index){
         // script element
@@ -263,22 +260,46 @@ function createFiles(files, folder){
   return new_dir;
 }
 
+function generateJSreport(files_dir, output, options){
+  return function(cb){
+    plato.inspect(files_dir, output, options || {}, function(results){
+      console.log('Generated JS report');
+      cb(null, results);
+    });
+  };
+}
 
+function generateCSSReport(file, options){
+  file = removeDotDot(file);
+  var html = fs.readFileSync(file, "utf-8");
+  return function(cb){
+      var css = "";
+      var re = /<style[^>]*>([\w\W]*?)<\/style>/gm;
+      var match;
+
+      while ( ( match = re.exec(html) ) !== null )
+      {
+        if (match.length > 1){
+            css += match[1]+ '\n';
+        }
+      }
+      console.log('CSS', css);
+      new analyzeCss(css, options, cb);
+  };
+}
 // MAIN
 if (program.delete) deleteFolderRecursive(program.output);
-
 getScripts(program.component, program.recursive).then(function(results){
   removeRepeted(results);
   createTmp(TMP_FOLDER);
   var files_dir = createFiles(results, TMP_FOLDER);
-  plato.inspect(files_dir, program.output || 'results', {}, function(results){
-    console.log('Generated results');
+  var parallel = [generateJSreport(files_dir, program.output,{}), generateCSSReport(program.component,{})];
+  async.parallel(parallel, function(err, results){
     deleteFolderRecursive(TMP_FOLDER);
-    if (program.server){
-      connect().use(serveStatic(program.output)).listen(program.port,function(){
-        console.log('Server running on ' + program.port + '...');
-      });
+    if(err) {
+      return console.log(err);
     }
+    console.log({js:results[0],css:results[1]});
   });
 
 },function(err){
