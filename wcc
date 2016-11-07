@@ -283,8 +283,12 @@ function generateCSSReport(file, options){
             css += match[1]+ '\n';
         }
       }
-      console.log('CSS', css);
-      new analyzeCss(css, options, cb);
+      new analyzeCss(css, options, function(err,results){
+        if(!err){
+          console.log('Generated CSS report');
+        }
+        cb(err,results);
+      });
   };
 }
 // MAIN
@@ -299,7 +303,8 @@ getScripts(program.component, program.recursive).then(function(results){
     if(err) {
       return console.log(err);
     }
-    console.log({js:results[0],css:results[1]});
+    var report ={js:results[0],css:results[1]};
+    createFiles([{file:'complexityReport.json',script:JSON.stringify(report,null,2)}],program.output+'/');
   });
 
 },function(err){
