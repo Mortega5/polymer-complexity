@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - .tmp_plato/07314593019113274/bower_components_twitter-timeline-maintenance_static_twitter-timeline.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>.tmp_plato/07314593019113274/bower_components_twitter-timeline-maintenance_static_twitter-timeline.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.92</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">337</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">87.83</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.28</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">Polymer({
+  is:&quot;twitter-timeline&quot;,
+  properties: {
+    index: {
+      type: Number,
+      value: 20,
+      observer:&quot;renderTemplate&quot;
+    },
+    show: {
+      type: Boolean,
+      value: true,
+    },
+    since_id: {
+      type: String,
+      value:&quot;&quot;
+    },
+    endpoint: {
+      type: String,
+      notify: true,
+      reflectToAttribute: true
+    },
+    language: {
+      type: String,
+      value: &quot;es&quot;,
+      reflectToAttribute: true,
+      observer: &quot;_languageChanged&quot;
+    },
+    count: {
+      type: Number,
+      value: 200,
+      notify: true,
+      reflectToAttribute: true
+    },
+    /*1 seg = 1000*/
+    refresh_time: {
+      type: Number,
+      value: 120000,
+      notify: true,
+      reflectToAttribute: true
+    },
+    access_token: {
+      type: String,
+      value: &quot;&quot;,
+      notify: true,
+      reflectToAttribute: true
+    },
+    secret_token: {
+      type: String,
+      value: &quot;&quot;,
+      notify: true,
+      reflectToAttribute: true
+    },
+    consumer_key: {
+      type: String,
+      value: &quot;&quot;,
+      notify: true,
+      reflectToAttribute: true
+    },
+    consumer_secret: {
+      type: String,
+      value: &quot;&quot;,
+      notify: true,
+      reflectToAttribute: true
+    },
+    language_url: {
+      type: String,
+      computed: &quot;_calculateLanguageUrl(idiom)&quot;
+    },
+    timeline_params: {
+      type: String,
+      computed: &quot;_calculatetimelineParams(access_token, secret_token, consumer_key, consumer_secret, count)&quot;
+    },
+    events: {
+      type: Array,
+      value: [],
+      notify: true
+    },
+    language_data: {
+      type: Array,
+      value: []
+    },
+    mockUrl: {
+      type: String,
+      value: function(){
+        return this.resolveUrl(&#039;mockData/tweets.json&#039;);
+      }
+    },
+    step: {
+      type:Number,
+      value:0
+    },
+    discardStepNumber:{
+      type:Number,
+      value:6
+    }
+  },
+
+  attached: function(){
+    this.decrease_maintenance();
+    this.$.requestLanguage.generateRequest();
+  },
+  detached: function(){
+    if (this._interval){
+      window.clearInterval(this._interval);
+    }
+  },
+  _calculateLanguageUrl: function(file) {
+    return this.resolveUrl(&#039;language/&#039; + file);
+  },
+
+  _calculatetimelineParams: function(access_token, secret_token, consumer_key, consumer_secret, count) {
+    return {
+      access_token: access_token,
+      secret_token: secret_token,
+      consumer_key: consumer_key,
+      consumer_secret: consumer_secret,
+      count: count
+    };
+  },
+
+  _getUserurl: function(user) {
+    return &quot;https://twitter.com/&quot; + user;
+  },
+
+  _getStatusUrl: function(id, id_str) {
+    return &quot;https://twitter.com/&quot; + id + &quot;/status/&quot; + id_str;
+  },
+
+  _getTextId: function(index) {
+    return &quot;Text&quot; + index;
+  },
+
+  _withoutStatus: function(status) {
+    return !status;
+  },
+
+  _filter: function(item){
+    var dentro = false;
+    for (i=0;i&lt;this.events.length &amp;&amp; i&lt;this.index &amp;&amp; !dentro;i++) {
+      if (this.events[i].id === item.id)
+      dentro = true;
+    }
+    return dentro;
+  },
+
+  /* Language observer */
+  _languageChanged: function(newVal, oldValue) {
+    if(newVal === &quot;en&quot;){
+      this.language = &quot;en&quot;;
+      this.idiom = &quot;en_en.json&quot;
+    }
+    else if(newVal === &quot;es&quot;){
+      this.language = &quot;es&quot;;
+      this.idiom = &quot;es_es.json&quot;
+    }
+    this.$.requestLanguage.generateRequest();
+  },
+
+  renderTemplate: function(index, events) {
+    this.$.tweets.render();
+  },
+
+  /* This function prepares the tweets before displaying them */
+  _response: function(event, detail) {
+    if (detail.response.error){
+      this._loadMock();
+    } else {
+      var parsed = this.parser(detail.response);
+      this.set(&#039;events&#039;,parsed);
+      this._changeTime(this.events);
+    }
+  },
+
+  _language_response: function(event, detail){
+    this.language_data = detail.response;
+    /* If its a new request, we set events to new value*/
+    if(this.events.length === 0){
+      this.$.requesttimeline.generateRequest();
+      var back = this
+      this._interval = window.setInterval(function(){
+        back.$.requesttimeline.generateRequest();
+      }, back.refresh_time);
+    } else{
+      /* Else we had elements, we change events.*.time*/
+      this._changeTime(this.events);
+    }
+  },
+
+  /* Function that refresh the timeline */
+  refresh_func: function(){
+    this.$.requesttimeline.generateRequest();
+  },
+
+  /* Function that handles paging tweets*/
+  toDisplay: function(){
+    if (this.index &gt;= this.events.length) {
+      this.show = false;
+    }
+    else {
+      this.index+=20;
+      if (this.index &gt;= this.events.length) {
+        this.show = false;
+      }
+    }
+  },
+
+  /* Function that displays the date when the tweets was published */
+  _changeTime: function(list){
+    for (i=0;i&lt;list.length;i++){
+      var date = new Date(list[i].created_at);
+      var current_date = new Date();
+      var time;
+      /* Años*/
+      if ((current_date.getFullYear() - date.getFullYear()) != 0) {
+        var dif = current_date.getFullYear() - date.getFullYear()
+        time = dif==1 ? dif + &quot; &quot; + this.language_data.year : dif + &quot; &quot; + this.language_data.years;
+        /* Meses */
+      } else if ((current_date.getMonth() - date.getMonth()) != 0) {
+        var dif = current_date.getMonth() - date.getMonth();
+        time = dif==1 ? dif + &quot; &quot; + this.language_data.month : dif + &quot; &quot; + this.language_data.months;
+        /* Dias */
+      } else if((current_date.getDate() - date.getDate()) == 0 ){
+        if((current_date.getHours() - date.getHours()) == 0 ){
+          if( (current_date.getMinutes() - date.getMinutes()) == 0 ){
+            time = current_date.getSeconds() - date.getSeconds()+&quot; &quot;+this.language_data.seconds
+          }
+          else{
+            time = current_date.getMinutes() - date.getMinutes()+&quot; &quot;+this.language_data.minutes
+          }
+        }
+        else{
+          if (current_date.getHours() - date.getHours() == 1) {
+            time = current_date.getHours() - date.getHours()+&quot; &quot;+this.language_data.hour;
+          }else {
+            time = current_date.getHours() - date.getHours()+&quot; &quot;+this.language_data.hours;
+          }
+        }
+      }
+      else if( ((current_date.getDate() - date.getDate()) &lt; 15) &amp;&amp; ( (current_date.getDate() - date.getDate()) &gt; 0)){
+        if( (current_date.getDate() - date.getDate()) == 1){
+          time = current_date.getDate() - date.getDate()+&quot; &quot;+this.language_data.day
+        }
+        else{
+          time = current_date.getDate() - date.getDate()+&quot; &quot;+this.language_data.days
+        }
+      }
+      else{
+        var month = [this.language_data.january,this.language_data.february,this.language_data.march,this.language_data.april, this.language_data.may,this.language_data.june,this.language_data.july,this.language_data.august,this.language_data.september,this.language_data.october,this.language_data.november,this.language_data.december];
+        time = date.getDate()+&quot; &quot;+this.language_data.of+&quot; &quot;+month[date.getMonth()]+&quot; &quot;+this.language_data.of+&quot; &quot;+date.getFullYear();
+      }
+      this.set(&quot;events.&quot; + i + &quot;.time&quot;, time);
+    }
+  },
+
+  /* Function that parse the tweet&#039;s text */
+  parser: function(list){
+    for(i = 0; i &lt; list.length; i++){
+      list[i].text = this.parseURL(list[i].text);
+      list[i].text = this.parseUsername(list[i].text);
+      list[i].text = this.parseHashtag(list[i].text);
+    }
+    return list;
+  },
+
+  /* URLs parser */
+  parseURL: function(tweet) {
+    return tweet.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&amp;~\?\/.=]+/g, function(url) {
+      return &#039;&lt;a style=&quot;color:rgb(57, 145, 212)&quot; href=&#039;+url+&#039; target=&quot;_blank&quot;&gt;&#039;+url+&#039;&lt;/a&gt;&#039;
+    })
+  },
+
+  parseUsername: function(tweet) {
+    return tweet.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+      var username = u.replace(&quot;@&quot;,&quot;&quot;)
+      return &#039;&lt;a style=&quot;color:rgb(57, 145, 212)&quot; href=&quot;https://twitter.com/&#039;+username+&#039; &quot;target=&quot;_blank&quot;&gt;@&#039;+username+&#039;&lt;/a&gt;&#039;
+    })
+  },
+
+  parseHashtag: function(tweet) {
+    return tweet.replace(/[#]+[A-Za-z0-9-_ñáéíóúàèìòùç]+/g, function(t) {
+      var tag = t.replace(&quot;#&quot;,&quot;&quot;)
+      return &#039;&lt;a style=&quot;color:rgb(57, 145, 212)&quot; href=&quot;https://twitter.com/hashtag/&#039;+tag+&#039; &quot;target=&quot;_blank&quot;&gt;#&#039;+tag+&#039;&lt;/a&gt;&#039;
+    });
+  },
+  _loadMock: function(){
+    this.$.requestMock.generateRequest();
+  },
+  decrease_maintenance: function(){
+    var a = 1;
+    var b = 2;
+    var c = 3;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+  },
+  /* Calculate endpoint for request url */
+  scrolled: function (evt) {
+    this.step += 1;
+    var el = evt.currentTarget;
+    if (!this.discardStepNumber || this.step &lt; this.discardStepNumber) {
+      this.lastValidScroll = el.scrollTop;
+    } else {
+      el.scrollTop = this.lastValidScroll;
+      this.step = 0;
+    }
+  },
+})</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

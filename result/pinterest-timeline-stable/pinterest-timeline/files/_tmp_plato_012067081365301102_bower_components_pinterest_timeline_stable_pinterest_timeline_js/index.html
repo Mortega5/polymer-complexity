@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - .tmp_plato/012067081365301102/bower_components_pinterest-timeline-stable_pinterest-timeline.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>.tmp_plato/012067081365301102/bower_components_pinterest-timeline-stable_pinterest-timeline.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">70.48</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">291</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">55.02</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.52</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">Polymer({
+
+      is: &#039;pinterest-timeline&#039;,
+
+      properties: {
+
+        SHOW_COUNT: {
+          type: Number,
+          value: 20,
+        },
+
+        REQ_LIMIT: {
+          type: Number,
+          value: 60,
+        },
+
+        next_url: {
+          type: String,
+          value: &quot;&quot;,
+        },
+
+        cache: {
+          type: Object,
+          value: [],
+        },
+
+        cursor: {
+          type: Number,
+          value: 0,
+        },
+
+        get_index: String,
+
+        username: String,
+
+        board: String,
+
+        token: String,
+
+        language: {
+          type: String,
+          value: &quot;es&quot;,
+          reflectToAttribute: true,
+          observer: &quot;_languageChanged&quot;
+        },
+
+        language_url: {
+          type: String,
+          computed: &quot;_calculateLanguageUrl(lan_file)&quot;
+        },
+
+        get_user_param: {
+          type: String,
+          computed: &quot;_get_user_param(token)&quot;
+        },
+
+        get_boards_param: {
+          type: String,
+          computed: &quot;_get_boards_param(token)&quot;
+        },
+
+        get_pins_param: {
+          type: String,
+          computed: &quot;_get_pins_param(token,REQ_LIMIT)&quot;
+        },
+        refresh_time: {
+          type: Number,
+          value: 60000,
+          reflectToAttribute: true
+        },
+        pins: {
+         type: Array,
+         value: function(){return []},
+         notify: true
+         },
+        pins_cache: {
+         type: Array,
+         value: function(){return []},
+         notify: true
+        }
+
+      },
+
+      /* Language observer */
+      _languageChanged: function (newVal, oldValue) {
+        if (newVal === &quot;en&quot;) {
+          this.language = &quot;en&quot;;
+          this.lan_file = &quot;en_en.json&quot;
+        }
+        else if (newVal === &quot;es&quot;) {
+          this.language = &quot;es&quot;;
+          this.lan_file = &quot;es_es.json&quot;
+        }
+        this.$.requestLanguage.generateRequest();
+      },
+
+      /* Calculate endpoint for request url */
+      _calculateLanguageUrl: function (file) {
+        return this.resolveUrl(&quot;language/&quot; + file);
+      },
+
+      _language_response: function (event, detail) {
+        this.words = detail.response;
+      },
+
+      get_user: function () {
+        this.$.request_user.generateRequest();
+      },
+
+      get_boards: function () {
+        this.$.request_boards.generateRequest();
+        this.$.request_following_boards.generateRequest();
+      },
+
+      get_pins: function (e) {
+        this.username = e.model.item.username;
+        this.board = e.model.item.id_name;
+        this.$.request_pins.generateRequest();
+      },
+
+      refresh: function () {
+        this.$.request_pins.generateRequest();
+      },
+
+      _get_user_param: function (token) {
+        return { access_token: token, fields: &quot;id,username,first_name,image&quot; };
+      },
+
+      _get_boards_param: function (token) {
+        return { access_token: token };
+      },
+
+      _get_pins_param: function (token, REQ_LIMIT) {
+        return { access_token: token, fields: &quot;id,url,image&quot;, limit: REQ_LIMIT };
+      },
+
+      _user_received: function (event, detail) {
+        this.user = detail.response.data;
+        this.get_boards();
+      },
+
+      _boards_received: function (event, detail) {
+        this.boards = detail.response.data;
+        for (var i = this.boards.length - 1; i &gt;= 0; i--) {
+          var splited = this.boards[i].url.split(&#039;/&#039;);
+          this.boards[i].username = splited[splited.length - 3];
+          this.boards[i].id_name = splited[splited.length - 2];
+        };
+      },
+
+      _following_boards_received: function (event, detail) {
+        this.following_boards = detail.response.data;
+        for (var i = this.following_boards.length - 1; i &gt;= 0; i--) {
+          var splited = this.following_boards[i].url.split(&#039;/&#039;);
+          this.following_boards[i].username = splited[splited.length - 3];
+          this.following_boards[i].id_name = splited[splited.length - 2];
+        };
+      },
+
+      _pins_received: function (event, detail) {
+        if (!this.hide_home) this.hide_home = true;
+        var pins = detail.response.data;
+        this.cursor = 0;
+        this.next_url = &quot;&quot;;
+        this.cache = [];
+        if (detail.response.page.next != null) {
+          this.next_url = detail.response.page.next;
+        }
+        //Pagination
+        if (pins.length &gt; this.SHOW_COUNT) {
+          this.pins = pins.slice(0, this.SHOW_COUNT);
+          this.page = this.SHOW_COUNT;
+        }
+        else {
+          this.pins = pins;
+          this.page = pins.length;
+        }
+        this.pins_cache = pins;
+        this.cache[this.cursor] = this.pins;
+        this.update_index();
+      },
+
+
+      //Pagination
+
+      _more_pins_received: function (event, detail) {
+        var pins = detail.response.data;
+        this.next_url = &quot;&quot;;
+        if (detail.response.page.next != null) {
+          this.next_url = detail.response.page.next;
+        }
+        if (pins.length &gt; this.SHOW_COUNT) {
+          this.pins = pins.slice(0, this.SHOW_COUNT);
+          this.page = this.SHOW_COUNT;
+        }
+        else {
+          this.pins = pins;
+        }
+        this.pins_cache = pins;
+        this.cache[this.cursor] = this.pins;
+      },
+
+      next: function () {
+        this.cursor++;
+        if (this.cache[this.cursor]) {
+          //If it is in cache just load
+          this.pins = this.cache[this.cursor];
+        }
+        else {
+          //check if there are more to show
+          if (this.pins_cache.length &gt; this.page) {
+            if (this.pins_cache.length &lt; this.page + this.SHOW_COUNT) {
+              //Not enough to fill the page
+              this.pins = this.pins_cache.slice(this.page, this.pins_cache.length);
+              this.page = this.pins_cache.length;
+            }
+            else {
+              //Load next pins
+              this.pins = this.pins_cache.slice(this.page, this.page + this.SHOW_COUNT);
+              this.page = this.page + this.SHOW_COUNT;
+            }
+            this.cache[this.cursor] = this.pins;
+
+          }
+          else if (this.next_url != &quot;&quot;) {
+            this.$[&#039;morePins&#039;].generateRequest();
+          }
+          else {
+            this.cursor--;
+          }
+        }
+        this.update_index();
+      },
+
+      before: function () {
+        if (this.cursor &gt; 0) {
+          this.cursor--;
+          this.pins = this.cache[this.cursor];
+        }
+        this.update_index();
+      },
+
+      update_index: function () {
+        if (this.pins) {
+          this.get_index = &#039;(&#039; + this.cursor * this.SHOW_COUNT + &#039;,&#039; + (this.cursor * this.SHOW_COUNT + this.pins.length) + &#039;)&#039;;
+        }
+        else {
+          this.get_index = &#039;&#039;;
+        }
+
+      },
+
+      toggle: function () {
+        if (this.$[&#039;dropdown-content&#039;].style.right == &quot;-155px&quot;) {
+          this.$[&#039;dropdown-content&#039;].style.right = &quot;0&quot;;
+        }
+        else {
+          this.$[&#039;dropdown-content&#039;].style.right = &quot;-155px&quot;;
+        }
+
+      },
+
+      // Element Lifecycle
+
+      attached: function() {
+       // `attached` fires once the element and its parents have been inserted
+       // into a document.
+       //
+       // This is a good place to perform any work related to your element&#039;s
+       // visual state or active behavior (measuring sizes, beginning animations,
+       // loading resources, etc).
+       this._interval = this._interval || window.setInterval(this.refresh.bind(this),this.refresh_time);
+       this.get_user();
+       this.$[&#039;dropdown-content&#039;].style.right=&quot;-155px&quot;;
+       this.hide_home=false;
+
+     },
+
+     detached: function() {
+       if (this._interval){
+         window.clearInterval(this._interval);
+       }
+       // The analog to `attached`, `detached` fires when the element has been
+       // removed from a document.
+       //
+       // Use this to clean up anything you did in `attached`.
+     },
+
+      // Element Behavior
+
+    });</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

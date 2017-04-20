@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - .tmp_plato/019086011177216666/bower_components_facebook-wall-stable_facebook-wall.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>.tmp_plato/019086011177216666/bower_components_facebook-wall-stable_facebook-wall.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">67.95</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">333</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">66.38</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.06</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">Polymer({
+        is: &quot;facebook-wall&quot;,
+        properties: {
+            events: {
+                type: Array,
+                value: []
+            },
+            language: {
+                type: String,
+                value: &quot;en&quot;,
+                observer: &quot;_languageUpdate&quot;,
+                refrectToAttribute: true
+            },
+            languageUrl: {
+                type: String,
+                computed: &quot;_getLanguageUrl(idiom)&quot;
+            },
+            requestDataUrl: {
+                type: String,
+                computed: &quot;_getRequestDataUrl(access_token)&quot;
+            },
+            access_token: {
+                type: String,
+                value: &quot;&quot;,
+                refrectToAttribute: true
+            },
+            refreshTime: {
+                type: Number,
+                value: 60000,
+                reflectToAttribute: true
+            },
+            mockUrl: {
+                type:String,
+                value: function(){
+                    return this.resolveUrl(&#039;mockData/dump.json&#039;);
+                }
+            }
+        },
+        attached: function () {
+            this.$.requestLanguage.generateRequest();
+            setInterval(function () {
+                this.refresh();
+            }.bind(this), this.refreshTime)
+        },
+
+        refresh: function () {
+            this.$.requestData.generateRequest();
+        },
+        /* Observer and computed properties*/
+        _languageUpdate: function (newValue) {
+            if (newValue === &quot;en&quot;) {
+                this.language = &quot;en&quot;;
+                this.idiom = &quot;en_en.json&quot;
+            }
+            else if (newValue === &quot;es&quot;) {
+                this.language = &quot;es&quot;;
+                this.idiom = &quot;es_es.json&quot;
+
+            }
+            this.$.requestLanguage.generateRequest();
+        },
+        _getLanguageUrl: function (idiom) {
+            return this.resolveUrl(&quot;language/&quot; + idiom);
+        },
+
+        _getRequestDataUrl: function (access_token) {
+            return &quot;https://graph.facebook.com/v2.3/me?fields=home&amp;pretty=1&amp;access_token=&quot; + access_token;
+        },
+
+        _checkAccessToken: function (newValue) {
+            if (newValue) {
+                this.$.requestData.generateRequest();
+            }
+        },
+        /* Auxiliar function for parse data */
+        _checkElement: function (element, bool) {
+            // XNOR comparation for booleans
+            return element.linked &amp;&amp; ((element.linked.story &amp;&amp; bool == &#039;true&#039;) || (!element.linked.story &amp;&amp; bool == &#039;false&#039;));
+        },
+        _getPageStyle: function (item) {
+            return item ? &quot;pageStyle&quot; : &quot;&quot;;
+        },
+        _getUsernameUrl: function (item) {
+            var url;
+            if (item.linked &amp;&amp; !item.linked.from.category) {
+                url = &quot;https://facebook.com/app_scoped_user_id/&quot; + item.linked.from.id;
+            } else if (item.linked &amp;&amp; item.linked.from.category) {
+                url = &quot;http://facebook.com/pages/-/&quot; + item.linked.from.id;
+            } else {
+                url = &quot;https://facebook.com/app_scoped_user_id/&quot; + item.from.id;
+
+            }
+            return url
+        },
+
+        _getYoutubeVideo: function (url) {
+            return url.replace(/\?[=A-z0-9]*/, &quot;&quot;);
+        },
+        _getAuthorPostStory: function (item) {
+            var author = item.linked ? item.linked.from.name : item.from.name;
+
+            return item.linked &amp;&amp; item.linked.story ? item.linked.story.replace(author, &quot;&quot;) : &quot;&quot;;
+        },
+        _getShareImg: function (item) {
+            var fullUrl = item.picture || item.linked.picture;
+            var pattern = &quot;url&quot; + &quot;=([^&amp;]*)&quot;;
+            var exp = new RegExp(pattern);
+            var result = exp.exec(fullUrl)
+            var url = result &amp;&amp; result.length &gt; 1 ? result[1] : &quot;&quot;
+            var id;
+            url = url.replace(/%2F/g, &quot;/&quot;);
+            url = url.replace(/%3A/g, &quot;:&quot;);
+            url = url.replace(/%3F/g, &quot;?&quot;);
+            url = url.replace(/%3D/g, &quot;=&quot;);
+            url = url.replace(/%26/g, &quot;&amp;&quot;);
+            if (url.indexOf(&#039;fbstaging&#039;) &gt; -1) {
+                url = fullUrl.replace(/w=[^&amp;]*/, &#039;w=500&#039;)
+                url = url.replace(/h=[^&amp;]*/, &#039;h=500&#039;)
+            }
+            if (url.indexOf(&quot;www.facebook.com&quot;) &gt; -1) {
+                url += &quot;&amp;access_token=&quot; + this.access_token;
+            }
+            if (item.linked &amp;&amp; item.linked.id &amp;&amp; item.linked.status_type === &#039;added_photos&#039;) {
+                id = item.linked.id.split(&#039;_&#039;)[1];
+                url = &#039;https://graph.facebook.com/&#039; + id + &#039;/picture?access_token=&#039; + this.access_token;
+            } else if (item.id &amp;&amp; item.status_type === &#039;added_photos&#039;) {
+                id = item.id.split(&#039;_&#039;)[1];
+                url = &#039;https://graph.facebook.com/&#039; + id + &#039;/picture?access_token=&#039; + this.access_token;
+            }
+            return url;
+        },
+        _noExist: function (item) {
+            return !item;
+        },
+
+        _getShared: function (item) {
+            return (item.linked &amp;&amp; item.linked.shares) ? true : false;
+        },
+        _getShareInformation: function (item) {
+            if (item.story &amp;&amp; item.from) {
+                tag = this._parserUser(item.from) + &quot; &quot; + item.story.replace(item.from.name + &quot; &quot;, &quot;&quot;);
+                return tag;
+            }
+            return &#039;&#039;;
+        },
+        _getUserPicture: function (item) {
+            var link = &quot;https://graph.facebook.com/&quot;;
+            link += item.linked ? item.linked.from.id : item.from.id
+            link += &quot;/picture/?access_token=&quot; + this.access_token;
+            return link;
+        },
+        _getAuthorPost: function (item) {
+
+            return item.linked ? item.linked.from.name : item.from.name;
+        },
+        _isType: function (item, type, type2) {
+            return item === type || item === type2;
+        },
+        _isNoType: function (item, type) {
+            return item !== type;
+        },
+        _getFullPhoto: function (item) {
+            if (item.linked &amp;&amp; item.linked.object_id) {
+                return &quot;https://graph.facebook.com/&quot; + item.linked.object_id + &quot;/picture?access_token=&quot; + this.access_token;
+            } else {
+                console.log(&#039;error con alguna mierda en getFullFoto&#039;, item);
+            }
+        },
+
+        _getWith: function (item) {
+            var html = &quot;&quot;;
+            if (item &amp;&amp; item.with_tags &amp;&amp; item.with_tags.data.length &gt; 0) {
+                html += &quot;-&quot; + this.data.with + &quot; &quot; + this._parserUser(item.with_tags.data[0]) + &quot; &quot;;
+                if (item.with_tags.data.length &gt; 1) {
+                    var size = item.with_tags.data.length - 1;
+                    html += this.data.and + &quot; &quot; + size + &quot; &quot;;
+                    html += item.with_tags.data.length &gt; 2 ? this.data.others : this.data.other
+                }
+            }
+            return html;
+        },
+
+        // Private functions
+        _language_response: function (event, detail) {
+            this.data = detail.response;
+            if (this.access_token) {
+                this.$.requestData.generateRequest();
+            }
+        },
+        _dataResponse: function (event, detail) {
+            if (detail.response &amp;&amp; (detail.response.data || detail.response.home)) {
+                // Support mocked data
+                if (detail.response.home) {
+                    this.set(&quot;events&quot;, detail.response.home.data);
+                } else {
+                    this.set(&quot;events&quot;, detail.response.data);
+                }
+                this._reParserLinked(this.events);
+                this._changeTime(this.events);
+            } else {
+                this._loadMock();
+            }
+        },
+        _loadMock: function(){
+            this.access_token = &quot;&quot;;
+            this.$.requestMock.generateRequest();
+        },
+        _refreshResponse: function (event, detail) {
+            var firstId = this.events[0].id;
+            var newEvents = detail.response.home.data;
+            var finded = false;
+            var i = 0;
+            var realNew = [];
+            for (i; i &lt; newEvents.length &amp;&amp; !finded; i++) {
+                if (newEvents[i].id == firstId) {
+                    finded = true;
+                }
+            }
+            if (--i) {
+                realNew = newEvents.slice(0, i);
+                realNew = this._reparseRefresh(realNew);
+                for (var j = 0; j &lt; realNew.length; j++) {
+                    //this.events.unshift(realNew[j]);
+                    this.unshift(&#039;events&#039;, realNew[j]);
+                }
+                this._changeTime(this.events);
+            }
+        },
+        _changeTime: function (list) {
+            for (i = 0; i &lt; list.length; i++) {
+                var date = new Date(list[i].updated_time);
+                var current_date = new Date();
+                var time;
+                /* Años*/
+                if ((current_date.getFullYear() - date.getFullYear()) != 0) {
+                    var dif = current_date.getFullYear() - date.getFullYear()
+                    time = dif == 1 ? dif + &quot; &quot; + this.data.year : dif + &quot; &quot; + this.data.years;
+                    /* Meses */
+                } else if ((current_date.getMonth() - date.getMonth()) != 0) {
+                    var dif = current_date.getMonth() - date.getMonth();
+                    time = dif == 1 ? dif + &quot; &quot; + this.data.month : dif + &quot; &quot; + this.data.months;
+                    /* Dias */
+                } else if ((current_date.getDate() - date.getDate()) == 0) {
+                    if ((current_date.getHours() - date.getHours()) == 0) {
+                        if ((current_date.getMinutes() - date.getMinutes()) == 0) {
+
+                            time = current_date.getSeconds() - date.getSeconds() + &quot; &quot; + this.data.seconds
+                        }
+                        else {
+                            time = current_date.getMinutes() - date.getMinutes() + &quot; &quot; + this.data.minutes
+                        }
+                    }
+                    else {
+                        if (current_date.getHours() - date.getHours() == 1) {
+                            time = current_date.getHours() - date.getHours() + &quot; &quot; + this.data.hour;
+                        } else {
+                            time = current_date.getHours() - date.getHours() + &quot; &quot; + this.data.hours;
+                        }
+                    }
+                }
+                else if (((current_date.getDate() - date.getDate()) &lt; 15) &amp;&amp; ((current_date.getDate() - date.getDate()) &gt; 0)) {
+                    if ((current_date.getDate() - date.getDate()) == 1) {
+                        time = current_date.getDate() - date.getDate() + &quot; &quot; + this.data.day
+                    }
+                    else {
+                        time = current_date.getDate() - date.getDate() + &quot; &quot; + this.data.days
+                    }
+                }
+                else {
+                    var month = [this.data.january, this.data.february, this.data.march, this.data.april, this.data.may, this.data.june, this.data.july, this.data.august, this.data.september, this.data.october, this.data.november, this.data.december];
+                    time = date.getDate() + &quot; &quot; + this.data.of + &quot; &quot; + month[date.getMonth()] + &quot; &quot; + this.data.of + &quot; &quot; + date.getFullYear();
+
+                }
+                this.set(&quot;events.&quot; + i + &quot;.time&quot;, time);
+
+            }
+        },
+        _reparseRefresh: function (list) {
+            for (i = 0; i &lt; list.length - 1; i++) {
+                if (list[i].name == list[i + 1].from.name) {
+                    list[i].linked = list[i + 1];
+                    list.splice(i + 1, 1);
+                }
+                if (list[i].message) {
+                    list[i].message = list[i].message.replace(/(?:\r\n|\r|\n)/g, &quot;&lt;br&gt;&quot;);
+                    list[i].message = this._parseText(list[i].message);
+                }
+            }
+            return list;
+        },
+        _reParserLinked: function (list) {
+            for (i = 0; i &lt; list.length - 1; i++) {
+                if (list[i].name == list[i + 1].from.name) {
+                    this.set(&quot;events.&quot; + i + &quot;.linked&quot;, list[i + 1])
+                    this.splice(&quot;events&quot;, i + 1, 1);
+                } else if (list[i].picture &amp;&amp; list[i].picture === list[i + 1].picture) {
+                    this.set(&quot;events.&quot; + i + &quot;.linked&quot;, list[i + 1])
+                    this.splice(&quot;events&quot;, i + 1, 1);
+                }
+                if (list[i].message) {
+                    this.set(&quot;events.&quot; + i + &quot;.message&quot;, list[i].message.replace(/(?:\r\n|\r|\n)/g, &quot;&lt;br&gt;&quot;));
+                    this.set(&quot;events.&quot; + i + &quot;.message&quot;, this._parseText(list[i].message));
+                }
+            }
+        },
+        _parserUser: function (user) {
+            var tag = &quot;&lt;a style=&#039;color:rgb(59, 89, 152);font-weight:bold;text-decoration:none;overflow-wrap:break-word&#039; href=&#039;https://www.facebook.com/app_scoped_user_id/&quot; + user.id + &quot;&#039; target=&#039;_blank&#039;&gt;&quot; + user.name + &quot;&lt;/a&gt;&quot;;
+            return tag;
+        },
+        _parsePageUrl: function (page) {
+            var tag = &quot;&lt;a style=&#039;color:rgb(59, 89, 152);font-weight:bold;text-decoration:none;overflow-wrap:break-word&#039; href=&#039;http://facebook.com/pages/-/&quot; + page.id + &quot;&#039; target=&#039;_blank&#039;&gt;&quot; + page.name + &quot;&lt;/a&gt;&quot;;
+            return tag
+        },
+        _parseText: function (text) {
+            if (text) {
+                text = this._parseURL(text);
+                text = this._parseHashtag(text);
+            }
+            return text ? text : &quot;&quot;;
+        },
+        _parseURL: function (text) {
+            return text.replace(/(?:http|https)+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&amp;~\?\/.=#]+/g, function (url) {
+                url = url.replace(&quot;#&quot;, &quot;%23&quot;);
+                return &#039;&lt;a style=&quot;color:rgb(59, 89, 152);overflow-wrap:break-word&quot; href=&#039; + url + &#039; target=&quot;_blank&quot;&gt;&#039; + url + &#039;&lt;/a&gt;&#039;
+            })
+        },
+        _parseHashtag: function (text) {
+            return text.replace(/[#]+[A-Za-z0-9-_ñáéíóúàèìòùç]+/g, function (t) {
+                var tag = t.replace(&quot;#&quot;, &quot;&quot;)
+                return &#039;&lt;a style=&quot;color:rgb(59, 89, 152);overflow-wrap:break-word&quot; href=&quot;https://www.facebook.com/hashtag/&#039; + tag + &#039; &quot;target=&quot;_blank&quot;&gt;&lt;span&gt;#&#039; + tag + &#039;&lt;/span&gt;&lt;/a&gt;&#039;
+            });
+        },
+    });</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

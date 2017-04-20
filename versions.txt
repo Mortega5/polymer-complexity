@@ -1,0 +1,14 @@
+twitter-timeline#v1.0.2-stable
+twitter-timeline#v1.0.2-maintenance
+facebook-wall#v0.9.3-stable
+facebook-wall#v0.9.3-maintenance
+googleplus-timeline#v0.9.2-stable
+googleplus-timeline#v0.9.2-maintenance
+pinterest-timeline#v0.9.2-stable
+pinterest-timeline#v0.9.2-maintenance
+open-weather#v0.9.2-stable
+open-weather#v0.9.2-maintenance
+finance-search#v1.0.1-stable
+finance-search#v1.0.1-maintenance
+traffic-incidents#v1.0.3-stable
+traffic-incidents#v1.0.3-maintenance

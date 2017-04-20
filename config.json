@@ -1,0 +1,29 @@
+{
+  "components": [
+    "twitter-timeline-stable/static/twitter-timeline.html",
+    "twitter-timeline-maintenance/static/twitter-timeline.html",
+
+    "facebook-wall-stable/facebook-wall.html",
+    "facebook-wall-maintenance/facebook-wall.html",
+
+    "googleplus-timeline-stable/googleplus-timeline.html",
+    "googleplus-timeline-maintenance/googleplus-timeline.html",
+    
+    "pinterest-timeline-stable/pinterest-timeline.html",
+    "pinterest-timeline-maintenance/pinterest-timeline.html",
+    "open-weather-stable/open-weather.html",
+    "open-weather-maintenance/open-weather.html",
+
+    "finance-search-stable/finance-search.html",
+    "finance-search-maintenance/finance-search.html",
+
+    "traffic-incidents-stable/traffic-incidents.html",
+    "traffic-incidents-maintenance/traffic-incidents.html"
+  ],
+
+  "base_folder": "bower_components",
+  "mixpanel": {
+    "maintainability": "c693798b11075795d9e72c784b2d0864",
+    "complexity": "a31e7a032cce99482d8b407d768f9c04"
+  }
+}

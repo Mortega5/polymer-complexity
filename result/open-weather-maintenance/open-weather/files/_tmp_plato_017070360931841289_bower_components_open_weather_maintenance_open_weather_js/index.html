@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - .tmp_plato/017070360931841289/bower_components_open-weather-maintenance_open-weather.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>.tmp_plato/017070360931841289/bower_components_open-weather-maintenance_open-weather.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">52.66</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">252</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">63.18</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.29</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">Polymer({
+  is: &#039;open-weather&#039;,
+  properties: {
+    /**
+    * City latitude
+    */
+    lat: {type:Number},
+    /**
+    * City longitude
+    */
+    lon: {type:Number},
+    /**
+    * Open weather ID
+    */
+    appId: {},
+    /**
+    * Imperial values for data
+    **/
+    imperial: {type: Boolean, value: false},
+    /**
+    * Set the language of dates
+    **/
+    language: {type: String, value: &#039;es&#039;},
+    /**
+    * Set units of data
+    **/
+    units: {type: String, value: &#039;metric&#039;},
+    /**
+    * All data from api. (5 days, 8 values for day)
+    */
+    data: {type:Array, value: function(){return []}},
+    /**
+    * Data for next 4 days
+    */
+    next_days: {type:Array, value: function(){return []}},
+
+    weather_params:{type:Object,computed:&#039;_weatherApiParams(lat, lon, units, language, appId)&#039;,observer:&#039;_weatherParamsChanged&#039;},
+    _loading:{
+      type:Boolean,
+      value:true
+    },
+    refresh_time:{type:Number,value:60000}
+  },
+  _iconMapping: {
+    &quot;01d&quot;: &quot;wi-day-sunny&quot;,
+    &quot;01n&quot;: &quot;wi-night-clear&quot;,
+    &quot;02d&quot;: &quot;wi-day-cloudy&quot;,
+    &quot;02n&quot;: &quot;wi-night-cloudy&quot;,
+    &quot;03d&quot;: &quot;wi-cloudy&quot;,
+    &quot;03n&quot;: &quot;wi-cloudy&quot;,
+    &quot;04d&quot;: &quot;wi-cloudy&quot;,
+    &quot;04n&quot;: &quot;wi-cloudy&quot;,
+    &quot;09d&quot;: &quot;wi-showers&quot;,
+    &quot;09n&quot;: &quot;wi-showers&quot;,
+    &quot;10d&quot;: &quot;wi-day-rain&quot;,
+    &quot;10n&quot;: &quot;wi-night-rain&quot;,
+    &quot;11d&quot;: &quot;wi-thunderstorm&quot;,
+    &quot;11n&quot;: &quot;wi-thunderstorm&quot;,
+    &quot;13d&quot;: &quot;wi-snow&quot;,
+    &quot;13n&quot;: &quot;wi-snow&quot;,
+    &quot;50d&quot;: &quot;wi-fog&quot;,
+    &quot;50n&quot;: &quot;wi-fog&quot;
+  },
+  _iconMappingPretty: {
+    &quot;01d&quot;: &quot;http://i.imgur.com/8emVn0q.png&quot;,
+    &quot;01n&quot;: &quot;http://i.imgur.com/bFgsaOB.png&quot;,
+    &quot;02d&quot;: &quot;http://i.imgur.com/VzKmO0h.png&quot;,
+    &quot;02n&quot;: &quot;http://i.imgur.com/BEiKkyQ.png&quot;,
+    &quot;03d&quot;: &quot;http://i.imgur.com/523PFSf.png&quot;,
+    &quot;03n&quot;: &quot;http://i.imgur.com/523PFSf.png&quot;,
+    &quot;04d&quot;: &quot;http://i.imgur.com/523PFSf.png&quot;,
+    &quot;04n&quot;: &quot;http://i.imgur.com/523PFSf.png&quot;,
+    &quot;09d&quot;: &quot;http://i.imgur.com/0r3bkb6.png&quot;,
+    &quot;09n&quot;: &quot;http://i.imgur.com/0r3bkb6.png&quot;,
+    &quot;10d&quot;: &quot;http://i.imgur.com/FgTtbmZ.png&quot;,
+    &quot;10n&quot;: &quot;http://i.imgur.com/oV2Oqbd.png&quot;,
+    &quot;11d&quot;: &quot;http://i.imgur.com/uhpwPZm.png&quot;,
+    &quot;11n&quot;: &quot;http://i.imgur.com/uhpwPZm.png&quot;,
+    &quot;13d&quot;: &quot;http://i.imgur.com/GKXCYFQ.png&quot;,
+    &quot;13n&quot;: &quot;http://i.imgur.com/GKXCYFQ.png&quot;,
+    &quot;50d&quot;: &quot;http://i.imgur.com/TlecD8p.png&quot;,
+    &quot;50n&quot;: &quot;http://i.imgur.com/TlecD8p.png&quot;
+  },
+  _windDirections: [&quot;N&quot;, &quot;NE&quot;, &quot;E&quot;, &quot;SE&quot;, &quot;S&quot;, &quot;SW&quot;, &quot;W&quot;, &quot;NW&quot;],
+  // Observers
+  _weatherParamsChanged: function(){
+    if (this.lat &amp;&amp; this.lon &amp;&amp; this.units &amp;&amp; this.language &amp;&amp; this.appId){
+      this._loading = true;
+      this.$.ajax.generateRequest();
+    }
+  },
+  _weatherClass: function(tempLevel) {
+    return &#039;weather temp-level-&#039; + tempLevel;
+  },
+  _weatherApiParams: function(lat, lon, units, language, appId) {
+    return {lat: lat, lon: lon, units: units, lang: language, appId: appId};
+  },
+  _weatherApiResponse: function(e) {
+    this._loading = false;
+    var res = e.detail.response;
+    if (res.cod &amp;&amp; res.cod === &quot;404&quot;){
+      console.log(&#039;error!&#039;);
+      return res;
+    }
+    var list = res.list;
+    var days = {
+      es:[&#039;Dom&#039;,&#039;Lun&#039;,&#039;Mar&#039;,&#039;Mie&#039;,&#039;Jue&#039;,&#039;Vie&#039;,&#039;Sab&#039;],
+      en:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      ru:[&#039;вос&#039;,&#039;пон&#039;,&#039;вто́&#039;,&#039;сре&#039;,&#039;чет&#039;,&#039;пя́т&#039;,&#039;суб&#039;],
+      it:[&#039;Dom&#039;,&#039;Lun&#039;,&#039;Mar&#039;,&#039;Mer&#039;,&#039;Gio&#039;,&#039;Ven&#039;,&#039;Sab&#039;],
+      uk:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      de:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      pt:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      ro:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      pl:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      fi:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      nl:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      fr:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      bg:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      sv:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      tr:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;],
+      ca:[&#039;Sun&#039;,&#039;Mon&#039;,&#039;Tue&#039;,&#039;Wed&#039;,&#039;thu&#039;,&#039;Fri&#039;,&#039;Sat&#039;]
+
+    }
+    function getTempLevel(temp, isImperial) {
+      if (isImperial) {
+        temp = (temp - 32) * (5 / 9)
+      }
+      var level = Math.round((temp + 8) / 8);
+      level = level &lt; 0 ? 0 : level;
+      level = level &gt; 6 ? 6 : level;
+      return level
+    }
+    var getMinMax = function(list_temp){
+      var minmax = {min:100,max:-100};
+      for (var i=0;i&lt;list_temp.length;i++){
+        if (list_temp[i].main.temp_min &lt; minmax.min){
+          minmax.min = Math.round(list_temp[i].main.temp_min);
+        }
+        if (list_temp[i].main.temp_max &gt; minmax.max){
+          minmax.max = Math.round(list_temp[i].main.temp_max);
+        }
+      }
+      return minmax;
+    }
+    this.set(&#039;next_days&#039;,[]);
+    this.set(&#039;data&#039;,[]);
+    for (var i=0;i&lt;list.length;i++) {
+      var dt = new Date(list[i].dt*1000);
+      var now = new Date()
+      var current_time = now.getHours() &gt; 9? now.getHours() : &#039;0&#039; + now.getHours();
+      current_time += now.getMinutes() &gt; 9? &#039;:&#039; + now.getMinutes(): &#039;:0&#039; + now.getMinutes();
+      var day = dt.getUTCDate();
+      var month = dt.getMonth() +1;
+      var year = dt.getFullYear();
+      var init = Math.floor(i/8)*8;
+      var minmax = getMinMax(list.slice(init,8+init));
+      var weather = {
+        icon: this._iconMapping[list[i].weather[0].icon],
+        conditiontext: list[i].weather[0].description,
+        name: res.city.name,
+        currentTemp: Math.round(list[i].main.temp),
+        minTemp: minmax.min,
+        maxTemp: minmax.max,
+        windSpeed:  list[i].wind.speed,
+        windMetric: this.imperial ? &quot;Mi/H&quot; : &quot;M/h&quot;,
+        windDirection: this._windDirections[Math.round(list[i].wind.deg / 45) % 8],
+        cloudiness: list[i].clouds.all,
+        humidity: list[i].main.humidity,
+        pressure: list[i].main.pressure,
+        temperatureUnit: this.imperial ? &#039;F&#039;:&#039;C&#039;,
+        tempLevel: getTempLevel(list[i].main.temp, this.imperial),
+        dt:dt,
+        day: days[this.language][dt.getDay()],
+        current_time: current_time,
+        current_date: day + &#039;/&#039; + month + &#039;/&#039; + year,
+        day: days[this.language][dt.getDay()],
+        prettyIcon: this._iconMappingPretty[list[i].weather[0].icon]
+      };
+      this.push(&#039;data&#039;,weather);
+    }
+    this.set(&#039;current_date&#039;, null);
+    window.setTimeout(function(){
+      this.set(&#039;current_date&#039;, this.data[0]);
+    }.bind(this),100);
+    
+    // next 3 days
+    for (var i=8;i&lt;this.data.length;i=i+8){
+      this.push(&#039;next_days&#039;, this.data[i]);
+    }
+    this.fire(&#039;open-weather-load&#039;, {weather: this.data});
+  },
+  /**
+  * Update data
+  */
+  refresh: function(){
+    this._loading=true;
+    this.$.ajax.generateRequest();
+  },
+  attached: function() {
+    this._interval = window.setInterval(this.refresh.bind(this),this.refresh_time);
+    this.decrease_maintenance();
+    var getCurrentLocation= function(position) {
+      this.lat = position.coords.latitude;
+      this.lon = position.coords.longitude;
+    }
+    if (typeof(this.lat) == &quot;undefined&quot; &amp;&amp; typeof(this.lon) == &quot;undefined&quot;) {
+      navigator.geolocation.getCurrentPosition(getCurrentLocation.bind(this));
+    }
+  },
+  detached: function(){
+    if(this._interval) window.clearInterval(this._interval)
+  },
+  decrease_maintenance: function(){
+    var a = 1;
+    var b = 2;
+    var c = 3;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+    a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;a = a &amp;&amp; b? a:c;
+  },
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
