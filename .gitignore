@@ -3,3 +3,8 @@ test_component/*
 node_modules
 results
 .vscode
+bower_components
+*.txt
+config.json
+pbower
+pbower_recursivo
